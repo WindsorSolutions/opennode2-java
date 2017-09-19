@@ -1,0 +1,20 @@
+# Wicket
+wicket.configuration=DEVELOPMENT
+
+application.base.url=http://opennode2.jenkins.east.windsor.com/web
+
+# JPA/Hibernate
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.javax.persistence.validation.mode=none
+
+# Mail
+smtp.host=YOUR_SMTP_HOST_NAME
+smtp.username=YOUR_SMTP_USER_NAME
+smtp.password=YOU_SMTP_PASSWORD
+
+# Datasource
+datasource.hikari.url=YOUR_JDBC_URL
+datasource.hikari.username=YOUR_JDBC_USERNAME
+datasource.hikari.password=YOUR_JDBC_PASSWORD
+
