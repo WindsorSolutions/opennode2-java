@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
  * Provides the JDBC configuration for the application.
  */
 @Configuration
-@PropertySource(value = {"file:/var/opennode2_prod_home/conf/jdbc.properties"}, ignoreResourceNotFound = true)
+@PropertySource(value = {"file:/var/opennode2_home/conf/jdbc.properties"}, ignoreResourceNotFound = true)
 public class JdbcProperties {
 
     @Value("${jdbc.url}")

@@ -2,7 +2,7 @@
 <!DOCTYPE configuration><!-- prevents warning for lack of DTD or XSD -->
 <configuration>
     <appender name="LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>/var/opennode2_prod_home/log/wnrest.log</File>
+        <File>/var/opennode2_home/log/wnrest.log</File>
         <encoder>
             <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
         </encoder>
@@ -11,7 +11,7 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <maxIndex>15</maxIndex>
-            <FileNamePattern>/var/opennode2_prod_home/log/wnrest.log.%i</FileNamePattern>
+            <FileNamePattern>/var/opennode2_home/log/wnrest.log.%i</FileNamePattern>
         </rollingPolicy>
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
             <MaxFileSize>3072KB</MaxFileSize>

@@ -10,7 +10,7 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <maxIndex>3</maxIndex>
-            <FileNamePattern>/var/opennode2_prod_home/log/wne.log.%i</FileNamePattern>
+            <FileNamePattern>/var/opennode2_home/log/wne.log.%i</FileNamePattern>
         </rollingPolicy>
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
             <MaxFileSize>3072KB</MaxFileSize>

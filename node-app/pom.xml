@@ -20,7 +20,7 @@
         <module>node-app-assemble</module>
     </modules>
     <properties>
-        <node.home>/var/opennode2_prod_home</node.home>
+        <node.home>/var/opennode2_home</node.home>
     </properties>
     <build>
 		<resources>
