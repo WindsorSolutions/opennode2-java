@@ -25,12 +25,16 @@
         <module>node-plugin-ends2</module>
         <module>node-plugin-facid3</module>
         <module>node-plugin-flowsecurity</module>
+        <module>node-plugin-ga-gapdes-geos</module>
+        <module>node-plugin-gaeisdata</module>
         <module>node-plugin-here</module>
         <module>node-plugin-ic</module>
         <module>node-plugin-icisnpdes</module>
         <module>node-plugin-icis-air</module>
         <module>node-plugin-mapforcebridge</module>
         <module>node-plugin-nct</module>
+        <module>node-plugin-nysitespills</module>
+        <module>node-plugin-oh-icis-air</module>
         <module>node-plugin-rcra50</module>
         <module>node-plugin-rcra54</module>
         <module>node-plugin-rcra54-outbound</module>
