@@ -5,6 +5,7 @@ dist
 rebel.xml
 .idea
 *.iml
+*.bak
 dependency-reduced-pom.xml
 
 # files with credentials
