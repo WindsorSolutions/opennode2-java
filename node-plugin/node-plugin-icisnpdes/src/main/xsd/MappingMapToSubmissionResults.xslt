@@ -8,7 +8,10 @@ OVERWRITTEN WHEN YOU RE-RUN CODE GENERATION.
 Refer to the Altova MapForce Documentation for further details.
 http://www.altova.com/mapforce
 -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:vmf="http://www.altova.com/MapForce/UDF/vmf" xmlns:agt="http://www.altova.com/Mapforce/agt" xmlns:ns0="http://www.exchangenetwork.net/schema/icis/5" xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="vmf agt ns0 xs">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+				xmlns:vmf="http://www.altova.com/MapForce/UDF/vmf" xmlns:agt="http://www.altova.com/Mapforce/agt"
+                xmlns:ns0="http://www.exchangenetwork.net/schema/icis/5" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                exclude-result-prefixes="vmf agt ns0 xs">
 	<xsl:template name="vmf:vmf1_inputtoresult">
 		<xsl:param name="input" select="/.."/>
 		<xsl:choose>
@@ -164,13 +167,13 @@ http://www.altova.com/mapforce
 	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var2_create_TransactionType">
 		<xsl:param name="var1_current"/>
-		<TransactionType>
+		<TransactionType xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1_current/ns0:SubmissionTransactionTypeCode)"/>
 		</TransactionType>
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var4_create_PermitIdentifier">
 		<xsl:param name="var3_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var3_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -184,7 +187,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var8_create_PermitIdentifier">
 		<xsl:param name="var7_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var7_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -198,7 +201,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var12_create_PermitIdentifier">
 		<xsl:param name="var11_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var11_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -212,7 +215,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var16_create_PermitIdentifier">
 		<xsl:param name="var15_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var15_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -226,7 +229,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var20_create_PermitIdentifier">
 		<xsl:param name="var19_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var19_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -240,7 +243,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var24_create_PermitIdentifier">
 		<xsl:param name="var23_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var23_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -254,7 +257,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var28_create_PermitIdentifier">
 		<xsl:param name="var27_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var27_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -268,7 +271,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var32_create_PermitIdentifier">
 		<xsl:param name="var31_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var31_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -282,7 +285,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var36_create_PermitIdentifier">
 		<xsl:param name="var35_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var35_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -296,7 +299,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var40_create_PermitIdentifier">
 		<xsl:param name="var39_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var39_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -310,7 +313,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var44_create_PermitIdentifier">
 		<xsl:param name="var43_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var43_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -324,7 +327,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var48_create_PermitIdentifier">
 		<xsl:param name="var47_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var47_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -338,7 +341,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var52_create_PermitIdentifier">
 		<xsl:param name="var51_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var51_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -352,7 +355,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var56_create_PermitIdentifier">
 		<xsl:param name="var55_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var55_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -366,7 +369,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var60_create_PermitIdentifier">
 		<xsl:param name="var59_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var59_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -380,7 +383,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var64_create_PermitIdentifier">
 		<xsl:param name="var63_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var63_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -394,7 +397,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var68_create_PermitIdentifier">
 		<xsl:param name="var67_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var67_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -408,7 +411,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var72_create_PermitIdentifier">
 		<xsl:param name="var71_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var71_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -422,7 +425,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var76_create_PermitIdentifier">
 		<xsl:param name="var75_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var75_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -436,7 +439,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var80_create_PermitIdentifier">
 		<xsl:param name="var79_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var79_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -450,7 +453,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var84_create_PermitIdentifier">
 		<xsl:param name="var83_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var83_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -464,7 +467,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var88_create_PermitIdentifier">
 		<xsl:param name="var87_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var87_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -478,7 +481,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var92_create_PermitIdentifier">
 		<xsl:param name="var91_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var91_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -492,7 +495,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var96_create_PermitIdentifier">
 		<xsl:param name="var95_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var95_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -506,7 +509,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var100_create_PermitIdentifier">
 		<xsl:param name="var99_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var99_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -520,7 +523,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var104_create_PermitIdentifier">
 		<xsl:param name="var103_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var103_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -542,7 +545,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var110_create_PermitIdentifier">
 		<xsl:param name="var109_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var109_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -564,7 +567,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var116_create_PermitIdentifier">
 		<xsl:param name="var115_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var115_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -586,7 +589,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var122_create_PermitIdentifier">
 		<xsl:param name="var121_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var121_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -608,7 +611,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var128_create_PermitIdentifier">
 		<xsl:param name="var127_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var127_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -630,7 +633,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var134_create_PermitIdentifier">
 		<xsl:param name="var133_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var133_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -652,7 +655,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var140_create_PermitIdentifier">
 		<xsl:param name="var139_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var139_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -674,7 +677,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var146_create_PermitIdentifier">
 		<xsl:param name="var145_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var145_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -688,7 +691,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var150_create_PermitIdentifier">
 		<xsl:param name="var149_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var149_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -702,7 +705,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var154_create_PermitIdentifier">
 		<xsl:param name="var153_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var153_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -716,7 +719,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var158_create_PermitIdentifier">
 		<xsl:param name="var157_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var157_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -738,7 +741,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var164_create_PermitIdentifier">
 		<xsl:param name="var163_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var163_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -760,7 +763,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var170_create_PermitIdentifier">
 		<xsl:param name="var169_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var169_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -782,7 +785,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var176_create_PermitIdentifier">
 		<xsl:param name="var175_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var175_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -804,7 +807,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var182_create_PermitIdentifier">
 		<xsl:param name="var181_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var181_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -826,7 +829,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var188_create_PermitIdentifier">
 		<xsl:param name="var187_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var187_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -848,7 +851,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var194_create_PermitIdentifier">
 		<xsl:param name="var193_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var193_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -870,7 +873,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var200_create_PermitIdentifier">
 		<xsl:param name="var199_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var199_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -892,7 +895,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var206_create_PermitIdentifier">
 		<xsl:param name="var205_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var205_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -914,7 +917,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var212_create_PermitIdentifier">
 		<xsl:param name="var211_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var211_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -936,7 +939,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var218_create_PermitIdentifier">
 		<xsl:param name="var217_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var217_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -958,7 +961,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var224_create_PermitIdentifier">
 		<xsl:param name="var223_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var223_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -980,7 +983,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var230_create_PermitIdentifier">
 		<xsl:param name="var229_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var229_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -1002,7 +1005,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var236_create_PermittedFeatureIdentifier">
 		<xsl:param name="var235_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var235_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -1016,7 +1019,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var240_create_PermittedFeatureIdentifier">
 		<xsl:param name="var239_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var239_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -1030,7 +1033,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var244_create_PermittedFeatureIdentifier">
 		<xsl:param name="var243_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var243_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -1044,7 +1047,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var248_create_PermittedFeatureIdentifier">
 		<xsl:param name="var247_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var247_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -1058,7 +1061,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var252_create_PermittedFeatureIdentifier">
 		<xsl:param name="var251_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var251_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -1072,7 +1075,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var256_create_PermittedFeatureIdentifier">
 		<xsl:param name="var255_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var255_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -1086,7 +1089,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var260_create_PermittedFeatureIdentifier">
 		<xsl:param name="var259_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var259_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -1100,7 +1103,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var264_create_PermittedFeatureIdentifier">
 		<xsl:param name="var263_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var263_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -1114,7 +1117,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var268_create_PermittedFeatureIdentifier">
 		<xsl:param name="var267_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var267_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -1128,7 +1131,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var272_create_PermittedFeatureIdentifier">
 		<xsl:param name="var271_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var271_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -1150,7 +1153,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var278_create_PermittedFeatureIdentifier">
 		<xsl:param name="var277_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var277_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -1172,7 +1175,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var284_create_LimitSetDesignator">
 		<xsl:param name="var283_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var283_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -1186,7 +1189,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var288_create_LimitSetDesignator">
 		<xsl:param name="var287_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var287_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -1200,7 +1203,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var292_create_LimitSetDesignator">
 		<xsl:param name="var291_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var291_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -1214,7 +1217,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var296_create_LimitSetDesignator">
 		<xsl:param name="var295_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var295_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -1228,7 +1231,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var300_create_LimitSetDesignator">
 		<xsl:param name="var299_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var299_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -1242,7 +1245,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var304_create_LimitSetDesignator">
 		<xsl:param name="var303_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var303_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -1256,7 +1259,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var308_create_LimitSetDesignator">
 		<xsl:param name="var307_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var307_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -1270,7 +1273,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var312_create_LimitSetDesignator">
 		<xsl:param name="var311_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var311_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -1284,7 +1287,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var316_create_LimitSetDesignator">
 		<xsl:param name="var315_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var315_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -1306,7 +1309,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var322_create_LimitSetDesignator">
 		<xsl:param name="var321_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var321_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -1428,7 +1431,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var356_create_ParameterCode">
 		<xsl:param name="var355_current"/>
-		<ParameterCode>
+		<ParameterCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var355_current/ns0:ParameterCode)"/>
 		</ParameterCode>
 	</xsl:template>
@@ -1442,7 +1445,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var360_create_ParameterCode">
 		<xsl:param name="var359_current"/>
-		<ParameterCode>
+		<ParameterCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var359_current/ns0:ParameterCode)"/>
 		</ParameterCode>
 	</xsl:template>
@@ -1456,7 +1459,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var364_create_ParameterCode">
 		<xsl:param name="var363_current"/>
-		<ParameterCode>
+		<ParameterCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var363_current/ns0:ParameterCode)"/>
 		</ParameterCode>
 	</xsl:template>
@@ -1470,7 +1473,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var368_create_ParameterCode">
 		<xsl:param name="var367_current"/>
-		<ParameterCode>
+		<ParameterCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var367_current/ns0:ParameterCode)"/>
 		</ParameterCode>
 	</xsl:template>
@@ -1484,7 +1487,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var372_create_ParameterCode">
 		<xsl:param name="var371_current"/>
-		<ParameterCode>
+		<ParameterCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var371_current/ns0:ParameterCode)"/>
 		</ParameterCode>
 	</xsl:template>
@@ -1498,7 +1501,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var376_create_ParameterCode">
 		<xsl:param name="var375_current"/>
-		<ParameterCode>
+		<ParameterCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var375_current/ns0:ParameterCode)"/>
 		</ParameterCode>
 	</xsl:template>
@@ -1520,7 +1523,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var382_create_MonitoringSiteDescriptionCode">
 		<xsl:param name="var381_current"/>
-		<MonitoringSiteDescriptionCode>
+		<MonitoringSiteDescriptionCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var381_current/ns0:MonitoringSiteDescriptionCode)"/>
 		</MonitoringSiteDescriptionCode>
 	</xsl:template>
@@ -1534,7 +1537,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var386_create_MonitoringSiteDescriptionCode">
 		<xsl:param name="var385_current"/>
-		<MonitoringSiteDescriptionCode>
+		<MonitoringSiteDescriptionCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var385_current/ns0:MonitoringSiteDescriptionCode)"/>
 		</MonitoringSiteDescriptionCode>
 	</xsl:template>
@@ -1556,7 +1559,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var392_create_MonitoringSiteDescriptionCode">
 		<xsl:param name="var391_current"/>
-		<MonitoringSiteDescriptionCode>
+		<MonitoringSiteDescriptionCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var391_current/ns0:MonitoringSiteDescriptionCode)"/>
 		</MonitoringSiteDescriptionCode>
 	</xsl:template>
@@ -1570,7 +1573,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var396_create_MonitoringSiteDescriptionCode">
 		<xsl:param name="var395_current"/>
-		<MonitoringSiteDescriptionCode>
+		<MonitoringSiteDescriptionCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var395_current/ns0:MonitoringSiteDescriptionCode)"/>
 		</MonitoringSiteDescriptionCode>
 	</xsl:template>
@@ -1584,7 +1587,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var400_create_MonitoringSiteDescriptionCode">
 		<xsl:param name="var399_current"/>
-		<MonitoringSiteDescriptionCode>
+		<MonitoringSiteDescriptionCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var399_current/ns0:MonitoringSiteDescriptionCode)"/>
 		</MonitoringSiteDescriptionCode>
 	</xsl:template>
@@ -1598,7 +1601,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var404_create_MonitoringSiteDescriptionCode">
 		<xsl:param name="var403_current"/>
-		<MonitoringSiteDescriptionCode>
+		<MonitoringSiteDescriptionCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var403_current/ns0:MonitoringSiteDescriptionCode)"/>
 		</MonitoringSiteDescriptionCode>
 	</xsl:template>
@@ -1612,7 +1615,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var408_create_LimitSeasonNumber">
 		<xsl:param name="var407_current"/>
-		<LimitSeasonNumber>
+		<LimitSeasonNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(number(string($var407_current/ns0:LimitSeasonNumber)))"/>
 		</LimitSeasonNumber>
 	</xsl:template>
@@ -1626,7 +1629,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var412_create_LimitSeasonNumber">
 		<xsl:param name="var411_current"/>
-		<LimitSeasonNumber>
+		<LimitSeasonNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(number(string($var411_current/ns0:LimitSeasonNumber)))"/>
 		</LimitSeasonNumber>
 	</xsl:template>
@@ -1640,7 +1643,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var416_create_LimitSeasonNumber">
 		<xsl:param name="var415_current"/>
-		<LimitSeasonNumber>
+		<LimitSeasonNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(number(string($var415_current/ns0:LimitSeasonNumber)))"/>
 		</LimitSeasonNumber>
 	</xsl:template>
@@ -1654,7 +1657,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var420_create_LimitSeasonNumber">
 		<xsl:param name="var419_current"/>
-		<LimitSeasonNumber>
+		<LimitSeasonNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(number(string($var419_current/ns0:LimitSeasonNumber)))"/>
 		</LimitSeasonNumber>
 	</xsl:template>
@@ -1668,7 +1671,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var424_create_LimitSeasonNumber">
 		<xsl:param name="var423_current"/>
-		<LimitSeasonNumber>
+		<LimitSeasonNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(number(string($var423_current/ns0:LimitSeasonNumber)))"/>
 		</LimitSeasonNumber>
 	</xsl:template>
@@ -1682,7 +1685,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var428_create_LimitSeasonNumber">
 		<xsl:param name="var427_current"/>
-		<LimitSeasonNumber>
+		<LimitSeasonNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(number(string($var427_current/ns0:LimitSeasonNumber)))"/>
 		</LimitSeasonNumber>
 	</xsl:template>
@@ -1796,7 +1799,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var460_create_ComplianceMonitoringIdentifier">
 		<xsl:param name="var459_current"/>
-		<ComplianceMonitoringIdentifier>
+		<ComplianceMonitoringIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var459_current/ns0:ComplianceMonitoringIdentifier)"/>
 		</ComplianceMonitoringIdentifier>
 	</xsl:template>
@@ -1810,7 +1813,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var464_create_ComplianceMonitoringIdentifier">
 		<xsl:param name="var463_current"/>
-		<ComplianceMonitoringIdentifier>
+		<ComplianceMonitoringIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var463_current/ns0:ComplianceMonitoringIdentifier)"/>
 		</ComplianceMonitoringIdentifier>
 	</xsl:template>
@@ -1982,7 +1985,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var512_create_NarrativeConditionNumber">
 		<xsl:param name="var511_current"/>
-		<NarrativeConditionNumber>
+		<NarrativeConditionNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var511_current/ns0:NarrativeConditionNumber))))"/>
 		</NarrativeConditionNumber>
 	</xsl:template>
@@ -1996,7 +1999,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var516_create_NarrativeConditionNumber">
 		<xsl:param name="var515_current"/>
-		<NarrativeConditionNumber>
+		<NarrativeConditionNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var515_current/ns0:NarrativeConditionNumber))))"/>
 		</NarrativeConditionNumber>
 	</xsl:template>
@@ -2010,7 +2013,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var520_create_NarrativeConditionNumber">
 		<xsl:param name="var519_current"/>
-		<NarrativeConditionNumber>
+		<NarrativeConditionNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var519_current/ns0:NarrativeConditionNumber))))"/>
 		</NarrativeConditionNumber>
 	</xsl:template>
@@ -2032,7 +2035,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var526_create_NarrativeConditionNumber">
 		<xsl:param name="var525_current"/>
-		<NarrativeConditionNumber>
+		<NarrativeConditionNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var525_current/ns0:NarrativeConditionNumber))))"/>
 		</NarrativeConditionNumber>
 	</xsl:template>
@@ -2768,7 +2771,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var730_create_EnforcementActionIdentifier">
 		<xsl:param name="var729_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var729_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -2782,7 +2785,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var734_create_EnforcementActionIdentifier">
 		<xsl:param name="var733_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var733_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -2796,7 +2799,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var738_create_EnforcementActionIdentifier">
 		<xsl:param name="var737_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var737_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -2810,7 +2813,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var742_create_EnforcementActionIdentifier">
 		<xsl:param name="var741_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var741_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -2824,7 +2827,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var746_create_EnforcementActionIdentifier">
 		<xsl:param name="var745_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var745_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -2846,7 +2849,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var752_create_EnforcementActionIdentifier">
 		<xsl:param name="var751_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var751_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -2860,7 +2863,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var756_create_EnforcementActionIdentifier">
 		<xsl:param name="var755_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var755_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -2882,7 +2885,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var762_create_EnforcementActionIdentifier">
 		<xsl:param name="var761_current"/>
-		<EnforcementActionIdentifier2>
+		<EnforcementActionIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var761_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier2>
 	</xsl:template>
@@ -3245,7 +3248,7 @@ http://www.altova.com/mapforce
 			</xsl:if>
 		</xsl:variable>
 		<xsl:variable name="var863_let" select="($var864_resultof_greater or boolean(string($var862_AcceptedReport)))"/>
-		<SubmissionResult>
+		<SubmissionResult xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<SubmissionTypeName>
 				<xsl:call-template name="vmf:vmf1_inputtoresult">
 					<xsl:with-param name="input" select="string($var866_current/ns0:SubmissionTypeName)"/>
@@ -4142,7 +4145,7 @@ http://www.altova.com/mapforce
 				</xsl:call-template>
 			</xsl:for-each>
 			<xsl:if test="string($var863_let) != 'false'">
-				<ResultCode>
+				<ResultCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 					<xsl:choose>
 						<xsl:when test="string($var864_resultof_greater) != 'false'">
 							<xsl:value-of select="'MULTPL'"/>
@@ -4235,13 +4238,13 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var880_create_TransactionType">
 		<xsl:param name="var879_current"/>
-		<TransactionType>
+		<TransactionType xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var879_current/ns0:SubmissionTransactionTypeCode)"/>
 		</TransactionType>
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var882_create_PermitIdentifier">
 		<xsl:param name="var881_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var881_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4255,7 +4258,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var886_create_PermitIdentifier">
 		<xsl:param name="var885_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var885_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4269,7 +4272,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var890_create_PermitIdentifier">
 		<xsl:param name="var889_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var889_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4283,7 +4286,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var894_create_PermitIdentifier">
 		<xsl:param name="var893_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var893_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4297,7 +4300,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var898_create_PermitIdentifier">
 		<xsl:param name="var897_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var897_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4311,7 +4314,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var902_create_PermitIdentifier">
 		<xsl:param name="var901_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var901_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4325,7 +4328,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var906_create_PermitIdentifier">
 		<xsl:param name="var905_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var905_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4339,7 +4342,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var910_create_PermitIdentifier">
 		<xsl:param name="var909_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var909_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4353,7 +4356,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var914_create_PermitIdentifier">
 		<xsl:param name="var913_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var913_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4367,7 +4370,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var918_create_PermitIdentifier">
 		<xsl:param name="var917_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var917_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4381,7 +4384,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var922_create_PermitIdentifier">
 		<xsl:param name="var921_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var921_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4395,7 +4398,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var926_create_PermitIdentifier">
 		<xsl:param name="var925_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var925_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4409,7 +4412,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var930_create_PermitIdentifier">
 		<xsl:param name="var929_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var929_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4423,7 +4426,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var934_create_PermitIdentifier">
 		<xsl:param name="var933_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var933_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4437,7 +4440,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var938_create_PermitIdentifier">
 		<xsl:param name="var937_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var937_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4451,7 +4454,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var942_create_PermitIdentifier">
 		<xsl:param name="var941_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var941_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4465,7 +4468,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var946_create_PermitIdentifier">
 		<xsl:param name="var945_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var945_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4479,7 +4482,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var950_create_PermitIdentifier">
 		<xsl:param name="var949_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var949_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4493,7 +4496,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var954_create_PermitIdentifier">
 		<xsl:param name="var953_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var953_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4507,7 +4510,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var958_create_PermitIdentifier">
 		<xsl:param name="var957_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var957_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4521,7 +4524,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var962_create_PermitIdentifier">
 		<xsl:param name="var961_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var961_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4535,7 +4538,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var966_create_PermitIdentifier">
 		<xsl:param name="var965_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var965_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4549,7 +4552,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var970_create_PermitIdentifier">
 		<xsl:param name="var969_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var969_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4563,7 +4566,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var974_create_PermitIdentifier">
 		<xsl:param name="var973_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var973_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4577,7 +4580,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var978_create_PermitIdentifier">
 		<xsl:param name="var977_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var977_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4599,7 +4602,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var984_create_PermitIdentifier">
 		<xsl:param name="var983_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var983_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4621,7 +4624,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var990_create_PermitIdentifier">
 		<xsl:param name="var989_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var989_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4643,7 +4646,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var996_create_PermitIdentifier">
 		<xsl:param name="var995_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var995_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4665,7 +4668,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1002_create_PermitIdentifier">
 		<xsl:param name="var1001_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1001_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4687,7 +4690,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1008_create_PermitIdentifier">
 		<xsl:param name="var1007_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1007_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4709,7 +4712,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1014_create_PermitIdentifier">
 		<xsl:param name="var1013_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1013_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4731,7 +4734,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1020_create_PermitIdentifier">
 		<xsl:param name="var1019_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1019_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4745,7 +4748,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1024_create_PermitIdentifier">
 		<xsl:param name="var1023_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1023_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4759,7 +4762,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1028_create_PermitIdentifier">
 		<xsl:param name="var1027_current"/>
-		<PermitIdentifier>
+		<PermitIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1027_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier>
 	</xsl:template>
@@ -4773,7 +4776,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1032_create_PermitIdentifier">
 		<xsl:param name="var1031_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1031_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -4795,7 +4798,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1038_create_PermitIdentifier">
 		<xsl:param name="var1037_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1037_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -4817,7 +4820,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1044_create_PermitIdentifier">
 		<xsl:param name="var1043_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1043_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -4839,7 +4842,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1050_create_PermitIdentifier">
 		<xsl:param name="var1049_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1049_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -4861,7 +4864,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1056_create_PermitIdentifier">
 		<xsl:param name="var1055_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1055_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -4883,7 +4886,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1062_create_PermitIdentifier">
 		<xsl:param name="var1061_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1061_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -4905,7 +4908,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1068_create_PermitIdentifier">
 		<xsl:param name="var1067_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1067_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -4927,7 +4930,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1074_create_PermitIdentifier">
 		<xsl:param name="var1073_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1073_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -4949,7 +4952,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1080_create_PermitIdentifier">
 		<xsl:param name="var1079_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1079_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -4971,7 +4974,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1086_create_PermitIdentifier">
 		<xsl:param name="var1085_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1085_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -4993,7 +4996,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1092_create_PermitIdentifier">
 		<xsl:param name="var1091_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1091_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -5015,7 +5018,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1098_create_PermitIdentifier">
 		<xsl:param name="var1097_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1097_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -5037,7 +5040,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1104_create_PermitIdentifier">
 		<xsl:param name="var1103_current"/>
-		<PermitIdentifier2>
+		<PermitIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1103_current/ns0:PermitIdentifier)"/>
 		</PermitIdentifier2>
 	</xsl:template>
@@ -5059,7 +5062,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1110_create_PermittedFeatureIdentifier">
 		<xsl:param name="var1109_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1109_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -5073,7 +5076,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1114_create_PermittedFeatureIdentifier">
 		<xsl:param name="var1113_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1113_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -5087,7 +5090,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1118_create_PermittedFeatureIdentifier">
 		<xsl:param name="var1117_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1117_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -5109,7 +5112,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1124_create_PermittedFeatureIdentifier">
 		<xsl:param name="var1123_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1123_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -5123,7 +5126,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1128_create_PermittedFeatureIdentifier">
 		<xsl:param name="var1127_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1127_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -5137,7 +5140,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1132_create_PermittedFeatureIdentifier">
 		<xsl:param name="var1131_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1131_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -5151,7 +5154,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1136_create_PermittedFeatureIdentifier">
 		<xsl:param name="var1135_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1135_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -5165,7 +5168,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1140_create_PermittedFeatureIdentifier">
 		<xsl:param name="var1139_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1139_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -5179,7 +5182,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1144_create_PermittedFeatureIdentifier">
 		<xsl:param name="var1143_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1143_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -5193,7 +5196,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1148_create_PermittedFeatureIdentifier">
 		<xsl:param name="var1147_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1147_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -5207,7 +5210,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1152_create_PermittedFeatureIdentifier">
 		<xsl:param name="var1151_current"/>
-		<PermittedFeatureIdentifier>
+		<PermittedFeatureIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1151_current/ns0:PermittedFeatureIdentifier)"/>
 		</PermittedFeatureIdentifier>
 	</xsl:template>
@@ -5229,7 +5232,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1158_create_LimitSetDesignator">
 		<xsl:param name="var1157_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1157_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -5243,7 +5246,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1162_create_LimitSetDesignator">
 		<xsl:param name="var1161_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1161_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -5257,7 +5260,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1166_create_LimitSetDesignator">
 		<xsl:param name="var1165_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1165_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -5271,7 +5274,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1170_create_LimitSetDesignator">
 		<xsl:param name="var1169_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1169_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -5285,7 +5288,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1174_create_LimitSetDesignator">
 		<xsl:param name="var1173_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1173_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -5299,7 +5302,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1178_create_LimitSetDesignator">
 		<xsl:param name="var1177_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1177_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -5313,7 +5316,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1182_create_LimitSetDesignator">
 		<xsl:param name="var1181_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1181_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -5327,7 +5330,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1186_create_LimitSetDesignator">
 		<xsl:param name="var1185_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1185_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -5341,7 +5344,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1190_create_LimitSetDesignator">
 		<xsl:param name="var1189_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1189_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -5363,7 +5366,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1196_create_LimitSetDesignator">
 		<xsl:param name="var1195_current"/>
-		<LimitSetDesignator>
+		<LimitSetDesignator xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1195_current/ns0:LimitSetDesignator)"/>
 		</LimitSetDesignator>
 	</xsl:template>
@@ -5485,7 +5488,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1230_create_ParameterCode">
 		<xsl:param name="var1229_current"/>
-		<ParameterCode>
+		<ParameterCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1229_current/ns0:ParameterCode)"/>
 		</ParameterCode>
 	</xsl:template>
@@ -5499,7 +5502,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1234_create_ParameterCode">
 		<xsl:param name="var1233_current"/>
-		<ParameterCode>
+		<ParameterCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1233_current/ns0:ParameterCode)"/>
 		</ParameterCode>
 	</xsl:template>
@@ -5513,7 +5516,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1238_create_ParameterCode">
 		<xsl:param name="var1237_current"/>
-		<ParameterCode>
+		<ParameterCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1237_current/ns0:ParameterCode)"/>
 		</ParameterCode>
 	</xsl:template>
@@ -5527,7 +5530,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1242_create_ParameterCode">
 		<xsl:param name="var1241_current"/>
-		<ParameterCode>
+		<ParameterCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1241_current/ns0:ParameterCode)"/>
 		</ParameterCode>
 	</xsl:template>
@@ -5541,7 +5544,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1246_create_ParameterCode">
 		<xsl:param name="var1245_current"/>
-		<ParameterCode>
+		<ParameterCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1245_current/ns0:ParameterCode)"/>
 		</ParameterCode>
 	</xsl:template>
@@ -5555,7 +5558,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1250_create_ParameterCode">
 		<xsl:param name="var1249_current"/>
-		<ParameterCode>
+		<ParameterCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1249_current/ns0:ParameterCode)"/>
 		</ParameterCode>
 	</xsl:template>
@@ -5577,7 +5580,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1256_create_MonitoringSiteDescriptionCode">
 		<xsl:param name="var1255_current"/>
-		<MonitoringSiteDescriptionCode>
+		<MonitoringSiteDescriptionCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1255_current/ns0:MonitoringSiteDescriptionCode)"/>
 		</MonitoringSiteDescriptionCode>
 	</xsl:template>
@@ -5591,7 +5594,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1260_create_MonitoringSiteDescriptionCode">
 		<xsl:param name="var1259_current"/>
-		<MonitoringSiteDescriptionCode>
+		<MonitoringSiteDescriptionCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1259_current/ns0:MonitoringSiteDescriptionCode)"/>
 		</MonitoringSiteDescriptionCode>
 	</xsl:template>
@@ -5613,7 +5616,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1266_create_MonitoringSiteDescriptionCode">
 		<xsl:param name="var1265_current"/>
-		<MonitoringSiteDescriptionCode>
+		<MonitoringSiteDescriptionCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1265_current/ns0:MonitoringSiteDescriptionCode)"/>
 		</MonitoringSiteDescriptionCode>
 	</xsl:template>
@@ -5627,7 +5630,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1270_create_MonitoringSiteDescriptionCode">
 		<xsl:param name="var1269_current"/>
-		<MonitoringSiteDescriptionCode>
+		<MonitoringSiteDescriptionCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1269_current/ns0:MonitoringSiteDescriptionCode)"/>
 		</MonitoringSiteDescriptionCode>
 	</xsl:template>
@@ -5641,7 +5644,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1274_create_MonitoringSiteDescriptionCode">
 		<xsl:param name="var1273_current"/>
-		<MonitoringSiteDescriptionCode>
+		<MonitoringSiteDescriptionCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1273_current/ns0:MonitoringSiteDescriptionCode)"/>
 		</MonitoringSiteDescriptionCode>
 	</xsl:template>
@@ -5655,7 +5658,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1278_create_MonitoringSiteDescriptionCode">
 		<xsl:param name="var1277_current"/>
-		<MonitoringSiteDescriptionCode>
+		<MonitoringSiteDescriptionCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1277_current/ns0:MonitoringSiteDescriptionCode)"/>
 		</MonitoringSiteDescriptionCode>
 	</xsl:template>
@@ -5669,7 +5672,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1282_create_LimitSeasonNumber">
 		<xsl:param name="var1281_current"/>
-		<LimitSeasonNumber>
+		<LimitSeasonNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(number(string($var1281_current/ns0:LimitSeasonNumber)))"/>
 		</LimitSeasonNumber>
 	</xsl:template>
@@ -5683,7 +5686,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1286_create_LimitSeasonNumber">
 		<xsl:param name="var1285_current"/>
-		<LimitSeasonNumber>
+		<LimitSeasonNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(number(string($var1285_current/ns0:LimitSeasonNumber)))"/>
 		</LimitSeasonNumber>
 	</xsl:template>
@@ -5705,7 +5708,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1292_create_LimitSeasonNumber">
 		<xsl:param name="var1291_current"/>
-		<LimitSeasonNumber>
+		<LimitSeasonNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(number(string($var1291_current/ns0:LimitSeasonNumber)))"/>
 		</LimitSeasonNumber>
 	</xsl:template>
@@ -5719,7 +5722,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1296_create_LimitSeasonNumber">
 		<xsl:param name="var1295_current"/>
-		<LimitSeasonNumber>
+		<LimitSeasonNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(number(string($var1295_current/ns0:LimitSeasonNumber)))"/>
 		</LimitSeasonNumber>
 	</xsl:template>
@@ -5733,7 +5736,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1300_create_LimitSeasonNumber">
 		<xsl:param name="var1299_current"/>
-		<LimitSeasonNumber>
+		<LimitSeasonNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(number(string($var1299_current/ns0:LimitSeasonNumber)))"/>
 		</LimitSeasonNumber>
 	</xsl:template>
@@ -5747,7 +5750,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1304_create_LimitSeasonNumber">
 		<xsl:param name="var1303_current"/>
-		<LimitSeasonNumber>
+		<LimitSeasonNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(number(string($var1303_current/ns0:LimitSeasonNumber)))"/>
 		</LimitSeasonNumber>
 	</xsl:template>
@@ -5853,7 +5856,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1334_create_ComplianceMonitoringIdentifier">
 		<xsl:param name="var1333_current"/>
-		<ComplianceMonitoringIdentifier>
+		<ComplianceMonitoringIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1333_current/ns0:ComplianceMonitoringIdentifier)"/>
 		</ComplianceMonitoringIdentifier>
 	</xsl:template>
@@ -5867,7 +5870,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1338_create_ComplianceMonitoringIdentifier">
 		<xsl:param name="var1337_current"/>
-		<ComplianceMonitoringIdentifier>
+		<ComplianceMonitoringIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1337_current/ns0:ComplianceMonitoringIdentifier)"/>
 		</ComplianceMonitoringIdentifier>
 	</xsl:template>
@@ -6039,7 +6042,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1386_create_NarrativeConditionNumber">
 		<xsl:param name="var1385_current"/>
-		<NarrativeConditionNumber>
+		<NarrativeConditionNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1385_current/ns0:NarrativeConditionNumber))))"/>
 		</NarrativeConditionNumber>
 	</xsl:template>
@@ -6053,7 +6056,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1390_create_NarrativeConditionNumber">
 		<xsl:param name="var1389_current"/>
-		<NarrativeConditionNumber>
+		<NarrativeConditionNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1389_current/ns0:NarrativeConditionNumber))))"/>
 		</NarrativeConditionNumber>
 	</xsl:template>
@@ -6067,7 +6070,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1394_create_NarrativeConditionNumber">
 		<xsl:param name="var1393_current"/>
-		<NarrativeConditionNumber>
+		<NarrativeConditionNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1393_current/ns0:NarrativeConditionNumber))))"/>
 		</NarrativeConditionNumber>
 	</xsl:template>
@@ -6089,7 +6092,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1400_create_NarrativeConditionNumber">
 		<xsl:param name="var1399_current"/>
-		<NarrativeConditionNumber>
+		<NarrativeConditionNumber xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1399_current/ns0:NarrativeConditionNumber))))"/>
 		</NarrativeConditionNumber>
 	</xsl:template>
@@ -6825,7 +6828,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1604_create_EnforcementActionIdentifier">
 		<xsl:param name="var1603_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1603_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -6839,7 +6842,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1608_create_EnforcementActionIdentifier">
 		<xsl:param name="var1607_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier >
 			<xsl:value-of select="string($var1607_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -6853,7 +6856,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1612_create_EnforcementActionIdentifier">
 		<xsl:param name="var1611_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1611_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -6867,7 +6870,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1616_create_EnforcementActionIdentifier">
 		<xsl:param name="var1615_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1615_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -6881,7 +6884,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1620_create_EnforcementActionIdentifier">
 		<xsl:param name="var1619_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1619_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -6895,7 +6898,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1624_create_EnforcementActionIdentifier">
 		<xsl:param name="var1623_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1623_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -6917,7 +6920,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1630_create_EnforcementActionIdentifier">
 		<xsl:param name="var1629_current"/>
-		<EnforcementActionIdentifier>
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1629_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -6939,7 +6942,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1636_create_EnforcementActionIdentifier">
 		<xsl:param name="var1635_current"/>
-		<EnforcementActionIdentifier2>
+		<EnforcementActionIdentifier2 xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1635_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier2>
 	</xsl:template>
@@ -7221,7 +7224,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1714_create_ResultCode">
 		<xsl:param name="var1713_current"/>
-		<ResultCode>
+		<ResultCode xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1713_current)"/>
 		</ResultCode>
 	</xsl:template>
@@ -7230,7 +7233,7 @@ http://www.altova.com/mapforce
 		<xsl:param name="var1716_current"/>
 		<xsl:param name="var1717_current"/>
 		<xsl:param name="var1718_current"/>
-		<SubmissionResult>
+		<SubmissionResult xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<SubmissionTypeName>
 				<xsl:call-template name="vmf:vmf1_inputtoresult">
 					<xsl:with-param name="input" select="string($var1715_current/ns0:SubmissionTypeName)"/>
@@ -8189,8 +8192,10 @@ http://www.altova.com/mapforce
 		</xsl:for-each>
 	</xsl:template>
 	<xsl:template match="/">
-		<SubmissionResultList>
-			<xsl:attribute name="xsi:noNamespaceSchemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">C:/projects/prod-node-db/ICIS/5.0/updated_xslt/ICS_SubmissionResults.xsd</xsl:attribute>
+		<SubmissionResultList xmlns="http://www.exchangenetwork.net/schema/icis/5">
+			<xsl:attribute name="xsi:noNamespaceSchemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">
+                <xsl:value-of select="'ICS_SubmissionResults.xsd'"/>
+            </xsl:attribute>
 			<xsl:for-each select="ns0:SubmissionResponse">
 				<xsl:call-template name="agt:MapToICS_SubmissionResults_var1735_function">
 					<xsl:with-param name="var1734_current" select="."/>

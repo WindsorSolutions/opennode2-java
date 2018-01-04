@@ -11,7 +11,7 @@
     <name>Node Plugin - ICIS NPDES v5</name>
     <properties>
         <node.plugin.name>icisnpdes</node.plugin.name>
-        <node.plugin.build.number>71</node.plugin.build.number>
+        <node.plugin.build.number>82</node.plugin.build.number>
         <node.plugin.description>Submits data to EPA ICIS-NPDES System. Data to be submitted must be loaded into the staging tables that accompany this plugin.</node.plugin.description>
         <node.plugin.help.text>Integrated Compliance Information System - NPDES Plugin</node.plugin.help.text>
     </properties>
@@ -33,6 +33,24 @@
                         <version>2.14</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <delete file="target/generated-sources/xjc/com/windsor/node/plugin/icisnpdes/generated/SubmissionResult.java" />
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

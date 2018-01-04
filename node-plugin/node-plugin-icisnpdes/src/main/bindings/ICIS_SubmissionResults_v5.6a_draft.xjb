@@ -7,11 +7,14 @@
 	<jaxb:bindings>
 		<jaxb:bindings node="//xsd:element[@name='SubmissionResultList']/xsd:complexType">
 			<hj:ignored/>
+
+			<jaxb:bindings node="//xsd:element[@name='SubmissionResult']/xsd:complexType">
+				<!--<inheritance:extends>com.windsor.node.plugin.icisnpdes.domain.AbstractSubmissionResult</inheritance:extends>-->
+				<!--<hj:entity>-->
+					<!--<orm:table name="ICS_SUBM_RESULTS"/>-->
+				<!--</hj:entity>-->
+				<hj:ignored/>
+			</jaxb:bindings>
 		</jaxb:bindings>
 	</jaxb:bindings>
-	<!--<jaxb:bindings>-->
-		<!--<jaxb:bindings node="//xsd:element[@name='SubmissionResult']//xsd:complexType">-->
-			<!--<hj:ignored/>-->
-		<!--</jaxb:bindings>-->
-	<!--</jaxb:bindings>-->
 </jaxb:bindings>
