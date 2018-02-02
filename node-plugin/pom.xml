@@ -32,7 +32,7 @@
         <module>node-plugin-mapforcebridge</module>
         <module>node-plugin-nct</module>
         <module>node-plugin-rcra50</module>
-        <module>node-plugin-rcra54</module>
+        <module>node-plugin-rcra56</module>
         <module>node-plugin-rcra54-outbound</module>
         <module>node-plugin-sdwis</module>
         <module>node-plugin-uic</module>
