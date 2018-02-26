@@ -732,7 +732,7 @@ application schema.</documentation>
 		</sequence>
 <!--		<attributeGroup ref="gml:AssociationAttributeGroup"/> -->
 	</complexType>
-	<!--&lt;!&ndash; =========================================================== &ndash;&gt;-->
+	<!-- =========================================================== -->
 	<!--<element name="_FeatureCollection" type="gml:AbstractFeatureCollectionType" abstract="true" substitutionGroup="gml:_Feature"/>-->
 	<!--&lt;!&ndash; ===========================================================   &ndash;&gt;-->
 	<!--<complexType name="AbstractFeatureCollectionType" abstract="true">-->
