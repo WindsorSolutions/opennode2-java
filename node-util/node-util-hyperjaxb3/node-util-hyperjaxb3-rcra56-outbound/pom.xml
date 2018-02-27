@@ -6,7 +6,7 @@
 		<artifactId>node-util-hyperjaxb3</artifactId>
 		<version>2.14</version>
 	</parent>
-	<artifactId>node-util-hyperjaxb3-rcra54-outbound</artifactId>
+	<artifactId>node-util-hyperjaxb3-rcra56-outbound</artifactId>
 	<packaging>jar</packaging>
-	<name>Node Util - Hyperjaxb3 - rcra54 - outbound</name>
+	<name>Node Util - Hyperjaxb3 - rcra56 - outbound</name>
 </project>

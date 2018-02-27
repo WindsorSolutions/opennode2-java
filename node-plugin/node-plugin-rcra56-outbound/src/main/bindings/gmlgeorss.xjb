@@ -4,7 +4,7 @@
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
                jaxb:extensionBindingPrefixes="hj orm"
                version="2.1">
-    <jaxb:bindings schemaLocation="../xsd/5/3/gmlgeorss.xsd">
+    <jaxb:bindings schemaLocation="../xsd/5/6/gmlgeorss.xsd">
 
        <jaxb:bindings node="//xsd:element[@name='_FeatureCollection']">
             <jaxb:factoryMethod name="FeatureCollectionPrivate"/>

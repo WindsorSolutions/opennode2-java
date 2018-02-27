@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
+               xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+               jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/6/RCRA_ReportUniv_v5.6.xsd">
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:LocationAddress']">
+        <hj:one-to-one>
+            <orm:join-column name="LOCADDRESSID"/>
+        </hj:one-to-one>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:MailingAddress']">
+        <hj:one-to-one>
+            <orm:join-column name="MAILINGADDRESSID"/>
+        </hj:one-to-one>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:RUContactAddress']">
+        <hj:one-to-one>
+            <orm:join-column name="CONTACTADDRESSID"/>
+        </hj:one-to-one>
+    </jaxb:bindings>
+
+</jaxb:bindings>
+
