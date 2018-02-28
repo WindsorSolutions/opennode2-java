@@ -27,7 +27,7 @@ public class SolicitOpCHByState extends SolicitOperation {
 
     @Override
     public SolicitRequestType getRequestType() {
-        return SolicitRequestType.PM_BY_STATE;
+        return SolicitRequestType.CH_BY_STATE;
     }
 
     @Override
