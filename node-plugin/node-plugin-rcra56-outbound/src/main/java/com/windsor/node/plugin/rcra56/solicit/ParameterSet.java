@@ -49,6 +49,12 @@ public enum ParameterSet {
     PM_DATA_BY_STATE(SolicitRequestType.PM_BY_STATE, new PluginServiceParameterDescriptor[] {
             PARAM_USE_SOLICIT_HISTORY, PARAM_STATE_REQ, PARAM_CHANGE_DATE
     }),
+    CH_DATA_BY_HANDLER(SolicitRequestType.CH_BY_HANDLER, new PluginServiceParameterDescriptor[] {
+            PARAM_USE_SOLICIT_HISTORY, PARAM_HANDLER_ID_REQ, PARAM_CHANGE_DATE
+    }),
+    CH_DATA_BY_STATE(SolicitRequestType.CH_BY_STATE, new PluginServiceParameterDescriptor[] {
+            PARAM_USE_SOLICIT_HISTORY, PARAM_STATE_REQ, PARAM_CHANGE_DATE
+    }),
     HD_MAX_SEQUENCE(SolicitRequestType.HD_MAX_SEQUENCE, new PluginServiceParameterDescriptor[] {
             PARAM_USE_SOLICIT_HISTORY, PARAM_HANDLER_ID_REQ, PARAM_SOURCE_TYPE, PARAM_STATE
     });
