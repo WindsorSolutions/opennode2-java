@@ -12,7 +12,7 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:FederalWasteGenerator']">
         <hj:one-to-one>
-            <orm:join-column name="WASTEGENTRID"/>
+            <orm:join-column name="WASTEGENRTRID"/>
         </hj:one-to-one>
     </jaxb:bindings>
 
@@ -74,6 +74,12 @@
         <hj:one-to-one>
             <orm:join-column name="SITEWASTEACTID"/>
         </hj:one-to-one>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HandlerLqgConsolidation']">
+        <hj:one-to-many>
+            <orm:join-column name="HANDLER_ID"/>
+        </hj:one-to-many>
     </jaxb:bindings>
 
 </jaxb:bindings>
