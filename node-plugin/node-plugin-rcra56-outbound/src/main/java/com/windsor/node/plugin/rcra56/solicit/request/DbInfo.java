@@ -8,7 +8,7 @@ public enum DbInfo {
     GS("GS", "from GeographicInformationSubmissionDataType where id > 0"),
     HD("HD", "from HazardousWasteHandlerSubmissionDataType where id > 0"),
     PM("PM", "from HazardousWastePermitDataType where id > 0"),
-    CH("CH", "from UniversalWasteActivityDataType where id > 0");
+    CH("CH", "from ReportUnivSubmissionDataType where id > 0");
 
     private String type;
     private String cleanup;

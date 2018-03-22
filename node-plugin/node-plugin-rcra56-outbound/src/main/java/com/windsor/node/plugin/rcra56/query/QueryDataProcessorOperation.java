@@ -333,7 +333,8 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
         getTargetEntityManager().getTransaction().begin();
         List<String> entityClasses = Arrays.asList("HazardousWasteCorrectiveActionDataType",
                 "HazardousWasteCMESubmissionDataType", "FinancialAssuranceFacilitySubmissionDataType",
-                "HazardousWasteHandlerSubmissionDataType", "HazardousWastePermitDataType");
+                "HazardousWasteHandlerSubmissionDataType", "HazardousWastePermitDataType",
+                "ReportUnivSubmissionDataType");
         for (String name : entityClasses) {
             List<Object> entities = getTargetEntityManager().createQuery(String.format("from %s where 1 = 1", name)).getResultList();
             for (Object entity: entities) {
