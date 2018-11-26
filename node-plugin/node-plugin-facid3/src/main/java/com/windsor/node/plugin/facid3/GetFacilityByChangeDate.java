@@ -134,7 +134,8 @@ public class GetFacilityByChangeDate extends BaseFacIdGetFacilityService
             Date parsedChangeDate = null;
             try
             {
-                parsedChangeDate = DateUtils.parseDate(changeDate, new String[]{"yyyy/MM/dd", "yyyy-MM-dd"});
+                parsedChangeDate = DateUtils.parseDate(changeDate, new String[]{"MM/dd/yyyy", "yyyy-MM-dd"});
+                logger.info("Using Change Date: " + parsedChangeDate);
             }
             catch(ParseException e)
             {
