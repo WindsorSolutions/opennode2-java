@@ -14,7 +14,7 @@ public class ScheduleConfig {
     @SpringBean
     private ExchangeService service;
 
-    @Scheduled(cron = "*/5 * * * *") // cron = "0 3 * * *"
+    @Scheduled(cron = "*/5 * * * * *") // cron = "0 3 * * * *"
     public void cleanupDocumentFiles() {
         service.cleanupDocumentFiles();
     }
