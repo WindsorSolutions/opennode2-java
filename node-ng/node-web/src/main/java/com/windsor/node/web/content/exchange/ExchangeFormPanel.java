@@ -111,6 +111,15 @@ public class ExchangeFormPanel extends ModalizablePanel<EditExchangeBean> {
 
         form.add(new Label("labelProtected", new IdentifiableResourceModel(NodeResourceModelKeys.LABEL_PROTECTED_TEXT)));
 
+        form.add(new RequirableFormGroup("filesGroup")
+                .add(new CheckBox("checkbox", EditExchangeBeanModels.bindAutoDeleteFiles(getModel())))
+                .add(new Label("label", new IdentifiableResourceModel(NodeResourceModelKeys.LABEL_FILES_DELETE))));
+
+        form.add(new RequirableFormGroup("filesAgeGroup")
+                .add(new TextField<>("field", EditExchangeBeanModels.bindAutoDeleteFileAge(getModel()))
+                        .setLabel(new IdentifiableResourceModel(NodeResourceModelKeys.LABEL_FILES_AGE))
+                        .add(new InputBehavior())));
+
         form.add(new Label("labelPluginInformation",
                 new IdentifiableResourceModel(NodeResourceModelKeys.LABEL_PLUGIN_INFORMATION)));
 

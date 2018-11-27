@@ -22,6 +22,8 @@ public final class EditExchangeBeanModels {
     public static final LazyModel<String> NAME = model(from(EditExchangeBean.class).getName());
     public static final LazyModel<String> TARGET_EXCHANGE_NAME = model(from(EditExchangeBean.class).getTargetExchangeName());
     public static final LazyModel<String> URL = model(from(EditExchangeBean.class).getUrl());
+    public static final LazyModel<Boolean> AUTO_DELETE_FILES = model(from(EditExchangeBean.class).isAutoDeleteFiles());
+    public static final LazyModel<Integer> AUTO_DELETE_FILE_AGE = model(from(EditExchangeBean.class).getAutoDeleteFileAge());
 
     private EditExchangeBeanModels() {
 
@@ -59,4 +61,11 @@ public final class EditExchangeBeanModels {
         return URL.bind(model);
     }
 
+    public static IModel<Boolean> bindAutoDeleteFiles(IModel<EditExchangeBean> model) {
+        return AUTO_DELETE_FILES.bind(model);
+    }
+
+    public static IModel<Integer> bindAutoDeleteFileAge(IModel<EditExchangeBean> model) {
+        return AUTO_DELETE_FILE_AGE.bind(model);
+    }
 }
