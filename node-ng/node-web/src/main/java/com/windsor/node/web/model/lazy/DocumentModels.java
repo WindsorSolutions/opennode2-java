@@ -16,6 +16,7 @@ public class DocumentModels {
 
     public static final LazyModel<String> NAME = model(from(Document.class).getName());
     public static final LazyModel<DocumentType> TYPE = model(from(Document.class).getType());
+    public static final LazyModel<byte[]> CONTENT = model(from(Document.class).getContent());
 
     private DocumentModels() {
 
@@ -27,6 +28,10 @@ public class DocumentModels {
 
     public static IModel<DocumentType> bindType(IModel<Document> model) {
         return TYPE.bind(model);
+    }
+
+    public static IModel<byte[]> bindContent(IModel<Document> model) {
+        return CONTENT.bind(model);
     }
 
 }

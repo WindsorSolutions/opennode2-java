@@ -91,15 +91,28 @@ public class TransactionDetailPanel extends Panel {
             @Override
             protected void populateItem(ListItem<Document> item) {
                 IModel<Document> docModel = item.getModel();
-                item.add(new Icon("icon", GlyphIconType.paperclip));
-                AjaxLink<?> link = new AjaxLink<Document>("link", docModel) {
 
-                    @Override
-                    public void onClick(AjaxRequestTarget target) {
-                        send(this, Broadcast.BUBBLE, new DownloadEvent<>(target, item.getModelObject()));
-                    }
+                // determine if we still have the content for this document
+                final boolean docContentAvailable = DocumentModels.bindContent(docModel).getObject() != null;
 
-                };
+                GlyphIconType iconType = docContentAvailable ? GlyphIconType.paperclip : GlyphIconType.bancircle;
+
+                item.add(new Icon("icon", iconType));
+
+                WebMarkupContainer link = null;
+                if(docContentAvailable) {
+                    link = new AjaxLink<Document>("link", docModel) {
+
+                        @Override
+                        public void onClick(AjaxRequestTarget target) {
+                            send(this, Broadcast.BUBBLE, new DownloadEvent<>(target, item.getModelObject()));
+                        }
+
+                    };
+                } else {
+                    link = new WebMarkupContainer("link", docModel);
+                }
+
                 item.add(link);
                 link.add(new Label("name", DocumentModels.bindName(docModel)));
                 link.add(new Label("type", DocumentModels.bindType(docModel)));
