@@ -1,6 +1,6 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-    <form wicket:id="form">
+    <div wicket:id="form">
         <div class="row">
             <div class="col-xs-12 col-md-12 col-lg-12">
                 <div wicket:id="nameGroup">
@@ -48,16 +48,23 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-12 col-lg-12">
-                <div wicket:id="filesGroup">
-                    <br/><b><span wicket:id="labelFiles">[PLUGIN]</span></b><br/>
+                <br/><b><span wicket:id="labelFiles">[PLUGIN]</span></b>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-inline">
+                <div wicket:id="filesGroup" class="form-group mb-2">
                     <input type="checkbox" wicket:id="field"/>
                     <span wicket:id="label">[AUTO DELETE]</span>
                 </div>
-                <div wicket:id="filesAgeGroup" style="margin-left: 1em;">
-                    <input wicket:id="field" class="form-control" />&nbsp;<span wicket:id="label">[PROTECTED]</span>
+                <div wicket:id="filesAgeGroup" class="form-group mx-sm-3 mb-2">
+                    <input wicket:id="field" class="form-control" />
                 </div>
+                <span wicket:id="labelDays">[DAYS]</span>
             </div>
         </div>
+
         <div class="row">
             <div class="col-xs-12 col-md-12 col-lg-12">
                 <div wicket:id="pluginGroup">
