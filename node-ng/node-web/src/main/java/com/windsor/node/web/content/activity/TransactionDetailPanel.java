@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -99,23 +100,34 @@ public class TransactionDetailPanel extends Panel {
 
                 item.add(new Icon("icon", iconType));
 
-                WebMarkupContainer link = null;
+                AjaxLink<?> link = new AjaxLink<Document>("link", docModel) {
+
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+                        send(this, Broadcast.BUBBLE, new DownloadEvent<>(target, item.getModelObject()));
+                    }
+
+                };
+                link.add(new Label("name", DocumentModels.bindName(docModel)));
+                link.add(new Label("type", DocumentModels.bindType(docModel)));
+
+
+                WebMarkupContainer nolink = new WebMarkupContainer("nolink", docModel);
+                nolink.add(AttributeModifier.append("title",
+                        "The content for this document has automatically been deleted"));
+                nolink.add(new Label("name", DocumentModels.bindName(docModel)));
+                nolink.add(new Label("type", DocumentModels.bindType(docModel)));
+
                 if(docContentAvailable) {
-                    link = new AjaxLink<Document>("link", docModel) {
-
-                        @Override
-                        public void onClick(AjaxRequestTarget target) {
-                            send(this, Broadcast.BUBBLE, new DownloadEvent<>(target, item.getModelObject()));
-                        }
-
-                    };
+                    item.add(new Label("status", Model.of("")));
+                    nolink.setVisible(false);
                 } else {
-                    link = new WebMarkupContainer("link", docModel);
+                    item.add(new Label("status", Model.of("Deleted")));
+                    link.setVisible(false);
                 }
 
                 item.add(link);
-                link.add(new Label("name", DocumentModels.bindName(docModel)));
-                link.add(new Label("type", DocumentModels.bindType(docModel)));
+                item.add(nolink);
             }
         });
 
