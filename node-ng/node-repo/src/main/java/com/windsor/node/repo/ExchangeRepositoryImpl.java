@@ -18,12 +18,16 @@ import com.windsor.stack.repo.search.querydsl.AbstractQuerydslFinderRepository;
 import com.windsor.stack.repo.search.querydsl.QuerydslFieldHandler;
 import com.windsor.stack.repo.search.querydsl.QuerydslJoinInfo;
 import com.windsor.stack.repo.search.querydsl.QuerydslUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides an implementation of the Exchange Repository.
  */
 public class ExchangeRepositoryImpl extends AbstractQuerydslFinderRepository<Exchange, ExchangeSearchCriteria, ExchangeSort>
         implements IFinderRepository<Exchange, ExchangeSearchCriteria, ExchangeSort>, ExchangeRepositoryCustom {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExchangeRepositoryImpl.class);
 
     private static final Map<Object, List<QuerydslJoinInfo>> ENTITY_ALIAS_MAP =
             ImmutableMap.<Object, List<QuerydslJoinInfo>> builder()
@@ -99,6 +103,7 @@ public class ExchangeRepositoryImpl extends AbstractQuerydslFinderRepository<Exc
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, (exchange.getAutoDeleteFileAge() * -1));
+        LOGGER.info("Clearing documents for exchange \"" + exchange.getName() + "\" older than " + calendar.getTime());
 
         String query = "update Document as d set d.content = null where d.transaction.id in ("
                 + "  select t.id from Transaction t where t.exchange.id = :eid"

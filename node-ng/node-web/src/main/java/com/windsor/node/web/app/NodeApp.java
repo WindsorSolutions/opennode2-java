@@ -34,6 +34,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
@@ -51,6 +52,7 @@ import net.bull.javamelody.SessionListener;
 /**
  * Bootstraps the Node Administration web application.
  */
+@EnableScheduling
 @EnableJpaAuditing
 @EnableAutoConfiguration(exclude = DataSourceAutoConfiguration.class)
 @Configuration
