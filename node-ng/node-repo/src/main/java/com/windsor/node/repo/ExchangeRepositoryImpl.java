@@ -1,5 +1,6 @@
 package com.windsor.node.repo;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import com.google.common.collect.ImmutableMap;
@@ -101,9 +102,8 @@ public class ExchangeRepositoryImpl extends AbstractQuerydslFinderRepository<Exc
             return;
         }
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, (exchange.getAutoDeleteFileAge() * -1));
-        LOGGER.info("Clearing documents for exchange \"" + exchange.getName() + "\" older than " + calendar.getTime());
+        LocalDateTime localDateTime =  LocalDateTime.now().minusDays(exchange.getAutoDeleteFileAge());
+        LOGGER.info("Clearing documents for exchange \"" + exchange.getName() + "\" older than " + localDateTime);
 
         String query = "update Document as d set d.content = null where d.transaction.id in ("
                 + "  select t.id from Transaction t where t.exchange.id = :eid"
@@ -111,7 +111,7 @@ public class ExchangeRepositoryImpl extends AbstractQuerydslFinderRepository<Exc
                 + ")";
         getEntityManager().createQuery(query)
                 .setParameter("eid", exchange.getId())
-                .setParameter("mdate", calendar.getTime())
+                .setParameter("mdate", localDateTime)
                 .executeUpdate();
     }
 }
