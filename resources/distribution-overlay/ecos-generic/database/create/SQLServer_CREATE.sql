@@ -81,7 +81,9 @@ CREATE TABLE NFlow (
 	ModifiedOn 	datetime NOT NULL,
 	Code       	varchar(255) NOT NULL,
 	TargetExchangeName varchar(255) NULL,
-	Description	varchar(500) NULL 
+	Description	varchar(500) NULL,
+	AutoDeleteFiles char(1) null,  -- added in 2.15
+	AutoDeleteFileAge int null     -- added in 2.15
 	);
 
 CREATE TABLE NNotification ( 
