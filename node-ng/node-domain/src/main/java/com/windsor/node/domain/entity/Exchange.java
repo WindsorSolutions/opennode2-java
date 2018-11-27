@@ -34,6 +34,13 @@ public class Exchange extends AbstractBaseEntity {
     @Column(name = "Description")
     private String description;
 
+    @Column(name = "AutoDeleteFiles")
+    @Type(type = "yes_no")
+    private boolean autoDeleteFiles;
+
+    @Column(name = "AutoDeleteFileAge")
+    private Integer autoDeleteFileAge;
+
     @OneToMany(mappedBy = "exchange", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AccountPolicy> accountPolicies;
 
@@ -103,6 +110,22 @@ public class Exchange extends AbstractBaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isAutoDeleteFiles() {
+        return autoDeleteFiles;
+    }
+
+    public void setAutoDeleteFiles(boolean autoDeleteFiles) {
+        this.autoDeleteFiles = autoDeleteFiles;
+    }
+
+    public Integer getAutoDeleteFileAge() {
+        return autoDeleteFileAge;
+    }
+
+    public void setAutoDeleteFileAge(Integer autoDeleteFileAge) {
+        this.autoDeleteFileAge = autoDeleteFileAge;
     }
 
     public List<AccountPolicy> getAccountPolicies() {
