@@ -53,15 +53,17 @@
         </div>
 
         <div class="row">
-            <div class="form-inline">
-                <div wicket:id="filesGroup" class="form-group mb-2">
-                    <input type="checkbox" wicket:id="field"/>
-                    <span wicket:id="label">[AUTO DELETE]</span>
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <div class="form-inline">
+                    <div wicket:id="filesGroup" class="form-group">
+                        <input type="checkbox" wicket:id="field" class="mr-5"/>
+                        <span wicket:id="label">[AUTO DELETE]</span>
+                    </div>
+                    <div wicket:id="filesAgeGroup" class="form-group mx-5" style="width: 150px;">
+                        <input wicket:id="field" class="form-control" />
+                    </div>
+                    <span wicket:id="labelDays">[DAYS]</span>
                 </div>
-                <div wicket:id="filesAgeGroup" class="form-group mx-sm-3 mb-2">
-                    <input wicket:id="field" class="form-control" />
-                </div>
-                <span wicket:id="labelDays">[DAYS]</span>
             </div>
         </div>
 
