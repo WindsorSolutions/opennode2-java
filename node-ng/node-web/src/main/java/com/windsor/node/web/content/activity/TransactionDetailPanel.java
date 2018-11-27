@@ -122,7 +122,7 @@ public class TransactionDetailPanel extends Panel {
                     item.add(new Label("status", Model.of("")));
                     nolink.setVisible(false);
                 } else {
-                    item.add(new Label("status", Model.of("&mdash; Deleted")));
+                    item.add(new Label("status", Model.of("- Deleted")));
                     link.setVisible(false);
                 }
 
