@@ -1,9 +1,6 @@
 package com.windsor.node.repo;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.google.common.collect.ImmutableMap;
 import com.mysema.query.types.EntityPath;
@@ -13,6 +10,7 @@ import com.windsor.node.domain.entity.Exchange;
 import com.windsor.node.domain.search.EntityAlias;
 import com.windsor.node.domain.search.ExchangeSearchCriteria;
 import com.windsor.node.domain.search.ExchangeSort;
+import com.windsor.node.domain.search.ExchangeSorts;
 import com.windsor.stack.domain.repo.IFinderRepository;
 import com.windsor.stack.domain.search.CriteriaHandler;
 import com.windsor.stack.domain.search.IField;
@@ -25,7 +23,7 @@ import com.windsor.stack.repo.search.querydsl.QuerydslUtils;
  * Provides an implementation of the Exchange Repository.
  */
 public class ExchangeRepositoryImpl extends AbstractQuerydslFinderRepository<Exchange, ExchangeSearchCriteria, ExchangeSort>
-        implements IFinderRepository<Exchange, ExchangeSearchCriteria, ExchangeSort> {
+        implements IFinderRepository<Exchange, ExchangeSearchCriteria, ExchangeSort>, ExchangeRepositoryCustom {
 
     private static final Map<Object, List<QuerydslJoinInfo>> ENTITY_ALIAS_MAP =
             ImmutableMap.<Object, List<QuerydslJoinInfo>> builder()
@@ -83,5 +81,32 @@ public class ExchangeRepositoryImpl extends AbstractQuerydslFinderRepository<Exc
     @Override
     protected Map<Object, CriteriaHandler<BooleanExpression, ? extends IField<?>, ?>> getCriteriaFieldHandlders() {
         return CRITERIA_FIELD_HANDLER;
+    }
+
+    @Override
+    public void cleanupDocumentFiles() {
+        find(new ExchangeSearchCriteria(), ExchangeSorts.NAME)
+                .filter( ex -> ex.isAutoDeleteFiles())
+                .forEach( ex -> cleanupDocumentFiles(ex));
+    }
+
+    private void cleanupDocumentFiles(Exchange exchange){
+
+        // bail out if the file age <= 0
+        if(exchange.getAutoDeleteFileAge() <= 0) {
+            return;
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, (exchange.getAutoDeleteFileAge() * -1));
+
+        String query = "update Document as d set d.content = null where d.transaction.id in ("
+                + "  select t.id from Transaction t where t.exchange.id = :eid"
+                + "    and t.modifiedOn <= :mdate"
+                + ")";
+        getEntityManager().createQuery(query)
+                .setParameter("eid", exchange.getId())
+                .setParameter("mdate", calendar.getTime())
+                .executeUpdate();
     }
 }

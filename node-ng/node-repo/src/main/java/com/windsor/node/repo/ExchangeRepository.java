@@ -12,9 +12,8 @@ import com.windsor.stack.domain.repo.ICrudRepository;
  * Provides a repository for managing Exchange instances.
  */
 public interface ExchangeRepository extends JpaRepository<Exchange, String>,
-        ICrudRepository<Exchange, String, ExchangeSearchCriteria, ExchangeSort> {
+        ICrudRepository<Exchange, String, ExchangeSearchCriteria, ExchangeSort>, ExchangeRepositoryCustom {
 
     @Query("select e from Exchange e where e.name = ?1")
     Exchange findByName(String name);
-
 }

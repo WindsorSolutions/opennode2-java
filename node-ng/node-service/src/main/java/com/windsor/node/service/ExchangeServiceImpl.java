@@ -33,4 +33,9 @@ public class ExchangeServiceImpl extends AbstractCrudService<Exchange, String, E
         return exchange == null || exchange.getId().equals(excludedId);
     }
 
+    @Transactional(readOnly = false)
+    @Override
+    public void cleanupDocumentFiles() {
+        repository.cleanupDocumentFiles();
+    }
 }

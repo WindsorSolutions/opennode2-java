@@ -12,4 +12,5 @@ public interface ExchangeService extends ICrudService<Exchange, String, Exchange
 
     boolean isNameUnique(String name, String excludeId);
 
+    void cleanupDocumentFiles();
 }
