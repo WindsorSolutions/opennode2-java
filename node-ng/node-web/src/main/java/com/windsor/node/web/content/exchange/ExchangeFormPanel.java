@@ -121,7 +121,7 @@ public class ExchangeFormPanel extends ModalizablePanel<EditExchangeBean> {
                 .add(new TextField<>("field", EditExchangeBeanModels.bindAutoDeleteFileAge(getModel()))
                         .add(new InputBehavior())));
 
-        form.add(new Label("labelDays", new IdentifiableResourceModel(NodeResourceModelKeys.LABEL_FILES_AGE))))
+        form.add(new Label("labelDays", new IdentifiableResourceModel(NodeResourceModelKeys.LABEL_FILES_AGE)));
 
         form.add(new Label("labelPluginInformation",
                 new IdentifiableResourceModel(NodeResourceModelKeys.LABEL_PLUGIN_INFORMATION)));
