@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:icis="http://www.exchangenetwork.net/schema/icis/5" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.exchangenetwork.net/schema/icis/5" elementFormDefault="qualified" attributeFormDefault="unqualified" version="5">
+	<!--
 	<xsd:include schemaLocation="ICIS_AirComplianceMonitoringStrategy_v5.8.xsd"/>
 	<xsd:include schemaLocation="ICIS_AirDACaseFile_v5.8.xsd"/>
 	<xsd:include schemaLocation="ICIS_AirDAComplianceMonitoring_v5.8.xsd"/>
@@ -11,11 +12,12 @@
 	<xsd:include schemaLocation="ICIS_AirPollutants_v5.8.xsd"/>
 	<xsd:include schemaLocation="ICIS_AirPrograms_v5.8.xsd"/>
 	<xsd:include schemaLocation="ICIS_AirTVACC_v5.8.xsd"/>
+	-->
 	<xsd:include schemaLocation="ICIS_BasicPermit_v5.8.xsd"/>
 	<xsd:include schemaLocation="ICIS_BiosolidsAnnualProgramReport_v5.8.xsd"/>
 	<xsd:include schemaLocation="ICIS_BiosolidsPermit_v5.8.xsd"/>
 	<xsd:include schemaLocation="ICIS_BiosolidsProgramReport_v5.8.xsd"/>
-	<xsd:include schemaLocation="ICIS_CaseFileLinkage_v5.8.xsd"/>
+	<!-- <xsd:include schemaLocation="ICIS_CaseFileLinkage_v5.8.xsd"/> -->
 	<xsd:include schemaLocation="ICIS_CAFOAnnualReport_v5.8.xsd"/>
 	<xsd:include schemaLocation="ICIS_CAFOPermit_v5.8.xsd"/>
 	<xsd:include schemaLocation="ICIS_Common_v5.8.xsd"/>
@@ -85,22 +87,22 @@
 	</xsd:element>
 	<xsd:complexType name="PayloadData">
 		<xsd:choice>
-			<xsd:element name="AirComplianceMonitoringStrategyData" type="icis:AirComplianceMonitoringStrategyData" maxOccurs="unbounded"/>
-			<xsd:element name="AirDACaseFileData" type="icis:AirDACaseFileData" maxOccurs="unbounded"/>
-			<xsd:element name="AirDAComplianceMonitoringData" type="icis:AirDAComplianceMonitoringData" maxOccurs="unbounded"/>
-			<xsd:element name="AirDAEnforcementActionLinkageData" type="icis:AirDAEnforcementActionLinkageData" maxOccurs="unbounded"/>
-			<xsd:element name="AirDAEnforcementActionMilestoneData" type="icis:AirDAEnforcementActionMilestoneData" maxOccurs="unbounded"/>
-			<xsd:element name="AirDAFormalEnforcementActionData" type="icis:AirDAFormalEnforcementActionData" maxOccurs="unbounded"/>
-			<xsd:element name="AirDAInformalEnforcementActionData" type="icis:AirDAInformalEnforcementActionData" maxOccurs="unbounded"/>
-			<xsd:element name="AirFacilityData" type="icis:AirFacilityData" maxOccurs="unbounded"/>
-			<xsd:element name="AirPollutantsData" type="icis:AirPollutantsData" maxOccurs="unbounded"/>
-			<xsd:element name="AirProgramsData" type="icis:AirProgramsData" maxOccurs="unbounded"/>
-			<xsd:element name="AirTVACCData" type="icis:AirTVACCData" maxOccurs="unbounded"/>
+			<!--<xsd:element name="AirComplianceMonitoringStrategyData" type="icis:AirComplianceMonitoringStrategyData" maxOccurs="unbounded"/>-->
+			<!--<xsd:element name="AirDACaseFileData" type="icis:AirDACaseFileData" maxOccurs="unbounded"/>-->
+			<!--<xsd:element name="AirDAComplianceMonitoringData" type="icis:AirDAComplianceMonitoringData" maxOccurs="unbounded"/>-->
+			<!--<xsd:element name="AirDAEnforcementActionLinkageData" type="icis:AirDAEnforcementActionLinkageData" maxOccurs="unbounded"/>-->
+			<!--<xsd:element name="AirDAEnforcementActionMilestoneData" type="icis:AirDAEnforcementActionMilestoneData" maxOccurs="unbounded"/>-->
+			<!--<xsd:element name="AirDAFormalEnforcementActionData" type="icis:AirDAFormalEnforcementActionData" maxOccurs="unbounded"/>-->
+			<!--<xsd:element name="AirDAInformalEnforcementActionData" type="icis:AirDAInformalEnforcementActionData" maxOccurs="unbounded"/>-->
+			<!--<xsd:element name="AirFacilityData" type="icis:AirFacilityData" maxOccurs="unbounded"/>-->
+			<!--<xsd:element name="AirPollutantsData" type="icis:AirPollutantsData" maxOccurs="unbounded"/>-->
+			<!--<xsd:element name="AirProgramsData" type="icis:AirProgramsData" maxOccurs="unbounded"/>-->
+			<!--<xsd:element name="AirTVACCData" type="icis:AirTVACCData" maxOccurs="unbounded"/>-->
 			<xsd:element name="BasicPermitData" type="icis:BasicPermitData" maxOccurs="unbounded"/>
 			<xsd:element name="BiosolidsAnnualProgramReportData" type="icis:BiosolidsAnnualProgramReportData" maxOccurs="unbounded"/>
 			<xsd:element name="BiosolidsPermitData" type="icis:BiosolidsPermitData" maxOccurs="unbounded"/>
 			<xsd:element name="BiosolidsProgramReportData" type="icis:BiosolidsProgramReportData" maxOccurs="unbounded"/>
-			<xsd:element name="CaseFileLinkageData" type="icis:CaseFileLinkageData" maxOccurs="unbounded"/>
+			<!--<xsd:element name="CaseFileLinkageData" type="icis:CaseFileLinkageData" maxOccurs="unbounded"/>-->
 			<xsd:element name="CAFOAnnualReportData" type="icis:CAFOAnnualReportData" maxOccurs="unbounded"/>
 			<xsd:element name="CAFOPermitData" type="icis:CAFOPermitData" maxOccurs="unbounded"/>
 			<xsd:element name="ComplianceMonitoringData" type="icis:ComplianceMonitoringData" maxOccurs="unbounded"/>

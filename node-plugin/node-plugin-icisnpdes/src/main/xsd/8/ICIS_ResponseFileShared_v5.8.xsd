@@ -16,8 +16,8 @@
 	<xsd:include schemaLocation="ICIS_EnforcementActionViolationLinkage_v5.8.xsd"/>
 	<xsd:include schemaLocation="ICIS_FinalOrderViolationLinkage_v5.8.xsd"/>
 	<xsd:include schemaLocation="ICIS_CopyMGPLimitSet_v5.8.xsd"/>
-	<xsd:include schemaLocation="ICIS_AirDAEnforcementActionLinkage_v5.8.xsd"/>
-	<xsd:include schemaLocation="ICIS_CaseFileLinkage_v5.8.xsd"/>
+	<!--<xsd:include schemaLocation="ICIS_AirDAEnforcementActionLinkage_v5.8.xsd"/>-->
+	<!--<xsd:include schemaLocation="ICIS_CaseFileLinkage_v5.8.xsd"/>-->
 	<xsd:element name="AcceptedReport" type="icis:AcceptedReportDataType">
 		<xsd:annotation>
 			<xsd:documentation>Describes an error that was encountered.</xsd:documentation>
@@ -286,11 +286,11 @@
 			<xsd:documentation>Uniquely identifies an Air DA compliance monitoring activity by including all the appropriate keys for it.</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
-	<xsd:element name="AirDAEnforcementActionLinkageIdentifier" type="icis:AirDAEnforcementActionLinkage">
-		<xsd:annotation>
-			<xsd:documentation>Uniquely identifies an Air DA enforcement action linkage by including all the appropriate keys for it.  The type definition is found in the Air DA Enforcement Action Linkage xsd file.</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
+	<!--<xsd:element name="AirDAEnforcementActionLinkageIdentifier" type="icis:AirDAEnforcementActionLinkage">-->
+		<!--<xsd:annotation>-->
+			<!--<xsd:documentation>Uniquely identifies an Air DA enforcement action linkage by including all the appropriate keys for it.  The type definition is found in the Air DA Enforcement Action Linkage xsd file.</xsd:documentation>-->
+		<!--</xsd:annotation>-->
+	<!--</xsd:element>-->
 	<xsd:element name="AirDAEnforcementActionMilestoneIdentifier" type="icis:AirDAEnforcementActionMilestoneKeyElements">
 		<xsd:annotation>
 			<xsd:documentation>Uniquely identifies an Air DA Enforcement Action Milestone by including all the appropriate keys for it.</xsd:documentation>
@@ -341,11 +341,11 @@
 			<xsd:documentation>Uniquely identifies a CAFO annual program report by including all the appropriate keys for it.</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
-	<xsd:element name="CaseFileLinkageIdentifier" type="icis:CaseFileLinkage">
-		<xsd:annotation>
-			<xsd:documentation>Uniquely identifies a case file linkage by including all the appropriate keys for it.  The type definition is found in the Case File Linkage xsd file.</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
+	<!--<xsd:element name="CaseFileLinkageIdentifier" type="icis:CaseFileLinkage">-->
+		<!--<xsd:annotation>-->
+			<!--<xsd:documentation>Uniquely identifies a case file linkage by including all the appropriate keys for it.  The type definition is found in the Case File Linkage xsd file.</xsd:documentation>-->
+		<!--</xsd:annotation>-->
+	<!--</xsd:element>-->
 	<xsd:element name="ComplianceMonitoringLinkageIdentifier" type="icis:ComplianceMonitoringLinkage">
 		<xsd:annotation>
 			<xsd:documentation>Uniquely identifies a compliance monitoring linkage by including all the appropriate keys for it.  The type definition is found in the CMLinkage xsd file.</xsd:documentation>
@@ -541,7 +541,7 @@
 			<xsd:element ref="icis:AirComplianceMonitoringStrategyIdentifier"/>
 			<xsd:element ref="icis:AirDACaseFileIdentifier"/>
 			<xsd:element ref="icis:AirDAComplianceMonitoringIdentifier"/>
-			<xsd:element ref="icis:AirDAEnforcementActionLinkageIdentifier"/>
+			<!--<xsd:element ref="icis:AirDAEnforcementActionLinkageIdentifier"/>-->
 			<xsd:element ref="icis:AirDAEnforcementActionMilestoneIdentifier"/>
 			<xsd:element ref="icis:AirDAFormalEnforcementActionIdentifier"/>
 			<xsd:element ref="icis:AirDAInformalEnforcementActionIdentifier"/>
@@ -552,7 +552,7 @@
 			<xsd:element ref="icis:BiosolidsAnnualProgramReportIdentifier"/>
 			<xsd:element ref="icis:BiosolidsProgramReportIdentifier"/>
 			<xsd:element ref="icis:CAFOAnnualProgramReportIdentifier"/>
-			<xsd:element ref="icis:CaseFileLinkageIdentifier"/>
+			<!--<xsd:element ref="icis:CaseFileLinkageIdentifier"/>-->
 			<xsd:element ref="icis:ComplianceMonitoringLinkageIdentifier"/>
 			<xsd:element ref="icis:ComplianceScheduleIdentifier"/>
 			<xsd:element ref="icis:ComplianceScheduleEventIdentifier"/>
