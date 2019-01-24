@@ -88,7 +88,7 @@
 	</xsd:complexType>
 	<xsd:complexType name="BiosolidsManagementPractices">
 		<xsd:sequence>
-			<xsd:element ref="icis:ManagementPracticeData" maxOccurs="unbounded"/>
+			<xsd:element ref="icis:ManagementPracticeData"/> <!-- maxOccurs="unbounded" -->
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:complexType name="ManagementPracticeData">
@@ -113,20 +113,20 @@
 			<xsd:element ref="icis:MinimumBoundaryDistanceIndicator" minOccurs="0"/>
 			<xsd:element ref="icis:MinimumBoundaryDistanceTypeCode" minOccurs="0"/>
 			<xsd:element ref="icis:AssociatedPermitIdentifier" minOccurs="0"/>
-			<xsd:element ref="icis:ThirdPartyProgramReportContact" minOccurs="0"/>
-			<xsd:element ref="icis:ThirdPartyProgramReportAddress" minOccurs="0"/>
+			<xsd:element ref="icis:ThirdPartyProgramReportContact" minOccurs="0" />
+			<xsd:element ref="icis:ThirdPartyProgramReportAddress" minOccurs="0" />
 			<xsd:element ref="icis:ManagementPracticeDeficiencyTypeCode" minOccurs="0" maxOccurs="unbounded"/>
 			<xsd:element ref="icis:ManagementPracticeCommentText" minOccurs="0"/>
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:complexType name="ThirdPartyProgramReportContact">
 		<xsd:sequence>
-			<xsd:element ref="icis:Contact"/>
+			<xsd:element ref="icis:Contact" maxOccurs="unbounded"/>
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:complexType name="ThirdPartyProgramReportAddress">
 		<xsd:sequence>
-			<xsd:element ref="icis:Address"/>
+			<xsd:element ref="icis:Address" maxOccurs="unbounded"/>
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:complexType name="CertifierProgramReportContact">

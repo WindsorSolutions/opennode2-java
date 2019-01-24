@@ -68,20 +68,25 @@
         </hj:element-collection>
     </jaxb:bindings>
 
+    <!--
     <jaxb:bindings
             node="//xsd:complexType[@name='ManagementPracticeData']//xsd:element[@ref='icis:ThirdPartyProgramReportContact']">
         <hj:one-to-one>
             <orm:join-column name="ICS_BS_MGMT_PRACTICES_ID" insertable="false" updatable="false"/>
         </hj:one-to-one>
     </jaxb:bindings>
+    -->
 
+    <!--
     <jaxb:bindings
             node="//xsd:complexType[@name='ManagementPracticeData']//xsd:element[@ref='icis:ThirdPartyProgramReportAddress']">
         <hj:one-to-one>
             <orm:join-column name="ICS_BS_MGMT_PRACTICES_ID" insertable="false" updatable="false"/>
         </hj:one-to-one>
     </jaxb:bindings>
+    -->
 
+    <!--
     <jaxb:bindings node="//xsd:complexType[@name='ThirdPartyProgramReportContact']">
         <inheritance:extends>com.windsor.node.plugin.icisnpdes.domain.AbstractThirdPartyProgramReportContact</inheritance:extends>
         <hj:entity>
@@ -96,7 +101,16 @@
             <orm:join-column name="ICS_CONTACT_ID" updatable="false" insertable="false"/>
         </hj:one-to-one>
     </jaxb:bindings>
+    -->
 
+    <jaxb:bindings>
+        <jaxb:bindings node="//xsd:complexType[@name='ThirdPartyProgramReportContact']">
+            <hj:embeddable />
+            <inheritance:implements>com.windsor.node.plugin.icisnpdes.domain.IContactList</inheritance:implements>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+    <!--
     <jaxb:bindings node="//xsd:complexType[@name='ThirdPartyProgramReportAddress']">
         <inheritance:extends>com.windsor.node.plugin.icisnpdes.domain.AbstractThirdPartyProgramReportAddress</inheritance:extends>
         <hj:entity>
@@ -110,6 +124,14 @@
         <hj:one-to-one>
             <orm:join-column name="ICS_ADDR_ID" updatable="false" insertable="false"/>
         </hj:one-to-one>
+    </jaxb:bindings>
+    -->
+
+    <jaxb:bindings>
+        <jaxb:bindings node="//xsd:complexType[@name='ThirdPartyProgramReportAddress']">
+            <hj:embeddable />
+            <inheritance:implements>com.windsor.node.plugin.icisnpdes.domain.IAddressList</inheritance:implements>
+        </jaxb:bindings>
     </jaxb:bindings>
 
     <jaxb:bindings
