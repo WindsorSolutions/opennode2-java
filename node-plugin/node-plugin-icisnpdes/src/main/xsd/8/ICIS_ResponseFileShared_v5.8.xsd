@@ -271,6 +271,7 @@
 			<xsd:maxLength value="30"/>
 		</xsd:restriction>
 	</xsd:simpleType>
+	<!--
 	<xsd:element name="AirComplianceMonitoringStrategyIdentifier" type="icis:AirComplianceMonitoringStrategyKeyElements">
 		<xsd:annotation>
 			<xsd:documentation>Uniquely identifies an Air Compliance Monitoring Strategy by including all the appropriate keys for it.</xsd:documentation>
@@ -286,11 +287,11 @@
 			<xsd:documentation>Uniquely identifies an Air DA compliance monitoring activity by including all the appropriate keys for it.</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
-	<!--<xsd:element name="AirDAEnforcementActionLinkageIdentifier" type="icis:AirDAEnforcementActionLinkage">-->
-		<!--<xsd:annotation>-->
-			<!--<xsd:documentation>Uniquely identifies an Air DA enforcement action linkage by including all the appropriate keys for it.  The type definition is found in the Air DA Enforcement Action Linkage xsd file.</xsd:documentation>-->
-		<!--</xsd:annotation>-->
-	<!--</xsd:element>-->
+	<xsd:element name="AirDAEnforcementActionLinkageIdentifier" type="icis:AirDAEnforcementActionLinkage">
+		<xsd:annotation>
+			<xsd:documentation>Uniquely identifies an Air DA enforcement action linkage by including all the appropriate keys for it.  The type definition is found in the Air DA Enforcement Action Linkage xsd file.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
 	<xsd:element name="AirDAEnforcementActionMilestoneIdentifier" type="icis:AirDAEnforcementActionMilestoneKeyElements">
 		<xsd:annotation>
 			<xsd:documentation>Uniquely identifies an Air DA Enforcement Action Milestone by including all the appropriate keys for it.</xsd:documentation>
@@ -326,6 +327,7 @@
 			<xsd:documentation>Uniquely identifies an Air Title V Annual Compliance Certification compliance monitoring activity by including all the appropriate keys for it.</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
+	-->
 	<xsd:element name="BiosolidsAnnualProgramReportIdentifier" type="icis:BiosolidsAnnualProgramReportKeyElements">
 		<xsd:annotation>
 			<xsd:documentation>Uniquely identifies a biosolids annual program report by including all the appropriate keys for it. </xsd:documentation>
@@ -538,10 +540,11 @@
 			<xsd:documentation>Choice of Submission response identifier choice that is used in both the accepted and error key data types.</xsd:documentation>
 		</xsd:annotation>
 		<xsd:choice>
+			<!--
 			<xsd:element ref="icis:AirComplianceMonitoringStrategyIdentifier"/>
 			<xsd:element ref="icis:AirDACaseFileIdentifier"/>
 			<xsd:element ref="icis:AirDAComplianceMonitoringIdentifier"/>
-			<!--<xsd:element ref="icis:AirDAEnforcementActionLinkageIdentifier"/>-->
+			<xsd:element ref="icis:AirDAEnforcementActionLinkageIdentifier"/>
 			<xsd:element ref="icis:AirDAEnforcementActionMilestoneIdentifier"/>
 			<xsd:element ref="icis:AirDAFormalEnforcementActionIdentifier"/>
 			<xsd:element ref="icis:AirDAInformalEnforcementActionIdentifier"/>
@@ -549,6 +552,7 @@
 			<xsd:element ref="icis:AirPollutantsIdentifier"/>
 			<xsd:element ref="icis:AirProgramReportIdentifier"/>
 			<xsd:element ref="icis:AirTVACCIdentifier"/>
+			-->
 			<xsd:element ref="icis:BiosolidsAnnualProgramReportIdentifier"/>
 			<xsd:element ref="icis:BiosolidsProgramReportIdentifier"/>
 			<xsd:element ref="icis:CAFOAnnualProgramReportIdentifier"/>
