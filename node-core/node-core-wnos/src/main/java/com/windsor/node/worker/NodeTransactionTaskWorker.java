@@ -238,6 +238,9 @@ public class NodeTransactionTaskWorker extends NodeWorker implements
                 }
 
                 logEntry.addEntry(makeAndDebug("Executing plugin..."));
+                if(pluginHelper == null) {
+                    logger.error("The pluginHelper is null!");
+                }
                 ProcessContentResult result = pluginHelper
                         .processTransaction(transaction);
 
@@ -376,8 +379,8 @@ public class NodeTransactionTaskWorker extends NodeWorker implements
 
         } catch (Throwable ex) {
 
-            logger.debug(ex.getMessage());
-
+            logger.error("An unexpected error occurred while processing the transaction: "
+                    + ex.getMessage(), ex);
             logEntry.setType(ActivityType.Error);
             logEntry.addEntry(makeAndDebug("Error:{0}", new Object[] { ex
                     .getMessage() }));
