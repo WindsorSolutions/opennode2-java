@@ -20,6 +20,7 @@
         <module>node-util-hyperjaxb3-facid</module>
         <module>node-util-hyperjaxb3-rcra56</module>
 		<module>node-util-hyperjaxb3-rcra56-outbound</module>
+		<module>node-util-hyperjaxb3-rcra57</module>
 		<module>node-util-hyperjaxb3-uic2</module>
     </modules>
 </project>

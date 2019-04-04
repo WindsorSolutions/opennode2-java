@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
+               xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+               jaxb:extensionBindingPrefixes="hj orm inheritance"
+               schemaLocation="../xsd/5/7/RCRA_ManifestWaste_v5.7.xsd">
+
+    <jaxb:bindings node="//xsd:complexType[@name='ManifestWasteDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_EM_WASTE"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="EM_WASTE_ID"/>
+        </hj:generated-id>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:QuantityUOMCode']">
+        <hj:basic>
+            <orm:column name="QNT_UOM_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:QuantityUOMDescription']">
+        <hj:basic>
+            <orm:column name="QNT_UOM_DESC"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:WMCode']">
+        <hj:basic>
+            <orm:column name="BR_WM_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:WMDescription']">
+        <hj:basic>
+            <orm:column name="BR_WM_DESC"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:UOMCode']">
+        <hj:basic>
+            <orm:column name="BR_DENSITY_UOM_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:UOMDescription']">
+        <hj:basic>
+            <orm:column name="BR_DENSITY_UOM_DESC"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DensityUnitOfMeasurement']">
+        <hj:embedded>
+            <orm:attribute-override name="uomCode">
+                <orm:column name="BR_DENSITY_UOM_CODE"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="uomDescription">
+                <orm:column name="BR_DENSITY_UOM_DESC"/>
+            </orm:attribute-override>
+        </hj:embedded>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DotHazardous']">
+        <hj:basic>
+            <orm:column name="DOT_HAZ_IND"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DotInformation']">
+        <hj:embedded>
+            <orm:attribute-override name="idNumber">
+                <orm:column name="DOT_ID_NUM"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="printedDotInformation">
+                <orm:column name="DOT_PRINTED_INFO"/>
+            </orm:attribute-override>
+        </hj:embedded>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:WastesDescription']">
+        <hj:basic>
+            <orm:column name="WASTES_DESC"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:Quantity']">
+        <hj:embedded>
+            <orm:attribute-override name="containerNumber">
+                <orm:column name="QNT_CONT_NUM"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="quantityVal">
+                <orm:column name="QNT_VAL"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="containerType.code">
+                <orm:column name="QNT_CONT_TYPE_CODE"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="containerType.manifestDescription">
+                <orm:column name="QNT_CONT_TYPE_DESC"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="quantityUnitOfMeasurement.code">
+                <orm:column name="QNT_UOM_CODE"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="quantityUnitOfMeasurement.manifestDescription">
+                <orm:column name="QNT_UOM_DESC"/>
+            </orm:attribute-override>
+
+        </hj:embedded>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:Br']">
+        <hj:basic>
+            <orm:column name="BR_IND"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:BrInfo']">
+        <hj:embedded>
+            <orm:attribute-override name="density">
+                <orm:column name="BR_DENSITY"/>
+            </orm:attribute-override>
+
+            <orm:attribute-override name="densityUnitOfMeasurement.uomCode">
+                <orm:column name="BR_DENSITY_UOM_CODE"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="densityUnitOfMeasurement.uomDescription">
+                <orm:column name="BR_DENSITY_UOM_DESC"/>
+            </orm:attribute-override>
+
+            <orm:attribute-override name="brFormCode.formCode">
+                <orm:column name="BR_FORM_CODE"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="brFormCode.formDescription">
+                <orm:column name="BR_FORM_DESC"/>
+            </orm:attribute-override>
+
+            <orm:attribute-override name="brSourceCode.sourceCode">
+                <orm:column name="BR_SRC_CODE"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="brSourceCode.sourceDescription">
+                <orm:column name="BR_SRC_DESC"/>
+            </orm:attribute-override>
+
+            <orm:attribute-override name="wasteMinimizationCode.wmCode">
+                <orm:column name="BR_SRC_CODE"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="wasteMinimizationCode.wmDescription">
+                <orm:column name="BR_SRC_DESC"/>
+            </orm:attribute-override>
+        </hj:embedded>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HazardousWaste']">
+        <hj:embedded>
+            <orm:association-override name="federalWasteCode">
+                <orm:join-column name="EM_WASTE_ID" updatable="false" nullable="false"/>
+                <orm:join-table name="RCRA_EM_WASTE_CD_FED"/>
+            </orm:association-override>
+            <orm:association-override name="tsdfStateWasteCode">
+                <orm:join-column name="EM_WASTE_ID" updatable="false" nullable="false"/>
+                <orm:join-table name="RCRA_EM_WASTE_CD_TSDF"/>
+            </orm:association-override>
+            <orm:association-override name="generatorStateWasteCode">
+                <orm:join-column name="EM_WASTE_ID" updatable="false" nullable="false"/>
+                <orm:join-table name="RCRA_EM_WASTE_CD_GEN"/>
+            </orm:association-override>
+        </hj:embedded>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:Pcb']">
+        <hj:basic>
+            <orm:column name="PCB_IND"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:PcbInfo']">
+        <hj:one-to-many>
+            <orm:join-column name="EM_WASTE_ID" updatable="false" nullable="false"/>
+            <orm:order-column name="ORDER_NUM" nullable="false"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='PcbInfoDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_EM_WASTE_PCB"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="EM_WASTE_PCB_ID"/>
+        </hj:generated-id>
+        <jaxb:bindings node="//xsd:element[@ref='RC:LoadType']">
+            <hj:basic>
+                <orm:column name="PCB_LOAD_TYPE_CODE"/>
+            </hj:basic>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xsd:element[@ref='RC:ArticleContainerId']">
+            <hj:basic>
+                <orm:column name="PCB_ARTICLE_CONT_ID"/>
+            </hj:basic>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xsd:element[@ref='RC:DateOfRemoval']">
+            <hj:basic>
+                <orm:column name="PCB_REMOVAL_DATE"/>
+            </hj:basic>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xsd:element[@ref='RC:Weight']">
+            <hj:basic>
+                <orm:column name="PCB_WEIGHT"/>
+            </hj:basic>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xsd:element[@ref='RC:WasteType']">
+            <hj:basic>
+                <orm:column name="PCB_WASTE_TYPE"/>
+            </hj:basic>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xsd:element[@ref='RC:BulkIdentity']">
+            <hj:basic>
+                <orm:column name="PCB_BULK_IDENTITY"/>
+            </hj:basic>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DiscrepancyResidueInfo']">
+        <hj:embedded>
+            <orm:attribute-override name="wasteQuantity">
+                <orm:column name="DISC_WASTE_QTY_IND"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="hasWasteType">
+                <orm:column name="DISC_WASTE_TYPE_IND"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="discrepancyComments">
+                <orm:column name="DISC_COMMENTS"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="residue">
+                <orm:column name="DISC_RESIDUE_IND"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="residueComments">
+                <orm:column name="DISC_RESIDUE_COMMENTS"/>
+            </orm:attribute-override>
+        </hj:embedded>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ManagementMethod']">
+        <hj:embedded>
+            <orm:attribute-override name="managementMethodCode">
+                <orm:column name="MGMT_METHOD_CODE"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="managementMethodDescription">
+                <orm:column name="MGMT_METHOD_DESC"/>
+            </orm:attribute-override>
+        </hj:embedded>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AdditionalComment']">
+        <hj:one-to-many>
+            <orm:join-column name="EM_WASTE_ID" referenced-column-name="EM_WASTE_ID"
+                             updatable="false" nullable="false"/>
+            <orm:order-column name="ORDER_NUM"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AdditionalInfo']">
+        <hj:embedded>
+            <orm:association-override name="additionalComment">
+                <orm:join-column name="EM_WASTE_ID" updatable="false" nullable="false"/>
+            </orm:association-override>
+            <orm:attribute-override name="newManifestDestination">
+                <orm:column name="ADD_INFO_NEW_MAN_DEST"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="consentNumber">
+                <orm:column name="ADD_INFO_CONSENT_NUM"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="handlingInstructions">
+                <orm:column name="ADD_INFO_HAND_INSTR"/>
+            </orm:attribute-override>
+        </hj:embedded>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:LineNumber']">
+        <hj:basic>
+            <orm:column name="LINE_NUM"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:EpaWaste']">
+        <hj:basic>
+            <orm:column name="EPA_WASTE_IND"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='FedManifestWasteCodeDescriptionDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_EM_WASTE_CD_FED"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="EM_WASTE_CD_ID"/>
+        </hj:generated-id>
+        <jaxb:bindings
+                node="//xsd:complexType[@name='FedManifestWasteCodeDescriptionDataType']//xsd:element[@ref='RC:ManifestWasteCode']">
+            <hj:basic>
+                <orm:column name="WASTE_CODE"/>
+            </hj:basic>
+        </jaxb:bindings>
+        <jaxb:bindings
+                node="//xsd:complexType[@name='FedManifestWasteCodeDescriptionDataType']//xsd:element[@ref='RC:ManifestWasteDescription']">
+            <hj:basic>
+                <orm:column name="WASTE_DESC"/>
+            </hj:basic>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='GenManifestWasteCodeDescriptionDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_EM_WASTE_CD_GEN"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="EM_WASTE_CD_ID"/>
+        </hj:generated-id>
+        <jaxb:bindings
+                node="//xsd:complexType[@name='GenManifestWasteCodeDescriptionDataType']//xsd:element[@ref='RC:ManifestWasteCode']">
+            <hj:basic>
+                <orm:column name="WASTE_CODE"/>
+            </hj:basic>
+        </jaxb:bindings>
+        <jaxb:bindings
+                node="//xsd:complexType[@name='GenManifestWasteCodeDescriptionDataType']//xsd:element[@ref='RC:ManifestWasteDescription']">
+            <hj:basic>
+                <orm:column name="WASTE_DESC"/>
+            </hj:basic>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='TsdfManifestWasteCodeDescriptionDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_EM_WASTE_CD_TSDF"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="EM_WASTE_CD_ID"/>
+        </hj:generated-id>
+        <jaxb:bindings
+                node="//xsd:complexType[@name='TsdfManifestWasteCodeDescriptionDataType']//xsd:element[@ref='RC:ManifestWasteCode']">
+            <hj:basic>
+                <orm:column name="WASTE_CODE"/>
+            </hj:basic>
+        </jaxb:bindings>
+        <jaxb:bindings
+                node="//xsd:complexType[@name='TsdfManifestWasteCodeDescriptionDataType']//xsd:element[@ref='RC:ManifestWasteDescription']">
+            <hj:basic>
+                <orm:column name="WASTE_DESC"/>
+            </hj:basic>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='AdditionalInfoDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='QuantityDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='CodeDescriptionDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='QuantityUOMCodeDescriptionDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='UOMCodeDescriptionDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='FormCodeDescriptionDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='SourceCodeDescriptionDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='WMCodeDescriptionDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <!-- RC:FederalWasteCode -->
+    <jaxb:bindings node="//xsd:element[@ref='RC:FederalWasteCode']">
+        <hj:one-to-many>
+            <orm:join-column table="RCRA_EM_WASTE_CD_FED" referenced-column-name="EM_WASTE_ID" name="EM_WASTE_ID"
+                             updatable="false" nullable="false"/>
+            <orm:order-column name="ORDER_NUM"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:TsdfStateWasteCode']">
+        <hj:one-to-many>
+            <orm:join-column table="RCRA_EM_WASTE_CD_TSDF" referenced-column-name="EM_WASTE_ID" name="EM_WASTE_ID"
+                             updatable="false" nullable="false"/>
+            <orm:order-column name="ORDER_NUM"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeneratorStateWasteCode']">
+        <hj:one-to-many>
+            <orm:join-column table="RCRA_EM_WASTE_CD_GEN" referenced-column-name="EM_WASTE_ID" name="EM_WASTE_ID"
+                             updatable="false" nullable="false"/>
+            <orm:order-column name="ORDER_NUM"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='HazardousWasteDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <!-- FIXME: the order-column is not being honored -->
+    <jaxb:bindings node="//xsd:element[@ref='RC:TxWasteCode']">
+        <hj:element-collection name="txWasteCode">
+            <orm:collection-table name="RCRA_EM_WASTE_CD_TRANS">
+                <orm:join-column name="EM_WASTE_ID" updatable="false"/>
+            </orm:collection-table>
+            <orm:column name="WASTE_CODE"/>
+            <orm:order-column name="ORDER_NUM" nullable="false"/>
+        </hj:element-collection>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:OriginalManifestTrackingNumber']">
+        <hj:element-collection name="originalManifestTrackingNumber">
+            <orm:collection-table name="RCRA_EM_WASTE_TR_NUM_ORIG">
+                <orm:join-column name="EM_WASTE_ID" updatable="false" nullable="false"/>
+            </orm:collection-table>
+            <orm:column name="MANIFEST_TRACKING_NUM"/>
+            <orm:order-column name="ORDER_NUM" nullable="false"/>
+        </hj:element-collection>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='BrInfoDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='DiscrepancyResidueInfoDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='DotInformationDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='ManagementMethodCodeDescriptionDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+</jaxb:bindings>
+
