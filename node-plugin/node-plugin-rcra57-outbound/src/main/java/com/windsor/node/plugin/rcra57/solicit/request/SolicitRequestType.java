@@ -1,4 +1,4 @@
-package com.windsor.node.plugin.rcra56.solicit.request;
+package com.windsor.node.plugin.rcra57.solicit.request;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +23,8 @@ public enum SolicitRequestType {
     PM_BY_STATE("GetPMDataByState", DbInfo.PM),
     CH_BY_HANDLER("GetCurrentHandlerById", DbInfo.CH),
     CH_BY_STATE("GetCurrentHandlerByState", DbInfo.CH),
+    EM_BY_HANDLER("GetEMDataByHandler", DbInfo.EM),
+    EM_BY_STATE("GetEMDataByState", DbInfo.EM),
     HD_MAX_SEQUENCE("GetHDMaxSequence", DbInfo.HD);
 
     private static final Map<String, SolicitRequestType> MAP;
