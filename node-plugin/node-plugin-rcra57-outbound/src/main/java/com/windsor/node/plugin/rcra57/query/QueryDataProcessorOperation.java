@@ -346,16 +346,17 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
 
     private void cleanupData(SolicitRequestType type, ProcessContentResult result) {
         getTargetEntityManager().getTransaction().begin();
-        List<String> entityClasses = Arrays.asList("HazardousWasteCorrectiveActionDataType",
-                "HazardousWasteCMESubmissionDataType", "FinancialAssuranceFacilitySubmissionDataType",
-                "HazardousWasteHandlerSubmissionDataType", "HazardousWastePermitDataType",
-                "ReportUnivSubmissionDataType", "HazardousWasteEManifestsDataType");
-        for (String name : entityClasses) {
-            List<Object> entities = getTargetEntityManager().createQuery(String.format("from %s where 1 = 1", name)).getResultList();
-            for (Object entity: entities) {
-                getTargetEntityManager().remove(entity);
-            }
-        }
+//        List<String> entityClasses = Arrays.asList("HazardousWasteCorrectiveActionDataType",
+//                "HazardousWasteCMESubmissionDataType", "FinancialAssuranceFacilitySubmissionDataType",
+//                "HazardousWasteHandlerSubmissionDataType", "HazardousWastePermitDataType",
+//                "ReportUnivSubmissionDataType", "HazardousWasteEManifestsDataType");
+//        for (String name : entityClasses) {
+//            List<Object> entities = getTargetEntityManager().createQuery(String.format("from %s where 1 = 1", name)).getResultList();
+//            for (Object entity: entities) {
+//                getTargetEntityManager().remove(entity);
+//            }
+//        }
+        type.getDbInfo().getCleanupHandler().cleanup(getTargetEntityManager());
         getTargetEntityManager().getTransaction().commit();
     }
 

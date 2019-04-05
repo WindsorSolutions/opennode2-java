@@ -57,7 +57,7 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:ReceivedDate']">
         <hj:basic>
-            <orm:column name="RCVD_DATE"/>
+            <orm:column name="RECEIVED_DATE"/>
         </hj:basic>
     </jaxb:bindings>
 
