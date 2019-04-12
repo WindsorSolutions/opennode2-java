@@ -58,7 +58,7 @@ public class ClearPendingSubmissions extends BaseRcraPlugin {
         try {
             getTargetEntityManager().getTransaction().begin();
             count = getTargetEntityManager()
-                    .createNativeQuery("UPDATE RCRA_SOLICITHISTORY SET PROCESSINGSTATUS = :failedStatus WHERE PROCESSINGSTATUS = :pendingStatus")
+                    .createNativeQuery("UPDATE RCRA_SUBMISSIONHISTORY SET PROCESSINGSTATUS = :failedStatus WHERE PROCESSINGSTATUS = :pendingStatus")
                     .setParameter("failedStatus", SolicitHistory.Status.FAILED.getName())
                     .setParameter("pendingStatus", SolicitHistory.Status.PENDING.getName())
                     .executeUpdate();
