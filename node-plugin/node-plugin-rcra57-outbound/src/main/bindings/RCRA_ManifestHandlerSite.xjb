@@ -157,7 +157,7 @@
                 <orm:column name="ES_DOC_NAME"/>
             </orm:attribute-override>
             <orm:attribute-override name="humanReadableDocument.size">
-                <orm:column name="ES_DOC_SIZE"/>
+                <orm:column name="ES_DOC_SIZE" column-definition="INT"/>
             </orm:attribute-override>
             <orm:attribute-override name="humanReadableDocument.mimeType">
                 <orm:column name="ES_DOC_MIME_TYPE"/>
@@ -181,13 +181,13 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:Registered']">
         <hj:basic>
-            <orm:column name="REG_IND"/>
+            <orm:column name="REG_IND" column-definition="char(1)"/>
         </hj:basic>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:Modified']">
         <hj:basic>
-            <orm:column name="MOD_IND"/>
+            <orm:column name="MOD_IND" column-definition="char(1)"/>
         </hj:basic>
     </jaxb:bindings>
 

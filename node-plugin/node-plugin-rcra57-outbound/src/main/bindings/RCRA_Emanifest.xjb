@@ -45,13 +45,13 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:IsPublic']">
         <hj:basic>
-            <orm:column name="PUBLIC_IND"/>
+            <orm:column name="PUBLIC_IND" column-definition="char(1)"/>
         </hj:basic>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:SignatureStatus']">
         <hj:basic>
-            <orm:column name="SIGN_STATUS_IND"/>
+            <orm:column name="SIGN_STATUS_IND" column-definition="char(1)"/>
         </hj:basic>
     </jaxb:bindings>
 
@@ -109,14 +109,14 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:Rejection']">
         <hj:basic>
-            <orm:column name="REJ_IND"/>
+            <orm:column name="REJ_IND" column-definition="char(1)"/>
         </hj:basic>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:RejectionInfo']">
         <hj:embedded>
             <orm:attribute-override name="transporterOnSite">
-                <orm:column name="REJ_TRANS_ON_SITE_IND"/>
+                <orm:column name="REJ_TRANS_ON_SITE_IND" column-definition="char(1)"/>
             </orm:attribute-override>
             <orm:attribute-override name="rejectionType">
                 <orm:column name="REJ_TYPE"/>
@@ -153,7 +153,7 @@
 
             <orm:attribute-override
                     name="generatorElectronicSignature.humanReadableDocument.size">
-                <orm:column name="REJ_GEN_ES_DOC_SIZE"/>
+                <orm:column name="REJ_GEN_ES_DOC_SIZE" column-definition="INT"/>
             </orm:attribute-override>
 
             <orm:attribute-override
@@ -186,13 +186,13 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:Discrepancy']">
         <hj:basic>
-            <orm:column name="DISCREPANCY_IND"/>
+            <orm:column name="DISCREPANCY_IND" column-definition="char(1)"/>
         </hj:basic>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:Residue']">
         <hj:basic>
-            <orm:column name="RESIDUE_IND"/>
+            <orm:column name="RESIDUE_IND" column-definition="char(1)"/>
         </hj:basic>
     </jaxb:bindings>
 
@@ -209,7 +209,7 @@
     <jaxb:bindings node="//xsd:element[@ref='RC:Import']">
         <jaxb:property name="importIndicator"/>
         <hj:basic>
-            <orm:column name="IMP_IND"/>
+            <orm:column name="IMP_IND" column-definition="char(1)"/>
         </hj:basic>
     </jaxb:bindings>
 
@@ -252,7 +252,7 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:ContainsPreviousRejectOrResidue']">
         <hj:basic>
-            <orm:column name="CONT_PREV_REJ_RES_IND"/>
+            <orm:column name="CONT_PREV_REJ_RES_IND" column-definition="char(1)"/>
         </hj:basic>
     </jaxb:bindings>
 
@@ -262,7 +262,7 @@
                 <orm:column name="PRINTED_DOC_NAME"/>
             </orm:attribute-override>
             <orm:attribute-override name="size">
-                <orm:column name="PRINTED_DOC_SIZE"/>
+                <orm:column name="PRINTED_DOC_SIZE" column-definition="INT"/>
             </orm:attribute-override>
             <orm:attribute-override name="mimeType">
                 <orm:column name="PRINTED_DOC_MIME_TYPE"/>
@@ -276,7 +276,7 @@
                 <orm:column name="FORM_DOC_NAME"/>
             </orm:attribute-override>
             <orm:attribute-override name="size">
-                <orm:column name="FORM_DOC_SIZE"/>
+                <orm:column name="FORM_DOC_SIZE" column-definition="INT"/>
             </orm:attribute-override>
             <orm:attribute-override name="mimeType">
                 <orm:column name="FORM_DOC_MIME_TYPE"/>
@@ -336,10 +336,10 @@
     <jaxb:bindings node="//xsd:element[@ref='RC:CorrectionInfo']">
         <hj:embedded>
             <orm:attribute-override name="versionNumber">
-                <orm:column name="CORR_VERSION_NUM"/>
+                <orm:column name="CORR_VERSION_NUM" column-definition="INT"/>
             </orm:attribute-override>
             <orm:attribute-override name="active">
-                <orm:column name="CORR_ACTIVE_IND"/>
+                <orm:column name="CORR_ACTIVE_IND" column-definition="char(1)"/>
             </orm:attribute-override>
             <orm:attribute-override name="electronicSignatureInfo.signer.manifestFirstName">
                 <orm:column name="CORR_ES_SIGNER_FIRST_NAME"/>
@@ -357,7 +357,7 @@
                 <orm:column name="CORR_ES_DOC_NAME"/>
             </orm:attribute-override>
             <orm:attribute-override name="electronicSignatureInfo.humanReadableDocument.size">
-                <orm:column name="CORR_ES_DOC_SIZE"/>
+                <orm:column name="CORR_ES_DOC_SIZE" column-definition="INT"/>
             </orm:attribute-override>
             <orm:attribute-override name="electronicSignatureInfo.humanReadableDocument.mimeType">
                 <orm:column name="CORR_ES_DOC_MIME_TYPE"/>
