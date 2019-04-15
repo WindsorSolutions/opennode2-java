@@ -18,6 +18,7 @@ import com.windsor.node.plugin.rcra57.domain.SolicitHistory;
 import com.windsor.node.plugin.rcra57.download.DownloadRequest;
 import com.windsor.node.plugin.rcra57.outbound.BaseRcraPlugin;
 import com.windsor.node.plugin.rcra57.solicit.StoredProcedureException;
+import com.windsor.node.plugin.rcra57.solicit.request.DbInfo;
 import com.windsor.node.plugin.rcra57.solicit.request.SolicitRequestType;
 import com.windsor.node.plugin.rcra57.status.GetStatusRequest;
 import com.windsor.node.service.helper.client.NodeClientFactory;
@@ -266,14 +267,12 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
      * @throws JAXBException On any issue reading the XML data
      */
     private void processData(final ProcessContentResult result, InputStream inputStream, SolicitRequestType type) throws JAXBException {
-
-        // get a handle on an unmarshaller for our data type
-        // FIXME: memory leak
-//        JAXBContext jaxbContext = JAXBContext.newInstance(
-//                "com.windsor.node.plugin.rcra57.domain",
-//                getClassLoader());
-
-        JAXBContext jaxbContext = JAXBContext.newInstance(HazardousWasteEmanifestsDataType.class);
+        JAXBContext jaxbContext = null;
+        if (type.getDbInfo() == DbInfo.EM) {
+            jaxbContext = JAXBContext.newInstance(HazardousWasteEmanifestsDataType.class);
+        } else {
+            jaxbContext = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",getClassLoader());
+        }
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
         // handle any validation events
@@ -301,30 +300,21 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
                         event.getLocator().getNode() + "\n");
                 builderError.append("      URL:  " +
                         event.getLocator().getURL());
-
-                // log our validation event
                 logger.info(builderError.toString());
-
-//                result.getAuditEntries().add(
-//                        new ActivityEntry(builderError.toString()));
-
-                // ignore validation errors
                 return true;
             }
         });
 
-        // unmarshall the input stream
-        @SuppressWarnings("rawtypes")
-        //JAXBElement submissionDataType = (JAXBElement) unmarshaller.unmarshal(inputStream);
-        HazardousWasteEmanifestsDataType submissionDataType = (HazardousWasteEmanifestsDataType) unmarshaller.unmarshal(inputStream);
-        //info("Received " + submissionDataType.getValue().getClass() + " from RCRA Info");
-
-        // purge the appropriate staging tables
-        //cleanupData(type, result);
-
-        // save our new data to the staging tables
-        //persistData(submissionDataType.getValue());
-        persistData(submissionDataType);
+        cleanupData(type, result);
+        if (type.getDbInfo() == DbInfo.EM) {
+            HazardousWasteEmanifestsDataType submissionDataType = (HazardousWasteEmanifestsDataType) unmarshaller.unmarshal(inputStream);
+            persistData(submissionDataType);
+        } else {
+            JAXBElement submissionDataType = (JAXBElement) unmarshaller.unmarshal(inputStream);
+            Object value = submissionDataType.getValue();
+            logger.info("submissionDataType value=" + value);
+            persistData(value );
+        }
     }
 
 //    private void cleanupData(SolicitRequestType type, ProcessContentResult result) {

@@ -321,6 +321,79 @@
         </hj:basic>
     </jaxb:bindings>
 
+    <jaxb:bindings node="//xsd:element[@ref='RC:FARequiredCode']">
+        <hj:basic>
+            <orm:column name="FA_REQUIRED" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GPRACACode']">
+        <hj:basic>
+            <orm:column name="GPRACA" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GPRAPermitCode']">
+        <hj:basic>
+            <orm:column name="GPRA_PERMIT" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GPRARenewalCode']">
+        <hj:basic>
+            <orm:column name="GPRA_RENEWAL" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HSMCode']">
+        <hj:basic>
+            <orm:column name="HSM" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:NCAPSCode']">
+        <hj:basic>
+            <orm:column name="NCAPS" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:SNCCode']">
+        <hj:basic>
+            <orm:column name="SNC" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AsStateRegulatedTSDFCode']">
+        <hj:basic>
+            <orm:column name="AS_STATE_REGULATED_TSDF" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ClosWRKLDCode']">
+        <hj:basic>
+            <orm:column name="CLOS_WRKLD" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ContactEmailCode']">
+        <hj:basic>
+            <orm:column name="CONTACT_EMAIL" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ContactFaxCode']">
+        <hj:basic>
+            <orm:column name="CONTACT_FAX" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ContactPhoneCode']">
+        <hj:basic>
+            <orm:column name="CONTACT_PHONE" />
+        </hj:basic>
+    </jaxb:bindings>
+
+
     <!--  -->
 
     <jaxb:bindings node="//xsd:element[@ref='RC:RUContactAddress']">
