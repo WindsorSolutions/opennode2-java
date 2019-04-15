@@ -13,7 +13,7 @@
         </hj:generated-id>
     </jaxb:bindings>
 
-    <jaxb:bindings node="//xsd:element[@ref='RC:TransactionCode']">
+    <jaxb:bindings node="//xsd:complexType[@name='PermitUnitDetailDataType']//xsd:element[@ref='RC:TransactionCode']">
         <hj:basic>
             <orm:column name="TRANS_CODE" />
         </hj:basic>
@@ -66,8 +66,8 @@
             <orm:join-column name="PRM_UNIT_DETAIL_ID" updatable="false" insertable="true" nullable="false"/>
         </hj:one-to-many>
     </jaxb:bindings>
-    
-    <jaxb:bindings node="//xsd:element[@ref='RC:HandlerWasteCodeDetails']">
+
+    <jaxb:bindings node="//xsd:element[@name='HandlerWasteCodeDetails']">
         <hj:one-to-many>
             <orm:join-column name="PRM_UNIT_DETAIL_ID" updatable="false" insertable="true" nullable="false"/>
         </hj:one-to-many>
@@ -91,6 +91,37 @@
     
     <jaxb:bindings node="//xsd:element[@ref='RC:MeasurementUnitText']">
         <hj:ignored/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='PmHandlerWasteCodeDetailDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_PRM_WASTE_CODE"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="PRM_WASTE_CODE_ID"/>
+        </hj:generated-id>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:WasteCodeText']">
+        <hj:ignored/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:WasteCode']">
+        <hj:basic>
+            <orm:column name="WASTE_CODE_TYPE" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:WasteCodeOwnerName']">
+        <hj:basic>
+            <orm:column name="WASTE_CODE_OWNER" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='PmHandlerWasteCodeDetailDataType']//xsd:element[@ref='RC:TransactionCode']">
+        <hj:basic>
+            <orm:column name="TRANSACTION_CODE"/>
+        </hj:basic>
     </jaxb:bindings>
  
 </jaxb:bindings>
