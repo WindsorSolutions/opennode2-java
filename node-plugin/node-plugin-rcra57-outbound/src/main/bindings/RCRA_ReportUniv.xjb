@@ -393,9 +393,6 @@
         </hj:basic>
     </jaxb:bindings>
 
-
-    <!--  -->
-
     <jaxb:bindings node="//xsd:element[@ref='RC:RUContactAddress']">
         <hj:embedded>
             <orm:attribute-override name="mailingAddressNumberText">
