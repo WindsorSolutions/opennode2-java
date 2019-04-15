@@ -16,5 +16,11 @@
         </hj:basic>
     </jaxb:bindings>
 
+    <jaxb:bindings node="//xsd:element[@ref='RC:TransactionCode']">
+        <hj:basic>
+            <orm:column name="TRANS_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
 </jaxb:bindings>
 
