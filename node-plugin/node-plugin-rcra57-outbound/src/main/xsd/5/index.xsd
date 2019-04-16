@@ -6,8 +6,8 @@
 	<!--
 	<xsd:include schemaLocation="./7/RCRA_HazardousWasteCMESubmission_v5.7.xsd"/>
 	<xsd:include schemaLocation="./7/RCRA_HazardousWasteHandlerSubmission_v5.7.xsd"/>
-	<xsd:include schemaLocation="./7/RCRA_HazardousWasteCorrectiveActionSubmission_v5.7.xsd"/>
 	-->
+	<xsd:include schemaLocation="./7/RCRA_HazardousWasteCorrectiveActionSubmission_v5.7.xsd"/>
 	<xsd:include schemaLocation="./7/RCRA_HazardousWastePermitSubmission_v5.7.xsd"/>
 	<xsd:include schemaLocation="./7/RCRA_FinancialAssuranceSubmission_v5.7.xsd"/>
     <xsd:include schemaLocation="./7/RCRA_HazardousWasteReportUniv_v5.7.xsd"/>

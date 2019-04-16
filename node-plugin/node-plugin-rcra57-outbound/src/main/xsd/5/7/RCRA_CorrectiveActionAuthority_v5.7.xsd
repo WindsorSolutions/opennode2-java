@@ -41,7 +41,19 @@
 			<xsd:element ref="RC:ResponsiblePersonID" minOccurs="0"/>
 			<xsd:element ref="RC:SupplementalInformationText" minOccurs="0"/>
 			<xsd:element ref="RC:CorrectiveActionStatutoryCitation" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element ref="RC:CorrectiveActionRelatedEvent" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element type="RC:AuthCorrectiveActionRelatedEventDataType" name="CorrectiveActionRelatedEvent" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="AuthCorrectiveActionRelatedEventDataType">
+		<xsd:sequence>
+			<xsd:element ref="RC:TransactionCode" minOccurs="0"/>
+			<xsd:element ref="RC:ActivityLocationCode"/>
+			<xsd:element ref="RC:CorrectiveActionEventDataOwnerCode"/>
+			<xsd:element ref="RC:CorrectiveActionEventCode"/>
+			<xsd:element ref="RC:CorrectiveActionEventText" minOccurs="0"/>
+			<xsd:element ref="RC:EventAgencyCode"/>
+			<xsd:element ref="RC:AgencyText" minOccurs="0"/>
+			<xsd:element ref="RC:EventSequenceNumber"/>
 		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>
