@@ -19,36 +19,6 @@
         </hj:basic>
     </jaxb:bindings>
 
-    <!--
-    <jaxb:bindings node="//xsd:complexType[@name='CorrectiveActionAreaDataType']//xsd:element[@ref='RC:EPAResponsiblePersonDataOwnerCode']">
-        <hj:basic>
-            <orm:column name="EPA_RESP_PERSON_DATA_OWNER_CDE" column-definition="char(2)" length="2"/>
-        </hj:basic>
-    </jaxb:bindings>
-    
-    <jaxb:bindings node="//xsd:complexType[@name='CorrectiveActionAreaDataType']//xsd:element[@ref='RC:StateResponsiblePersonDataOwnerCode']">
-        <hj:basic>
-            <orm:column name="STA_RESP_PERSON_DATA_OWNER_CDE" column-definition="char(2)" length="2"/>
-        </hj:basic>
-    </jaxb:bindings>
-    
-    <jaxb:bindings node="//xsd:complexType[@name='CorrectiveActionAreaDataType']//xsd:element[@ref='RC:StateResponsiblePersonID']">
-        <hj:basic>
-            <orm:column name="STA_RESP_PERSON_ID"/>
-        </hj:basic>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:complexType[@name='CorrectiveActionAreaDataType']//xsd:element[@ref='RC:TransactionCode']">
-        <hj:basic>
-            <orm:column name="TRANS_CODE"/>
-        </hj:basic>
-    </jaxb:bindings>
-    -->
-
-    <!-- -->
-
-    <!-- <jaxb:bindings node="//xsd:complexType[@name='PmHandlerWasteCodeDetailDataType']"> -->
-
     <jaxb:bindings node="//xsd:complexType[@name='AreaCorrectiveActionRelatedEventDataType']">
         <hj:entity>
             <orm:table name="RCRA_CA_AREA_REL_EVENT"/>

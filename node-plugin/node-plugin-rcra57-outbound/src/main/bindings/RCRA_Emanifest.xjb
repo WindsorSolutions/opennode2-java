@@ -103,7 +103,6 @@
         <hj:one-to-many>
             <orm:cascade/>
             <orm:join-column name="EM_EMANIFEST_ID" updatable="false" nullable="false"/>
-            <!--<orm:join-table name="RCRA_EM_WASTE"/>-->
         </hj:one-to-many>
     </jaxb:bindings>
 

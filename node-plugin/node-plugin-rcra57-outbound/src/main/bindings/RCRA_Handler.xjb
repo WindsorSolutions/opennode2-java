@@ -4,14 +4,6 @@
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
                jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/7/RCRA_Handler_v5.7.xsd">
 
-    <!--
-    FIXME: what schema elements need to be pulled apart?
-    * HandlerWasteCodeDetails:
-     - episodic waste code - rcra_hd_episodic_waste_code
-     - secondary material - rcra_hd_sec_waste_code
-     - waste code - rcra_hd_waste_code
-    -->
-
     <jaxb:bindings node="//xsd:complexType[@name='HandlerDataType']">
         <hj:entity>
             <orm:table name="RCRA_HD_HANDLER"/>
@@ -300,98 +292,16 @@
         </hj:one-to-many>
     </jaxb:bindings>
 
-    <!--
-        <jaxb:bindings node="//xsd:element[@ref='RC:ReportUnivs']">
-        <hj:one-to-many>
-            <orm:join-column name="RU_SUBM_ID" nullable="false" updatable="false"/>
-        </hj:one-to-many>
-    </jaxb:bindings>
-    -->
-
     <jaxb:bindings node="//xsd:element[@ref='RC:HandlerEpisodicEvent']">
         <hj:one-to-one>
             <orm:join-column name="HD_HANDLER_ID" nullable="false" updatable="false" insertable="true"/>
         </hj:one-to-one>
-        <!--
-        <hj:embedded>
-            <orm:attribute-override name="transactionCode">
-                <orm:column name="EPIS_TRANS_CODE"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="episodicEventOwner">
-                <orm:column name="EPIS_EVENT_OWNER"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="episodicEventType">
-                <orm:column name="EPIS_EVENT_TYPE"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="episodicEventOtherDescription">
-                <orm:column name="EPIS_EVENT_OTHER_DESC"/>
-            </orm:attribute-override>
-
-            <orm:attribute-override name="contact.firstName">
-                <orm:column name="EPIS_CONTACT_FIRST_NAME"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="contact.middleInitial">
-                <orm:column name="EPIS_CONTACT_MIDDLE_INITIAL" column-definition="char(1)" length="1"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="contact.lastName">
-                <orm:column name="EPIS_CONTACT_LAST_NAME"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="contact.organizationFormalName">
-                <orm:column name="EPIS_CONTACT_ORG_NAME"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="contact.individualTitleText">
-                <orm:column name="EPIS_CONTACT_TITLE"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="contact.emailAddressText">
-                <orm:column name="EPIS_CONTACT_EMAIL_ADDRESS"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="contact.telephoneNumberText">
-                <orm:column name="EPIS_CONTACT_PHONE"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="contact.phoneExtensionText">
-                <orm:column name="EPIS_CONTACT_PHONE_EXT"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="contact.faxNumberText">
-                <orm:column name="EPIS_CONTACT_FAX"/>
-            </orm:attribute-override>
-
-            <orm:attribute-override name="episodicEventStartDate">
-                <orm:column name="EPIS_START_DATE"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="episodicEventEndDate">
-                <orm:column name="EPIS_END_DATE"/>
-            </orm:attribute-override>
-
-        </hj:embedded>
-        -->
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:HandlerLqgClosure']">
         <hj:one-to-one>
             <orm:join-column name="HD_HANDLER_ID" nullable="false" updatable="false" insertable="true"/>
         </hj:one-to-one>
-        <!--
-        <hj:embedded>
-            <orm:attribute-override name="transactionCode">
-                <orm:column name="CLOSURE_TRANS_CODE"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="closureType">
-                <orm:column name="CLOSURE_TYPE"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="expectedClosureDate">
-                <orm:column name="EXPECTED_CLOSURE_DATE"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="newClosureDate">
-                <orm:column name="NEW_CLOSURE_DATE"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="dateClosed">
-                <orm:column name="DATE_CLOSED"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="inComplianceIndicator">
-                <orm:column name="CLOSURE_IN_COMPLIANCE_IND"/>
-            </orm:attribute-override>
-        </hj:embedded>
-        -->
     </jaxb:bindings>
 
 </jaxb:bindings>

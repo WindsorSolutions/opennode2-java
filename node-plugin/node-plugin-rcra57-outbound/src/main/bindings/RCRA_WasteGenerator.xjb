@@ -24,15 +24,5 @@
         </hj:basic>
     </jaxb:bindings>
 
-    <!-- FIXME: we're going to need to split this type -->
-
-    <!--
-    <jaxb:bindings node="//xsd:element[@ref='RC:WasteGeneratorStatusCode']">
-        <hj:basic>
-            <orm:column name="STATE_WASTE_GENERATOR"/>
-        </hj:basic>
-    </jaxb:bindings>
-    -->
-
 </jaxb:bindings>
 

@@ -14,6 +14,12 @@
         </hj:generated-id>
     </jaxb:bindings>
 
+    <jaxb:bindings node="//xsd:element[@ref='RC:CorrectiveActionStatutoryCitation']">
+        <hj:one-to-many>
+            <orm:join-column name="CA_AUTHORITY_ID" nullable="false" insertable="true" updatable="false"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
     <jaxb:bindings node="//xsd:complexType[@name='AuthCorrectiveActionRelatedEventDataType']">
         <hj:entity>
             <orm:table name="RCRA_CA_AUTH_REL_EVENT"/>
