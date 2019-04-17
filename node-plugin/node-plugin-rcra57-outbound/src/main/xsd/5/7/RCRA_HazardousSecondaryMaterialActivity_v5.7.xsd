@@ -29,7 +29,18 @@
 			<xsd:element ref="RC:ActualShortTonsQuantity" minOccurs="0"/>
 			<xsd:element ref="RC:LandBasedUnitIndicator" minOccurs="0"/>
 			<xsd:element ref="RC:LandBasedUnitIndicatorText" minOccurs="0"/>
-			<xsd:element ref="RC:HandlerWasteCodeDetails" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="HandlerWasteCodeDetails" type="RC:HazHandlerWasteCodeDataType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="HazHandlerWasteCodeDataType">
+		<xsd:annotation>
+			<xsd:documentation>Hazardous waste codes describing the handler's hazardous waste streams.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="RC:TransactionCode" minOccurs="0"/>
+			<xsd:element ref="RC:WasteCodeOwnerName" minOccurs="0"/>
+			<xsd:element ref="RC:WasteCode" minOccurs="0"/>
+			<xsd:element ref="RC:WasteCodeText" minOccurs="0"/>
 		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>

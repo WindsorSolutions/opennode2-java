@@ -5,20 +5,47 @@
     jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/7/RCRA_HandlerEpisodicEvent_v5.7.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='HandlerEpisodicEventDataType']">
-        <hj:embeddable />
-        <!--
         <hj:entity>
-            <orm:table name="RCRA_HD_EPISODIC_WASTE"/>
+            <orm:table name="RCRA_HD_EPISODIC_EVENT"/>
         </hj:entity>
         <hj:generated-id name="Dbid">
-            <orm:column name="HD_EPISODIC_WASTE_ID"/>
+            <orm:column name="HD_EPISODIC_EVENT_ID"/>
         </hj:generated-id>
-        -->
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:TransactionCode']">
         <hj:basic>
             <orm:column name="TRANSACTION_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:EpisodicEventEndDate']">
+        <hj:basic>
+            <orm:column name="END_DATE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:EpisodicEventStartDate']">
+        <hj:basic>
+            <orm:column name="START_DATE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:EpisodicEventOtherDescription']">
+        <hj:basic>
+            <orm:column name="EVENT_OTHER_DESC"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:EpisodicEventOwner']">
+        <hj:basic>
+            <orm:column name="EVENT_OWNER"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:EpisodicEventType']">
+        <hj:basic>
+            <orm:column name="EVENT_TYPE"/>
         </hj:basic>
     </jaxb:bindings>
 

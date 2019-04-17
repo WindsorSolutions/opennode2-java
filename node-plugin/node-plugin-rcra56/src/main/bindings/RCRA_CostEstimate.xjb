@@ -31,12 +31,6 @@
         </hj:basic>
     </jaxb:bindings>
 
-    <jaxb:bindings node="//xsd:element[@ref='RC:getCostEstimateReasonCode']">
-        <hj:basic>
-            <orm:column name="COST_ESTIMATE_RSN_CODE"/>
-        </hj:basic>
-    </jaxb:bindings>
-
     <jaxb:bindings node="//xsd:element[@ref='RC:CostEstimateRelatedMechanism']">
         <hj:one-to-many>
             <orm:join-column name="FA_COST_EST_ID"/>

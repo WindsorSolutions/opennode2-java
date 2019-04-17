@@ -37,20 +37,20 @@
 
             <!-- non-standard HD mappings -->
 
-<!--            <xjc:javaType name="java.lang.String" xmlType="RC:SignedDateDataType"-->
-<!--                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.StringAdapter"/>-->
-<!--            <xjc:javaType name="java.lang.String" xmlType="RC:AcknowledgeReceiptDateDataType"-->
-<!--                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.StringAdapter"/>-->
-<!--            <xjc:javaType name="java.lang.String" xmlType="RC:ReceiveDateDataType"-->
-<!--                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.StringAdapter"/>-->
-<!--            <xjc:javaType name="java.lang.String" xmlType="RC:TreatmentStorageDisposalDateDataType"-->
-<!--                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.StringAdapter"/>-->
-<!--            <xjc:javaType name="java.lang.Integer" xmlType="RC:NAICSSequenceNumberDataType"-->
-<!--                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.IntegerAdapter"/>-->
-<!--            <xjc:javaType name="java.lang.String" xmlType="RC:CurrentStartDateDataType"-->
-<!--                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.StringAdapter"/>-->
-<!--            <xjc:javaType name="java.lang.String" xmlType="RC:CurrentEndDateDataType"-->
-<!--                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.StringAdapter"/>-->
+            <xjc:javaType name="java.lang.String" xmlType="RC:SignedDateDataType"
+                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.StringAdapter"/>
+            <xjc:javaType name="java.lang.String" xmlType="RC:AcknowledgeReceiptDateDataType"
+                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.StringAdapter"/>
+            <xjc:javaType name="java.lang.String" xmlType="RC:ReceiveDateDataType"
+                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.StringAdapter"/>
+            <xjc:javaType name="java.lang.String" xmlType="RC:TreatmentStorageDisposalDateDataType"
+                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.StringAdapter"/>
+            <xjc:javaType name="java.lang.Integer" xmlType="RC:NAICSSequenceNumberDataType"
+                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.IntegerAdapter"/>
+            <xjc:javaType name="java.lang.String" xmlType="RC:CurrentStartDateDataType"
+                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.StringAdapter"/>
+            <xjc:javaType name="java.lang.String" xmlType="RC:CurrentEndDateDataType"
+                          adapter="com.windsor.node.plugin.common.xml.bind.annotation.adapters.StringAdapter"/>
 
         </jaxb:globalBindings>
 
@@ -58,6 +58,41 @@
             <hj:default-generated-id name="dbid" transient="true" javaType="java.lang.String">
                 <orm:generated-value generator="UUID" />
             </hj:default-generated-id>
+            <hj:default-single-property type="RC:ReceiveDateDataType">
+                <hj:basic>
+                    <orm:column column-definition="varchar(10)" length="10"/>
+                </hj:basic>
+            </hj:default-single-property>
+            <hj:default-single-property type="RC:SignedDateDataType">
+                <hj:basic>
+                    <orm:column column-definition="varchar2(10)" length="10"/>
+                </hj:basic>
+            </hj:default-single-property>
+            <hj:default-single-property type="RC:AcknowledgeReceiptDateDataType">
+                <hj:basic>
+                    <orm:column column-definition="varchar2(10)" length="10"/>
+                </hj:basic>
+            </hj:default-single-property>
+            <hj:default-single-property type="RC:ReceiveDateDataType">
+                <hj:basic>
+                    <orm:column column-definition="varchar(10)" length="10"/>
+                </hj:basic>
+            </hj:default-single-property>
+            <hj:default-single-property type="RC:TreatmentStorageDisposalDateDataType">
+                <hj:basic>
+                    <orm:column column-definition="varchar2(10)" length="10"/>
+                </hj:basic>
+            </hj:default-single-property>
+            <hj:default-single-property type="RC:CurrentStartDateDataType">
+                <hj:basic>
+                    <orm:column column-definition="varchar2(10)" length="10"/>
+                </hj:basic>
+            </hj:default-single-property>
+            <hj:default-single-property type="RC:CurrentEndDateDataType">
+                <hj:basic>
+                    <orm:column column-definition="varchar2(10)" length="10"/>
+                </hj:basic>
+            </hj:default-single-property>
         </hj:persistence>
 
 <!--        <hj:persistence>-->
@@ -718,26 +753,7 @@
 <!--                </hj:basic>-->
 <!--            </hj:default-single-property>-->
 
-<!--            <hj:default-single-property type="RC:SignedDateDataType">-->
-<!--                <hj:basic>-->
-<!--                    <orm:column column-definition="varchar2(10)" length="10"/>-->
-<!--                </hj:basic>-->
-<!--            </hj:default-single-property>-->
-<!--            <hj:default-single-property type="RC:AcknowledgeReceiptDateDataType">-->
-<!--                <hj:basic>-->
-<!--                    <orm:column column-definition="varchar2(10)" length="10"/>-->
-<!--                </hj:basic>-->
-<!--            </hj:default-single-property>-->
-<!--            <hj:default-single-property type="RC:ReceiveDateDataType">-->
-<!--                <hj:basic>-->
-<!--                    <orm:column column-definition="varchar2(10)" length="10"/>-->
-<!--                </hj:basic>-->
-<!--            </hj:default-single-property>-->
-<!--            <hj:default-single-property type="RC:TreatmentStorageDisposalDateDataType">-->
-<!--                <hj:basic>-->
-<!--                    <orm:column column-definition="varchar2(10)" length="10"/>-->
-<!--                </hj:basic>-->
-<!--            </hj:default-single-property>-->
+
 <!--            <hj:default-single-property type="RC:MailingAddressCountryNameDataType">-->
 <!--                <hj:basic>-->
 <!--                    <orm:column column-definition="char(2)" length="2"/>-->
@@ -773,16 +789,7 @@
 <!--                    <orm:column column-definition="char(2)" length="2"/>-->
 <!--                </hj:basic>-->
 <!--            </hj:default-single-property>-->
-<!--            <hj:default-single-property type="RC:CurrentStartDateDataType">-->
-<!--                <hj:basic>-->
-<!--                    <orm:column column-definition="varchar2(10)" length="10"/>-->
-<!--                </hj:basic>-->
-<!--            </hj:default-single-property>-->
-<!--            <hj:default-single-property type="RC:CurrentEndDateDataType">-->
-<!--                <hj:basic>-->
-<!--                    <orm:column column-definition="varchar2(10)" length="10"/>-->
-<!--                </hj:basic>-->
-<!--            </hj:default-single-property>-->
+
 <!--            <hj:default-single-property type="RC:AccumulatedWasteCodeDataType">-->
 <!--                <hj:basic>-->
 <!--                    <orm:column column-definition="char(1)" length="1"/>-->

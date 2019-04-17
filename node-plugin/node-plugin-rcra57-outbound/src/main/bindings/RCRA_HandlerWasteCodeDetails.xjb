@@ -6,10 +6,10 @@
 
     <jaxb:bindings node="//xsd:complexType[@name='HandlerWasteCodeDataType']">
         <hj:entity>
-            <orm:table name="RCRA_PRM_WASTE_CODE"/>
+            <orm:table name="RCRA_HD_WASTE_CODE"/>
         </hj:entity>
         <hj:generated-id name="Dbid">
-            <orm:column name="PRM_WASTE_CODE_ID"/>
+            <orm:column name="HD_WASTE_CODE_ID"/>
         </hj:generated-id>
     </jaxb:bindings>
 

@@ -5,20 +5,29 @@
     jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/7/RCRA_HandlerLqgClosure_v5.7.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='HandlerLqgClosureDataType']">
-        <hj:embeddable />
-        <!--
         <hj:entity>
             <orm:table name="RCRA_HD_LQG_CLOSURE"/>
         </hj:entity>
         <hj:generated-id name="Dbid">
             <orm:column name="HD_LQG_CLOSURE_ID"/>
         </hj:generated-id>
-        -->
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:TransactionCode']">
         <hj:basic>
             <orm:column name="TRANSACTION_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ClosureType']">
+        <hj:basic>
+            <orm:column name="CLOSURE_TYPE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:InComplianceIndicator']">
+        <hj:basic>
+            <orm:column name="IN_COMPLIANCE_IND"/>
         </hj:basic>
     </jaxb:bindings>
 
