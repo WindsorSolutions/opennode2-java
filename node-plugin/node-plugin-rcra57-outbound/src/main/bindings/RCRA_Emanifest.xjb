@@ -19,6 +19,12 @@
         </hj:basic>
     </jaxb:bindings>
 
+    <jaxb:bindings node="//xsd:element[@ref='RC:SubmissionType']">
+        <hj:basic>
+            <orm:column name="SUBM_TYPE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
     <jaxb:bindings node="//xsd:element[@ref='RC:CreatedDate']">
         <hj:basic>
             <orm:column name="CREATED_DATE"/>
