@@ -23,5 +23,11 @@
         <hj:ignored/>
     </jaxb:bindings>
 
+    <jaxb:bindings node="//xsd:element[@ref='RC:HazardousSecondaryMaterialActivity']">
+        <hj:one-to-many>
+            <orm:join-column name="HD_HANDLER_ID" nullable="false" insertable="true" updatable="false"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
 </jaxb:bindings>
 

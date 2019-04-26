@@ -43,4 +43,22 @@
         </hj:basic>
     </jaxb:bindings>
 
+    <jaxb:bindings node="//xsd:element[@ref='RC:EpisodicWasteSequenceNumber']">
+        <hj:basic>
+            <orm:column name="SEQ_NUMBER"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:EstimatedQuantity']">
+        <hj:basic>
+            <orm:column name="EST_QNTY"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@type='RC:EpisodicHandlerWasteCodeDataType']">
+        <hj:one-to-many>
+            <orm:join-column name="HD_EPISODIC_EVENT_ID" nullable="false" insertable="true" updatable="false"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
 </jaxb:bindings>

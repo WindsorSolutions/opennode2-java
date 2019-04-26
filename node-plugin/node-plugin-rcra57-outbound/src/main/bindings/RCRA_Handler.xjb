@@ -138,7 +138,7 @@
     <jaxb:bindings node="//xsd:element[@ref='RC:HazardousSecondaryMaterial']">
         <hj:embedded>
             <orm:association-override name="hazardousSecondaryMaterialActivity">
-                <orm:join-column name="HD_HANDLER_ID"/>
+                <orm:join-column name="HD_HANDLER_ID" insertable="true" nullable="false" updatable="false"/>
             </orm:association-override>
         </hj:embedded>
     </jaxb:bindings>
@@ -293,15 +293,15 @@
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:HandlerEpisodicEvent']">
-        <hj:one-to-one>
+        <hj:one-to-many>
             <orm:join-column name="HD_HANDLER_ID" nullable="false" updatable="false" insertable="true"/>
-        </hj:one-to-one>
+        </hj:one-to-many>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:HandlerLqgClosure']">
-        <hj:one-to-one>
+        <hj:one-to-many>
             <orm:join-column name="HD_HANDLER_ID" nullable="false" updatable="false" insertable="true"/>
-        </hj:one-to-one>
+        </hj:one-to-many>
     </jaxb:bindings>
 
 </jaxb:bindings>
