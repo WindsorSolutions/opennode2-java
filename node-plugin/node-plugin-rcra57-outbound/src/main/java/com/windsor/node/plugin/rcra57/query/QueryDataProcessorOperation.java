@@ -29,6 +29,9 @@ import net.exchangenetwork.wsdl.node._2.NodeFaultMessage;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.hibernate.dialect.Dialect;
+import org.hibernate.dialect.SQLServerDialect;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
 
 import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
@@ -243,13 +246,28 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
 
         try {
             getTargetEntityManager().getTransaction().begin();
+            logger.info("Starting transaction to execute SP");
+
+            Dialect dialect = getTargetEntityManager().getEntityManagerFactory().unwrap(SessionFactoryImplementor.class).getDialect();
+
+            //String dialect = getTargetEntityManager().getEntityManagerFactory().getProperties().get("hibernate.dialect").toString();
+            logger.info("Hibernate Dialect=" + dialect);
+            String spCallTemplate = null;
+            if (dialect instanceof SQLServerDialect) { //.equals("org.hibernate.dialect.SQLServerDialect")) {
+                spCallTemplate = "exec %s ?";
+            } else {
+                spCallTemplate = "call %s(?)";
+            }
+            String spCall = format(spCallTemplate, storedProcedure);
+            logger.info("SP call: " + spCall);
             Query query = getTargetEntityManager()
-                    .createNativeQuery(format("call %s(?)", storedProcedure));
+                    .createNativeQuery(spCall);
             logger.info("Calling stored procedure: " + query.toString());
             query.setParameter(1, type.getDbInfo().getType());
             query.executeUpdate();
             getTargetEntityManager().getTransaction().commit();
         } catch (Exception exception) {
+            logger.error("Error executing SP", exception);
             getTargetEntityManager().getTransaction().rollback();
             String rootCause = ExceptionUtils.getRootCauseMessage(exception);
             logger.info("Rolled back the transaction for the stored procedure", exception);
