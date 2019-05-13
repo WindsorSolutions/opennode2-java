@@ -324,12 +324,12 @@
 	<xsd:complexType name="AddressDataType">
 		<xsd:sequence>
 			<xsd:element ref="RC:StreetNumber" minOccurs="0"/>
-			<xsd:element ref="RC:Address1"/>
+			<xsd:element ref="RC:Address1" minOccurs="0"/>
 			<xsd:element ref="RC:Address2" minOccurs="0"/>
-			<xsd:element ref="RC:City"/>
+			<xsd:element ref="RC:City" minOccurs="0"/>
 			<xsd:element ref="RC:Country" minOccurs="0"/>
-			<xsd:element ref="RC:ManifestState"/>
-			<xsd:element ref="RC:Zip"/>
+			<xsd:element ref="RC:ManifestState" minOccurs="0"/>
+			<xsd:element ref="RC:Zip" minOccurs="0"/>
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:simpleType name="Address1DataType">

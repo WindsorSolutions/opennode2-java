@@ -249,11 +249,9 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
             logger.info("Starting transaction to execute SP");
 
             Dialect dialect = getTargetEntityManager().getEntityManagerFactory().unwrap(SessionFactoryImplementor.class).getDialect();
-
-            //String dialect = getTargetEntityManager().getEntityManagerFactory().getProperties().get("hibernate.dialect").toString();
             logger.info("Hibernate Dialect=" + dialect);
             String spCallTemplate = null;
-            if (dialect instanceof SQLServerDialect) { //.equals("org.hibernate.dialect.SQLServerDialect")) {
+            if (dialect instanceof SQLServerDialect) {
                 spCallTemplate = "exec %s ?";
             } else {
                 spCallTemplate = "call %s(?)";

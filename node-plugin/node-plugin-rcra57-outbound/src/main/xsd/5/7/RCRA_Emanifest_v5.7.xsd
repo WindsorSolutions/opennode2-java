@@ -21,7 +21,7 @@
 		</xsd:annotation>
 		<xsd:sequence>
 			<xsd:element ref="RC:CreatedDate"/>
-			<xsd:element ref="RC:UpdatedDate"/>
+			<xsd:element ref="RC:UpdatedDate" minOccurs="0"/>
 			<xsd:element ref="RC:ManifestTrackingNumber"/>
 			<xsd:element ref="RC:Status"/>
 			<xsd:element ref="RC:IsPublic" minOccurs="0"/>
@@ -243,6 +243,7 @@
 			<xsd:enumeration value="Signed"/>
 			<xsd:enumeration value="Corrected"/>
 			<xsd:enumeration value="UnderCorrection"/>
+			<xsd:enumeration value="NotAssigned"/>
 			<!--xsd:enumeration value="Received"/-->
 		</xsd:restriction>
 	</xsd:simpleType>
