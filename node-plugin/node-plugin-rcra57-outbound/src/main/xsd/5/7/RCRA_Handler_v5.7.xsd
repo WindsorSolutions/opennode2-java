@@ -82,7 +82,7 @@
 			<xsd:element ref="RC:HDReportCycleYear" minOccurs="0"/>
 			<xsd:element ref="RC:HealthcareFacility" minOccurs="0"/>
 			<xsd:element ref="RC:ReverseDistributor" minOccurs="0"/>
-			<xsd:element ref="SubpartPWithdrawal" minOccurs="0"/>
+			<xsd:element ref="RC:SubpartPWithdrawal" minOccurs="0"/>
 		</xsd:sequence>
 	</xsd:complexType>
 	<xsd:element name="AccessibilityCode" type="RC:Char1DataType">
