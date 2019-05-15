@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+    version="1.0">
+
+    <persistence-unit name="icis-air">
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirFacility</class>
+        <class>com.windsor.node.plugin.oepa.domain.NaicsCodeDetails</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirPayload</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirPollutants</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirPrograms</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirComplianceMonitoringStrategy</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirDaCaseFile</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirDaFormalEnforcementAction</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirDaEnforcementActionLinkage</class>
+        <class>com.windsor.node.plugin.oepa.domain.ComplianceMonitoringLinkage</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirProgramsSubpartData</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirPollutantDaClassificationData</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirComplianceMonitoringData</class>
+        <class>com.windsor.node.plugin.oepa.domain.AirFacilityIdentifier</class>
+        <class>com.windsor.node.plugin.oepa.domain.ComplianceInspectionTypeCode</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirTvaccData</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirTvaccReviewData</class>
+        <class>com.windsor.node.plugin.oepa.domain.ProgramCode</class>
+        <class>com.windsor.node.plugin.oepa.domain.AirStackTestData</class>
+        <class>com.windsor.node.plugin.oepa.domain.TestResultsData</class>
+        <class>com.windsor.node.plugin.oepa.domain.IcisAirDaInformalEnforcementAction</class>
+        <class>com.windsor.node.plugin.oepa.domain.ProgramsViolatedCode</class>
+        <class>com.windsor.node.plugin.oepa.domain.EnforcementActionTypeCode</class>
+        <class>com.windsor.node.plugin.oepa.domain.LinkageAirDAEnforcementActionIdentifier</class>
+        <class>com.windsor.node.plugin.oepa.domain.CaseFileLinkage</class>
+        <class>com.windsor.node.plugin.oepa.domain.LinkageCaseFile</class>
+        <class>com.windsor.node.plugin.oepa.domain.OtherPathwayActivityData</class>
+        <class>com.windsor.node.plugin.oepa.domain.AirDaFinalOrder</class>
+        <class>com.windsor.node.plugin.oepa.domain.DemandStipulatedPenalty</class>
+        <class>com.windsor.node.plugin.oepa.domain.FinalOrderAirFacilityIdentifier</class>
+        <class>com.windsor.node.plugin.oepa.domain.CaseFileCommentText</class>
+        <class>com.windsor.node.plugin.oepa.domain.AirViolationData</class>
+        <class>com.windsor.node.plugin.oepa.domain.AirPollutantCode</class>
+    </persistence-unit>
+
+</persistence>

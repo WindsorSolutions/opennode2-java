@@ -1,0 +1,388 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.windsor.node.plugin</groupId>
+        <artifactId>node-plugin</artifactId>
+        <version>2.14</version>
+    </parent>
+    <artifactId>node-plugin-oh-icis-air-loader</artifactId>
+    <packaging>jar</packaging>
+    <name>Node Plugin - OH ICIS Air Loader</name>
+    <description>Loads data from the Ohio Web Daemon into ICIS AIR staging</description>
+
+    <properties>
+        <node.plugin.name>oh-icis-air-loader</node.plugin.name>
+        <node.plugin.build.number>1</node.plugin.build.number>
+        <node.plugin.description>Loads data from the Ohio Web Daemon into ICIS AIR staging</node.plugin.description>
+        <node.plugin.help.text>OH Specific Plugin - Stage Web Daemon data to ICIS AIR</node.plugin.help.text>
+
+        <!--<mvn.spring.version>3.2.11.RELEASE</mvn.spring.version>-->
+        <!--<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
+        <!--<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>-->
+        <!--<cxf.version>2.6.2</cxf.version>-->
+        <!--<jaxb.impl.version>2.2.7-b41</jaxb.impl.version>-->
+        <!--<jaxws-api.version>2.2.8</jaxws-api.version>-->
+        <!--<javax.xml.bind.version>2.2.7</javax.xml.bind.version>-->
+        <!--<hibernate.version>4.3.11.Final</hibernate.version>-->
+    </properties>
+
+    <build>
+        <finalName>${node.plugin.name}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>com.windsor.node.plugin</groupId>
+            <artifactId>node-plugin-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.windsor.node.plugin</groupId>
+            <artifactId>node-plugin-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- OLD DESCRIPTOR -->
+    <!--<dependencies>-->
+
+        <!--&lt;!&ndash; Springframework dependencies &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-webmvc</artifactId>-->
+            <!--<version>${mvn.spring.version}</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<artifactId>commons-logging</artifactId>-->
+                    <!--<groupId>commons-logging</groupId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-oxm</artifactId>-->
+            <!--<version>${mvn.spring.version}</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-jdbc</artifactId>-->
+            <!--<version>${mvn.spring.version}</version>-->
+        <!--</dependency>-->
+
+        <!--&lt;!&ndash; New location for Spring's mail integration, version number apparently differs &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.integration</groupId>-->
+            <!--<artifactId>spring-integration-mail</artifactId>-->
+            <!--<version>3.0.5.RELEASE</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.springframework</groupId>-->
+                    <!--<artifactId>spring-context</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+
+        <!--&lt;!&ndash; Optional dependecy that's required for Quartz timers/jobs to function &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>opensymphony</groupId>-->
+            <!--<artifactId>quartz</artifactId>-->
+            <!--<version>1.6.2</version>-->
+        <!--</dependency>-->
+        <!--&lt;!&ndash; END Springframework dependencies &ndash;&gt;-->
+
+        <!--&lt;!&ndash; Apache commons dependencies that are not otherwise included &ndash;&gt;-->
+        <!--&lt;!&ndash; Note, commons-lang and commons-lang3 will work side by side, commons-lang is included as a transitive dependency &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.commons</groupId>-->
+            <!--<artifactId>commons-lang3</artifactId>-->
+            <!--<version>3.1</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>commons-io</groupId>-->
+            <!--<artifactId>commons-io</artifactId>-->
+            <!--<version>2.4</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>commons-collections</groupId>-->
+            <!--<artifactId>commons-collections</artifactId>-->
+            <!--<version>3.2</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>com.zaxxer</groupId>-->
+            <!--<artifactId>HikariCP</artifactId>-->
+            <!--<version>1.3.3</version>-->
+        <!--</dependency>-->
+        <!--&lt;!&ndash; Minimum javassist version required by HikariCP &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.javassist</groupId>-->
+            <!--<artifactId>javassist</artifactId>-->
+            <!--<version>3.18.1-GA</version>-->
+        <!--</dependency>-->
+
+        <!--&lt;!&ndash; Declare target servlet API &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>javax.servlet</groupId>-->
+            <!--<artifactId>servlet-api</artifactId>-->
+            <!--<version>2.5</version>-->
+            <!--<scope>provided</scope>-->
+        <!--</dependency>-->
+
+        <!--&lt;!&ndash; Logging and log interceptors &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.slf4j</groupId>-->
+            <!--<artifactId>jcl-over-slf4j</artifactId>-->
+            <!--<version>1.7.7</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.slf4j</groupId>-->
+                    <!--<artifactId>slf4j-api</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.slf4j</groupId>-->
+            <!--<artifactId>slf4j-api</artifactId>-->
+            <!--<version>1.7.7</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>ch.qos.logback</groupId>-->
+            <!--<artifactId>logback-classic</artifactId>-->
+            <!--<version>1.1.2</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.slf4j</groupId>-->
+                    <!--<artifactId>slf4j-api</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+        <!--&lt;!&ndash; END Logging and log interceptors &ndash;&gt;-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.apache.cxf</groupId>-->
+            <!--<artifactId>cxf-rt-frontend-jaxws</artifactId>-->
+            <!--<version>${cxf.version}</version>-->
+            <!--&lt;!&ndash; Avoid using such an old JAXB implementation &ndash;&gt;-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>com.sun.xml.bind</groupId>-->
+                    <!--<artifactId>jaxb-impl</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.geronimo.specs</groupId>-->
+                    <!--<artifactId>geronimo-javamail_1.4_spec</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.cxf</groupId>-->
+            <!--<artifactId>cxf-rt-transports-http</artifactId>-->
+            <!--<version>${cxf.version}</version>-->
+        <!--</dependency>-->
+
+        <!--&lt;!&ndash; Force a newer JAXB implementation &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>com.sun.xml.bind</groupId>-->
+            <!--<artifactId>jaxb-impl</artifactId>-->
+            <!--<version>${jaxb.impl.version}</version>-->
+        <!--</dependency>-->
+
+        <!--&lt;!&ndash; Force newer JAXWS for Eclipse IDE &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>javax.xml.ws</groupId>-->
+            <!--<artifactId>jaxws-api</artifactId>-->
+            <!--<version>${jaxws-api.version}</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>javax.xml.bind</groupId>-->
+                    <!--<artifactId>jaxb-api</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                    <!--<groupId>javax.activation</groupId>-->
+                    <!--<artifactId>activation</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>javax.xml.bind</groupId>-->
+            <!--<artifactId>jaxb-api</artifactId>-->
+            <!--<version>${javax.xml.bind.version}</version>-->
+        <!--</dependency>-->
+
+        <!--&lt;!&ndash; Testing Resources &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>junit</groupId>-->
+            <!--<artifactId>junit</artifactId>-->
+            <!--<version>4.10</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.easytesting</groupId>-->
+            <!--<artifactId>fest-assert</artifactId>-->
+            <!--<version>1.4</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.mockito</groupId>-->
+            <!--<artifactId>mockito-core</artifactId>-->
+            <!--<version>1.9.0</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>pl.pragmatists</groupId>-->
+            <!--<artifactId>JUnitParams</artifactId>-->
+            <!--<version>0.3.7</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+        <!--&lt;!&ndash; END Testing Resources &ndash;&gt;-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate</groupId>-->
+            <!--<artifactId>hibernate-jpamodelgen</artifactId>-->
+            <!--<version>1.2.0.Final</version>-->
+            <!--<optional>true</optional>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate</groupId>-->
+            <!--<artifactId>hibernate-core</artifactId>-->
+            <!--<version>${hibernate.version}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate</groupId>-->
+            <!--<artifactId>hibernate-entitymanager</artifactId>-->
+            <!--<version>${hibernate.version}</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.eclipse.persistence</groupId>-->
+            <!--<artifactId>eclipselink</artifactId>-->
+            <!--<version>2.7.4</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.safehaus.jug</groupId>-->
+            <!--<artifactId>jug-asl</artifactId>-->
+            <!--<version>2.0.0</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>commons-beanutils</groupId>-->
+            <!--<artifactId>commons-beanutils</artifactId>-->
+            <!--<version>20030211.134440</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.apache.velocity</groupId>-->
+            <!--<artifactId>velocity</artifactId>-->
+            <!--<version>1.7</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>com.windsor.node</groupId>-->
+            <!--<artifactId>plugin-common</artifactId>-->
+            <!--<version>2.15</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.windsor.node</groupId>-->
+            <!--<artifactId>core-common</artifactId>-->
+            <!--<version>2.15</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.windsor.node</groupId>-->
+            <!--<artifactId>core-wnos</artifactId>-->
+            <!--<version>2.15</version>-->
+        <!--</dependency>-->
+    <!--</dependencies>-->
+
+    <!--<build>-->
+        <!--<finalName>oepa-icis-air-loader</finalName>-->
+        <!--<resources>-->
+            <!--<resource>-->
+                <!--<directory>src/main/resources</directory>-->
+                <!--<filtering>true</filtering>-->
+            <!--</resource>-->
+            <!--<resource>-->
+                <!--<directory>src/test/resources</directory>-->
+                <!--<filtering>true</filtering>-->
+            <!--</resource>-->
+        <!--</resources>-->
+
+        <!--<pluginManagement>-->
+            <!--<plugins>-->
+                <!--<plugin>-->
+                    <!--<groupId>org.apache.maven.plugins</groupId>-->
+                    <!--<artifactId>maven-compiler-plugin</artifactId>-->
+                    <!--<version>3.1</version>-->
+                    <!--<configuration>-->
+                        <!--<source>1.7</source>-->
+                        <!--<target>1.7</target>-->
+                        <!--<compilerArguments>-->
+                           <!--<endorseddirs>${project.build.directory}/endorsed</endorseddirs>-->
+                        <!--</compilerArguments>-->
+                    <!--</configuration>-->
+                <!--</plugin>-->
+                <!--<plugin>-->
+                    <!--<groupId>org.apache.maven.plugins</groupId>-->
+                    <!--<artifactId>maven-war-plugin</artifactId>-->
+                    <!--<version>2.4</version>-->
+                <!--</plugin>-->
+                <!--<plugin>-->
+                    <!--<groupId>org.apache.maven.plugins</groupId>-->
+                    <!--<artifactId>maven-surefire-plugin</artifactId>-->
+                    <!--<configuration>-->
+                        <!--<forkMode>once</forkMode>-->
+                        <!--<argLine>-Djava.endorsed.dirs=${project.build.directory}/endorsed</argLine>-->
+                    <!--</configuration>-->
+                 <!--</plugin>-->
+            <!--</plugins>-->
+        <!--</pluginManagement>-->
+    <!--</build>-->
+
+    <!--<repositories>-->
+        <!--<repository>-->
+            <!--<id>central</id>-->
+            <!--<url>https://nexus.windsorcloud.com/repository/maven-public/</url>-->
+            <!--<releases>-->
+                <!--<enabled>true</enabled>-->
+            <!--</releases>-->
+            <!--<snapshots>-->
+                <!--<enabled>true</enabled>-->
+            <!--</snapshots>-->
+        <!--</repository>-->
+    <!--</repositories>-->
+    <!--<pluginRepositories>-->
+        <!--<pluginRepository>-->
+            <!--<id>central</id>-->
+            <!--<url>https://nexus.windsorcloud.com/repository/maven-public/</url>-->
+            <!--<releases>-->
+                <!--<enabled>true</enabled>-->
+            <!--</releases>-->
+            <!--<snapshots>-->
+                <!--<enabled>true</enabled>-->
+            <!--</snapshots>-->
+        <!--</pluginRepository>-->
+    <!--</pluginRepositories>-->
+</project>

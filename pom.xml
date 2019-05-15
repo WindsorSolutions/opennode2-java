@@ -37,11 +37,11 @@
     <distributionManagement>
         <repository>
             <id>nexus-east</id>
-            <url>http://nexus.east.windsor.com/content/repositories/releases/</url>
+            <url>https://nexus.east.windsor.com/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
             <id>nexus-east</id>
-            <url>http://nexus.east.windsor.com/content/repositories/snapshots/</url>
+            <url>https://nexus.east.windsor.com/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 

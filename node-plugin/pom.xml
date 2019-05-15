@@ -35,6 +35,7 @@
         <module>node-plugin-nct</module>
         <module>node-plugin-nysitespills</module>
         <module>node-plugin-oh-icis-air</module>
+        <module>node-plugin-oh-icis-air-loader</module>
         <module>node-plugin-rcra50</module>
         <module>node-plugin-rcra54</module>
         <module>node-plugin-rcra54-outbound</module>
