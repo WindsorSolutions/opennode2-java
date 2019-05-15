@@ -52,19 +52,6 @@ public abstract class AbstractAddressContactEntity {
 
 	}
 
-	@XmlTransient
-	@Transient
-	public ThirdPartyProgramReportContact thirdPartyProgramReportContact;
-
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "contact")
-	public ThirdPartyProgramReportContact getThirdPartyProgramReportContact() {
-		return thirdPartyProgramReportContact;
-	}
-
-	public void setThirdPartyProgramReportContact(ThirdPartyProgramReportContact thirdPartyProgramReportContact) {
-		this.thirdPartyProgramReportContact = thirdPartyProgramReportContact;
-	}
-
 	/**
 	 * After the data is loaded, checks whether the contact and/or address field
 	 * needs to be nulled out, based on the whether there are indeed any

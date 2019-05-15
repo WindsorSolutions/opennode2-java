@@ -35,6 +35,8 @@ public class EditExchangeBeanServiceImpl implements EditExchangeBeanService {
         exchange.setSecure(bean.isSecure());
         exchange.setTargetExchangeName(bean.getTargetExchangeName());
         exchange.setUrl(bean.getUrl());
+        exchange.setAutoDeleteFiles(bean.isAutoDeleteFiles());
+        exchange.setAutoDeleteFileAge(bean.getAutoDeleteFileAge());
 
         exchange = exchangeService.save(exchange);
 

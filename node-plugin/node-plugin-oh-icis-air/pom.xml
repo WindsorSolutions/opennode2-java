@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.windsor.node.plugin</groupId>
         <artifactId>node-plugin</artifactId>
-        <version>2.14</version>
+        <version>2.16</version>
     </parent>
     <artifactId>node-plugin-oh-icis-air</artifactId>
     <packaging>jar</packaging>

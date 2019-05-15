@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.1"
+               xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
+               jaxb:extensionBindingPrefixes="hj orm annox">
+
+    <jaxb:bindings schemaLocation="../xsd/5/index.xsd" node="/xsd:schema">
+
+        <!-- global settings -->
+
+        <jaxb:globalBindings generateIsSetMethod="true" localScoping="toplevel">
+            <jaxb:serializable uid="1"/>
+        </jaxb:globalBindings>
+
+
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.windsor.node.plugin.rcra56.domain.generated"/>
+        </jaxb:schemaBindings>
+
+        <hj:persistence>
+            <hj:default-generated-id name="ID" transient="true" javaType="java.lang.Long"/>
+        </hj:persistence>
+
+    </jaxb:bindings>
+
+</jaxb:bindings>

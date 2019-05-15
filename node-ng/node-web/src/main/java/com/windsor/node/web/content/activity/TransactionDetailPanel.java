@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -91,7 +92,14 @@ public class TransactionDetailPanel extends Panel {
             @Override
             protected void populateItem(ListItem<Document> item) {
                 IModel<Document> docModel = item.getModel();
-                item.add(new Icon("icon", GlyphIconType.paperclip));
+
+                // determine if we still have the content for this document
+                final boolean docContentAvailable = DocumentModels.bindContent(docModel).getObject() != null;
+
+                GlyphIconType iconType = docContentAvailable ? GlyphIconType.paperclip : GlyphIconType.bancircle;
+
+                item.add(new Icon("icon", iconType));
+
                 AjaxLink<?> link = new AjaxLink<Document>("link", docModel) {
 
                     @Override
@@ -100,9 +108,26 @@ public class TransactionDetailPanel extends Panel {
                     }
 
                 };
-                item.add(link);
                 link.add(new Label("name", DocumentModels.bindName(docModel)));
                 link.add(new Label("type", DocumentModels.bindType(docModel)));
+
+
+                WebMarkupContainer nolink = new WebMarkupContainer("nolink", docModel);
+                nolink.add(AttributeModifier.append("title",
+                        "The content for this document has automatically been deleted"));
+                nolink.add(new Label("name", DocumentModels.bindName(docModel)));
+                nolink.add(new Label("type", DocumentModels.bindType(docModel)));
+
+                if(docContentAvailable) {
+                    item.add(new Label("status", Model.of("")));
+                    nolink.setVisible(false);
+                } else {
+                    item.add(new Label("status", Model.of("- Deleted")));
+                    link.setVisible(false);
+                }
+
+                item.add(link);
+                item.add(nolink);
             }
         });
 

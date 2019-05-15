@@ -78,6 +78,10 @@ public enum NodeResourceModelKeys implements IIdentifiable<String> {
     LABEL_ACCOUNT_HOME_PAGE("label.account.home"),
     LABEL_PROTECTED_TEXT("label.protected.text"),
 
+    LABEL_FILES("label.files"),
+    LABEL_FILES_DELETE("label.files.delete"),
+    LABEL_FILES_AGE("label.files.age"),
+
     LABEL_PLUGIN_NAME("label.plugin.name"),
     LABEL_PLUGIN_DESCRIPTION("label.plugin.description"),
     LABEL_PLUGIN_FULL_NAME("label.plugin.fullName"),

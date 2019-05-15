@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations" xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance" xmlns:annox="http://annox.dev.java.net"
+	xmlns:mofokom="http://www.mofokom.biz/xjc/transient" jaxb:extensionBindingPrefixes="hj orm inheritance annox" schemaLocation="../xsd/8/ICIS_SW_v5.8.xsd">
+
+	<!-- GPCF notice of intent -->
+
+	<jaxb:bindings>
+		<jaxb:bindings node="//xsd:complexType[@name='GPCFNoticeOfIntent']">
+			<inheritance:extends>com.windsor.node.plugin.icisnpdes.domain.AbstractGPCFNotice
+			</inheritance:extends>
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+	<!-- GPCF notice of termination -->
+
+	<jaxb:bindings>
+		<jaxb:bindings node="//xsd:complexType[@name='GPCFNoticeOfTermination']">
+			<inheritance:extends>com.windsor.node.plugin.icisnpdes.domain.AbstractGPCFNotice
+			</inheritance:extends>
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+	<!-- project type -->
+
+	<jaxb:bindings>
+		<jaxb:bindings node="//xsd:complexType[@name='ProjectType']">
+			<inheritance:extends>com.windsor.node.plugin.icisnpdes.domain.AbstractProjectType
+			</inheritance:extends>
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings node="//xsd:element[@ref='icis:ProjectType']">
+		<annox:annotate>
+			<annox:annotate annox:class="org.hibernate.annotations.NotFound" action="IGNORE" />
+		</annox:annotate>
+		<hj:many-to-one>
+			<orm:join-column name="ICS_SW_UNPRMT_CNST_INSP_ID" referenced-column-name="ICS_SW_UNPRMT_CNST_INSP_ID"
+				insertable="false" updatable="false" />
+		</hj:many-to-one>
+	</jaxb:bindings>
+
+	<jaxb:bindings>
+		<jaxb:bindings node="//xsd:complexType[@name='ConstructionSiteList']">
+			<hj:entity>
+				<orm:table name="ICS_CNST_SITE"/>
+			</hj:entity>
+			<hj:generated-id name="Dbid">
+				<orm:column name="ICS_CNST_SITE_ID" updatable="false" insertable="false"/>
+			</hj:generated-id>
+		</jaxb:bindings>
+	</jaxb:bindings>
+
+	<jaxb:bindings node="//xsd:complexType[@name='ConstructionSiteList']//xsd:element[@ref='icis:ConstructionSiteCode']">
+		<hj:element-collection name="ConstructionSiteCode">
+			<orm:column name="CNST_SITE_CODE"/>
+			<orm:collection-table name="ICS_CNST_SITE">
+				<orm:join-column name="ICS_CNST_SITE_ID" referenced-column-name="ICS_CNST_SITE_ID"
+								 insertable="false" updatable="false"/>
+			</orm:collection-table>
+		</hj:element-collection>
+	</jaxb:bindings>
+
+	<jaxb:bindings node="//xsd:element[@ref='icis:ConstructionSiteList']">
+		<annox:annotate>
+			<annox:annotate annox:class="org.hibernate.annotations.NotFound" action="IGNORE" />
+		</annox:annotate>
+		<!--<hj:many-to-one>-->
+			<!--<orm:join-column name="ICS_SW_CNST_PRMT_ID"-->
+							 <!--referenced-column-name="ICS_SW_CNST_PRMT_ID"-->
+							 <!--insertable="false" updatable="false" />-->
+		<!--</hj:many-to-one>-->
+	</jaxb:bindings>
+
+	<jaxb:bindings node="//xsd:complexType[@name='ConstructionSiteList']//xsd:element[@ref='icis:ConstructionSiteOtherText']">
+		<hj:ignored/>
+	</jaxb:bindings>
+</jaxb:bindings>

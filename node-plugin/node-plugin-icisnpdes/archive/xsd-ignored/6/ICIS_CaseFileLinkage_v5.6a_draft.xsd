@@ -26,7 +26,6 @@
 			<xsd:extension base="icis:CaseFileKeyElements">
 				<xsd:choice>
 					<xsd:element ref="icis:LinkageCaseFile"/>
-					<xsd:element ref="icis:LinkageAirDAEnforcementAction"/>
 					<xsd:element ref="icis:LinkageEnforcementAction"/>
 					<xsd:element ref="icis:LinkageComplianceMonitoring"/>
 				</xsd:choice>

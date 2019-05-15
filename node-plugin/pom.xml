@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.windsor.node</groupId>
         <artifactId>node</artifactId>
-        <version>2.14</version>
+        <version>2.16</version>
     </parent>
     <groupId>com.windsor.node.plugin</groupId>
     <artifactId>node-plugin</artifactId>
@@ -37,8 +37,8 @@
         <module>node-plugin-oh-icis-air</module>
         <module>node-plugin-oh-icis-air-loader</module>
         <module>node-plugin-rcra50</module>
-        <module>node-plugin-rcra54</module>
-        <module>node-plugin-rcra54-outbound</module>
+        <module>node-plugin-rcra56</module>
+        <module>node-plugin-rcra56-outbound</module>
         <module>node-plugin-sdwis</module>
         <module>node-plugin-uic</module>
         <module>node-plugin-uic2</module>
@@ -103,7 +103,7 @@
                         <dependency>
                             <groupId>com.windsor.node.util.hyperjaxb3</groupId>
                             <artifactId>node-util-hyperjaxb3-core</artifactId>
-                            <version>2.14</version>
+                            <version>2.16</version>
                         </dependency>
                     </dependencies>
                 </plugin>

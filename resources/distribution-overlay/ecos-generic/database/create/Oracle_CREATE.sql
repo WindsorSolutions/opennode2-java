@@ -89,7 +89,9 @@ CREATE TABLE NFlow (
 	ModifiedOn 	date NOT NULL,
 	Code       	varchar2(255) NOT NULL,
 	TargetExchangeName varchar2(255) NULL,
-	Description	varchar2(500) NULL 
+	Description	varchar2(500) NULL,
+	AutoDeleteFiles char(1) NULL,  -- added in 2.15
+	AutoDeleteFileAge number NULL  -- added in 2.15
 	)
 ;
 

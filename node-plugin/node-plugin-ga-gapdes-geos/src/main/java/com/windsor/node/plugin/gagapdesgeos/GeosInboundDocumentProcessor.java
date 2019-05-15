@@ -175,8 +175,7 @@ public class GeosInboundDocumentProcessor extends BaseWnosPlugin {
                             GeosSwSubmission submission = null;
                             try {
                                 submission = gson.fromJson(submissionData, GeosSwSubmission.class);
-                                logger.debug("      Processing submission: " + submission);
-
+                                logger.debug("      Processing submission: " + submission.submissionId);
                             } catch (Exception exception) {
                                 errors++;
                                 logger.warn("      Could not parse JSON data for file \"" + path.getFileName() + "\": " +
@@ -213,7 +212,7 @@ public class GeosInboundDocumentProcessor extends BaseWnosPlugin {
                                         }
                                     }
 
-                                    persistData(submission);
+                                    getTargetEntityManager().persist(submission);
                                     logger.info("      Submission saved to the database");
                                 } catch (Exception exception) {
                                     errors++;
@@ -225,7 +224,8 @@ public class GeosInboundDocumentProcessor extends BaseWnosPlugin {
                                 }
                             } else {
                                 result.getAuditEntries().add(
-                                        new ActivityEntry("Did not save the submission to the database"));
+
+                                        new ActivityEntry("Error encountered, skipping the rest of the data"));
                             }
                         }
 
@@ -290,6 +290,7 @@ public class GeosInboundDocumentProcessor extends BaseWnosPlugin {
     }
 
     /**
+<<<<<<< HEAD
      * Persist a data object to the database.
      * @param submission
      */
@@ -298,6 +299,8 @@ public class GeosInboundDocumentProcessor extends BaseWnosPlugin {
     }
 
     /**
+=======
+>>>>>>> master
      * Unzips the provided ZIP archive and returns a path to the folder containing the ZIP archive contents.
      * @param document Document to unzip
      * @return Path to the unpacked ZIP archive

@@ -16,6 +16,8 @@ public class EditExchangeBean implements Serializable {
     private String originalName;
     private String targetExchangeName;
     private String description;
+    private boolean autoDeleteFiles;
+    private Integer autoDeleteFileAge;
     private byte[] pluginContent;
 
     public EditExchangeBean() {
@@ -31,6 +33,8 @@ public class EditExchangeBean implements Serializable {
         setSecure(exchange.isSecure());
         setTargetExchangeName(exchange.getTargetExchangeName());
         setUrl(exchange.getUrl());
+        setAutoDeleteFiles(exchange.isAutoDeleteFiles());
+        setAutoDeleteFileAge(exchange.getAutoDeleteFileAge());
     }
 
     public String getId() {
@@ -95,6 +99,22 @@ public class EditExchangeBean implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isAutoDeleteFiles() {
+        return autoDeleteFiles;
+    }
+
+    public void setAutoDeleteFiles(boolean autoDeleteFiles) {
+        this.autoDeleteFiles = autoDeleteFiles;
+    }
+
+    public Integer getAutoDeleteFileAge() {
+        return autoDeleteFileAge;
+    }
+
+    public void setAutoDeleteFileAge(Integer autoDeleteFileAge) {
+        this.autoDeleteFileAge = autoDeleteFileAge;
     }
 
     public byte[] getPluginContent() {

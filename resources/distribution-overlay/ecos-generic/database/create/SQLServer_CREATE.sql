@@ -6,9 +6,9 @@ CREATE TABLE NAccount (
 	SystemRole 	varchar(50) NOT NULL,
 	Affiliation varchar(50) NOT NULL,
 	IsDeleted     VARCHAR(1) NULL,
-    IsDemoUser    VARCHAR(1) NULL,
-    PasswordHash  VARCHAR(50) NULL,
-	ModifiedBy 	varchar(50) NOT NULL,
+  IsDemoUser    VARCHAR(1) NULL,
+  PasswordHash  VARCHAR(50) NULL,
+	ModifiedBy 	varchar(50) NULL,
 	ModifiedOn 	datetime NOT NULL 
 	);
 
@@ -28,8 +28,8 @@ CREATE TABLE NActivity (
 	TransactionId	varchar(50) NULL,
 	IP           	varchar(64) NULL,
 	WebMethod       VARCHAR(50) NULL,
-    FlowName        VARCHAR(255) NULL,
-    Operation       VARCHAR(255) NULL,
+  FlowName        VARCHAR(255) NULL,
+  Operation       VARCHAR(255) NULL,
 	ModifiedBy   	varchar(50) NOT NULL,
 	ModifiedOn   	datetime NOT NULL 
 	);
@@ -69,7 +69,7 @@ CREATE TABLE NDocument (
 	DocumentId     	varchar(255) NOT NULL,
 	Status         	varchar(50) NOT NULL,
 	StatusDetail   	varchar(4096) NULL,
-	DocumentContent	image NULL 
+	DocumentContent	varbinary(max) NULL
 	);
 
 CREATE TABLE NFlow ( 
@@ -81,7 +81,9 @@ CREATE TABLE NFlow (
 	ModifiedOn 	datetime NOT NULL,
 	Code       	varchar(255) NOT NULL,
 	TargetExchangeName varchar(255) NULL,
-	Description	varchar(500) NULL 
+	Description	varchar(500) NULL,
+	AutoDeleteFiles char(1) null,  -- added in 2.15
+	AutoDeleteFileAge int null     -- added in 2.15
 	);
 
 CREATE TABLE NNotification ( 
@@ -114,7 +116,7 @@ CREATE TABLE NPlugin (
 	FlowId       	varchar(50) NOT NULL,
 	ModifiedBy   	varchar(50) NOT NULL,
 	ModifiedOn   	datetime NOT NULL,
-	PluginContent	image NOT NULL,
+	PluginContent	varbinary(max) NOT NULL,
 	BinaryVersion   VARCHAR(40) NULL
 	);
 
@@ -210,10 +212,10 @@ CREATE TABLE NTransaction (
 	Operation   	varchar(255) NULL,
 	WebMethod   	varchar(50) NOT NULL,
 	EndpointVersion              VARCHAR(50) NULL,
-    NetworkEndpointVersion       VARCHAR(50) NULL,
-    NetworkEndpointUrl           VARCHAR(500) NULL,
-    NetworkEndpointStatus        VARCHAR(50) NULL,
-    NetworkEndpointStatusDetail  VARCHAR(8000) NULL
+  NetworkEndpointVersion       VARCHAR(50) NULL,
+  NetworkEndpointUrl           VARCHAR(500) NULL,
+  NetworkEndpointStatus        VARCHAR(50) NULL,
+  NetworkEndpointStatusDetail  VARCHAR(8000) NULL
 	);
 
 CREATE TABLE NTransactionNotification ( 

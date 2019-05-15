@@ -82,7 +82,9 @@ CREATE TABLE NFlow (
     ModifiedOn  datetime NOT NULL,
     Code        varchar(255) NOT NULL,
     TargetExchangeName varchar(255) NULL,
-    Description varchar(500) NULL
+    Description varchar(500) NULL,
+    AutoDeleteFiles char(1) NULL, -- added in 2.15
+    AutoDeleteFileAge int NULL    -- added in 2.15
     ) ENGINE=InnoDB;
 
 CREATE TABLE NNotification ( 

@@ -2,14 +2,7 @@ package com.windsor.node.domain.entity;
 
 import java.util.List;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -41,18 +34,28 @@ public class Exchange extends AbstractBaseEntity {
     @Column(name = "Description")
     private String description;
 
-    @OneToMany(mappedBy = "exchange")
+    @Column(name = "AutoDeleteFiles")
+    @Type(type = "yes_no")
+    private boolean autoDeleteFiles;
+
+    @Column(name = "AutoDeleteFileAge")
+    private Integer autoDeleteFileAge;
+
+    @OneToMany(mappedBy = "exchange", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AccountPolicy> accountPolicies;
 
-    @OneToMany(mappedBy = "exchange")
+    @OneToMany(mappedBy = "exchange", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExchangeService> services;
 
     @OneToMany(mappedBy = "exchange")
     @OrderBy("ModifiedOn DESC")
     private List<Plugin> plugins;
 
-    @OneToMany(mappedBy = "exchange")
+    @OneToMany(mappedBy = "exchange", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications;
+
+    @OneToMany(mappedBy = "exchange", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Schedule> schedules;
 //
 //    @Transient
 //    private PluginUpload pluginUpload;
@@ -109,6 +112,22 @@ public class Exchange extends AbstractBaseEntity {
         this.description = description;
     }
 
+    public boolean isAutoDeleteFiles() {
+        return autoDeleteFiles;
+    }
+
+    public void setAutoDeleteFiles(boolean autoDeleteFiles) {
+        this.autoDeleteFiles = autoDeleteFiles;
+    }
+
+    public Integer getAutoDeleteFileAge() {
+        return autoDeleteFileAge;
+    }
+
+    public void setAutoDeleteFileAge(Integer autoDeleteFileAge) {
+        this.autoDeleteFileAge = autoDeleteFileAge;
+    }
+
     public List<AccountPolicy> getAccountPolicies() {
         return accountPolicies;
     }
@@ -140,7 +159,16 @@ public class Exchange extends AbstractBaseEntity {
     public void setNotifications(List<Notification> notifications) {
         this.notifications = notifications;
     }
-//
+
+    public List<Schedule> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(List<Schedule> schedules) {
+        this.schedules = schedules;
+    }
+
+    //
 //    public PluginUpload getPluginUpload() {
 //        return pluginUpload;
 //    }
