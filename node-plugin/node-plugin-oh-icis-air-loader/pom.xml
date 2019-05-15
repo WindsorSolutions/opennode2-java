@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.windsor.node.plugin</groupId>
         <artifactId>node-plugin</artifactId>
-        <version>2.14</version>
+        <version>2.16</version>
     </parent>
     <artifactId>node-plugin-oh-icis-air-loader</artifactId>
     <packaging>jar</packaging>
@@ -13,7 +13,7 @@
 
     <properties>
         <node.plugin.name>oh-icis-air-loader</node.plugin.name>
-        <node.plugin.build.number>1</node.plugin.build.number>
+        <node.plugin.build.number>4</node.plugin.build.number>
         <node.plugin.description>Loads data from the Ohio Web Daemon into ICIS AIR staging</node.plugin.description>
         <node.plugin.help.text>OH Specific Plugin - Stage Web Daemon data to ICIS AIR</node.plugin.help.text>
 

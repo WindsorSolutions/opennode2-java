@@ -87,12 +87,31 @@ public class IcisAirStagingTablePopulator extends BaseWnosPlugin {
          File incomingPath = new File(rootPath + File.separatorChar + e);
          File archivedPath = new File(rootPath + File.separatorChar + archivedDirectory);
          File workingPath = new File(rootPath + File.separatorChar + workingDirectory);
+         result.getAuditEntries().add(this.makeEntry("Using Web Daemon data directory \"" + rootPath + "\""));
+
          FileFilter xmlFileFilter = new FileFilter() {
             public boolean accept(File pathname) {
                return pathname != null && StringUtils.isNotBlank(pathname.getName()) && pathname.getName().endsWith(".xml");
             }
          };
          File[] deadFiles = workingPath.listFiles(xmlFileFilter);
+
+         File rootPathFile = new File(rootPath);
+         result.getAuditEntries().add(this.makeEntry("Checking for files to process in \""  + rootPathFile.getAbsolutePath() + "\""));
+         if (!rootPathFile.exists()) {
+            result.getAuditEntries().add(this.makeEntry("ERROR: The Web Daemon directory does not exist!"));
+            throw new IllegalStateException("Web daemon directory does not exist");
+         }
+
+         if (!rootPathFile.canRead()) {
+            result.getAuditEntries().add(this.makeEntry("ERROR: The Web Daemon directory exists but I cannot read from it!"));
+            throw new IllegalStateException("Web daemon directory is not readable");
+         }
+
+         if (!rootPathFile.canWrite()) {
+            result.getAuditEntries().add(this.makeEntry("ERROR: The Web Daemon directory exists but I cannot write to it!"));
+            throw new IllegalStateException("Web daemon directory is not writable");
+         }
 
          for(int incomingFiles = 0; deadFiles != null && incomingFiles < deadFiles.length; ++incomingFiles) {
             this.logger.warn("Dead file exists in " + workingPath.getCanonicalPath() + ", file name is " + deadFiles[incomingFiles] + ", removing.");
@@ -101,6 +120,7 @@ public class IcisAirStagingTablePopulator extends BaseWnosPlugin {
          }
 
          File[] var18 = incomingPath.listFiles(xmlFileFilter);
+         result.getAuditEntries().add(this.makeEntry("Found " + var18.length + " files to process in \"" + incomingPath.getAbsolutePath() + "\""));
 
          for(int workingFiles = 0; var18 != null && workingFiles < var18.length; ++workingFiles) {
             if(workingFiles == 0) {
