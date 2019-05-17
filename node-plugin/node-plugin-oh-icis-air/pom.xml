@@ -11,7 +11,7 @@
     <name>Node Plugin - OH STARS2 to ICIS AIR Importer</name>
     <properties>
         <node.plugin.name>oh-icis-air</node.plugin.name>
-        <node.plugin.build.number>03</node.plugin.build.number>
+        <node.plugin.build.number>10</node.plugin.build.number>
         <node.plugin.description>Imports ICIS AIR data that was exported from STARS2 via the OH Web Daemon</node.plugin.description>
         <node.plugin.help.text>OH Specific Plugin - STARS2 to ICIS AIR</node.plugin.help.text>
     </properties>
