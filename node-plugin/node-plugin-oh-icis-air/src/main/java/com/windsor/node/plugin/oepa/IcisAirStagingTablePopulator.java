@@ -9,31 +9,14 @@ import com.windsor.node.common.domain.ProcessContentResult;
 import com.windsor.node.common.domain.ServiceType;
 import com.windsor.node.data.dao.PluginServiceParameterDescriptor;
 import com.windsor.node.plugin.BaseWnosPlugin;
-import com.windsor.node.plugin.oepa.domain.CaseFileLinkage;
-import com.windsor.node.plugin.oepa.domain.ComplianceMonitoringLinkage;
-import com.windsor.node.plugin.oepa.domain.HasComplianceMonitoringIdentifier;
-import com.windsor.node.plugin.oepa.domain.IcisAirComplianceMonitoringData;
-import com.windsor.node.plugin.oepa.domain.IcisAirComplianceMonitoringStrategy;
-import com.windsor.node.plugin.oepa.domain.IcisAirDaCaseFile;
-import com.windsor.node.plugin.oepa.domain.IcisAirDaEnforcementActionLinkage;
-import com.windsor.node.plugin.oepa.domain.IcisAirDaFormalEnforcementAction;
-import com.windsor.node.plugin.oepa.domain.IcisAirDaInformalEnforcementAction;
-import com.windsor.node.plugin.oepa.domain.IcisAirFacility;
-import com.windsor.node.plugin.oepa.domain.IcisAirPayload;
-import com.windsor.node.plugin.oepa.domain.IcisAirPollutants;
-import com.windsor.node.plugin.oepa.domain.IcisAirPrograms;
-import com.windsor.node.plugin.oepa.domain.IcisAirTvaccData;
-import com.windsor.node.plugin.oepa.domain.IcisFedExportData;
-import com.windsor.node.plugin.oepa.domain.SettableIcisAirPayload;
+import com.windsor.node.plugin.common.persistence.HibernatePersistenceUnitInfo;
+import com.windsor.node.plugin.common.persistence.PluginPersistenceConfig;
+import com.windsor.node.plugin.oepa.domain.*;
 import com.windsor.node.service.helper.IdGenerator;
 import com.windsor.node.service.helper.settings.SettingServiceProvider;
 import java.io.File;
 import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -47,6 +30,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.cfg.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,7 +89,7 @@ public class IcisAirStagingTablePopulator extends BaseWnosPlugin {
 
          for(int workingFiles = 0; var18 != null && workingFiles < var18.length; ++workingFiles) {
             if(workingFiles == 0) {
-               result.getAuditEntries().add(this.makeEntry("Incoming files exist, count:  " + var18.length));
+               result.getAuditEntries().add(this.makeEntry("Incoming files exist, processing " + var18.length + " file..."));
             }
 
             File previousData = var18[workingFiles];
@@ -122,10 +106,10 @@ public class IcisAirStagingTablePopulator extends BaseWnosPlugin {
          File currentFile;
          for(i = 0; var19 != null && i < var19.length; ++i) {
             if(i == 0) {
-               result.getAuditEntries().add(this.makeEntry("Processing working files, count:  " + var19.length));
+               result.getAuditEntries().add(this.makeEntry("Processing working files, processing " + var19.length + " files..."));
             }
 
-            result.getAuditEntries().add(this.makeEntry("Processing file name \"" + var19[i].getName() + "\""));
+            result.getAuditEntries().add(this.makeEntry("Processing file \"" + var19[i].getName() + "\""));
             currentFile = var19[i];
             var20 = this.processFile(currentFile, var20, Boolean.valueOf(i == var19.length - 1), result);
             if(i == var18.length - 1) {
@@ -137,7 +121,7 @@ public class IcisAirStagingTablePopulator extends BaseWnosPlugin {
 
          for(i = 0; var19 != null && i < var19.length; ++i) {
             if(i == 0) {
-               result.getAuditEntries().add(this.makeEntry("Moving processed working files to archived, count:  " + var19.length));
+               result.getAuditEntries().add(this.makeEntry("Moving " + var19.length + " processed working files to archive"));
             }
 
             currentFile = var19[i];
@@ -149,6 +133,7 @@ public class IcisAirStagingTablePopulator extends BaseWnosPlugin {
       } catch (Exception var17) {
          result.getAuditEntries().add(this.makeEntry("Exception occured: \n" + var17.getMessage()));
          result.getAuditEntries().add(this.makeEntry("Plugin processing failed."));
+         logger.error(var17.getMessage(), var17);
          return result;
       }
 
@@ -170,95 +155,133 @@ public class IcisAirStagingTablePopulator extends BaseWnosPlugin {
          facilities.getIcisAirComplianceMonitoringDataList().addAll(data.getIcisAirComplianceMonitoringDataList());
       }
 
-      this.logger.info("XML file succesfully loaded into memory:  " + xmlFile.getName());
+      result.getAuditEntries().add(this.makeEntry("XML file succesfully loaded into memory:  " + xmlFile.getName()));
       if(facilities != null) {
          if(facilities.getIcisAirFacilitiesList() != null) {
-            this.logger.info(facilities.getIcisAirFacilitiesList().size() + " IcisAirFacility records were loaded.");
-            this.logger.info("Persisting.");
+            result.getAuditEntries().add(this.makeEntry(facilities.getIcisAirFacilitiesList().size() + " IcisAirFacility records were loaded."));
+            result.getAuditEntries().add(this.makeEntry("Persisting."));
             this.loadStagingData(facilities.getIcisAirFacilitiesList(), "AirFacilitySubmission", new Class[]{IcisAirFacility.class});
-            this.logger.info("All IcisAirFacility persisted.");
+            result.getAuditEntries().add(this.makeEntry("All IcisAirFacility persisted."));
+         } else {
+            result.getAuditEntries().add(this.makeEntry("No IcisAirFacility records were present."));
          }
 
          if(facilities.getIcisAirPollutantsList() != null) {
-            this.logger.info(facilities.getIcisAirPollutantsList().size() + " IcisAirPollutants records were loaded.");
-            this.logger.info("Persisting.");
+            result.getAuditEntries().add(this.makeEntry(facilities.getIcisAirPollutantsList().size() + " IcisAirPollutants records were loaded."));
+            result.getAuditEntries().add(this.makeEntry("Persisting."));
             this.loadStagingData(facilities.getIcisAirPollutantsList(), "AirPollutantsSubmission", new Class[]{IcisAirPollutants.class});
-            this.logger.info("All IcisAirPollutants persisted.");
+            result.getAuditEntries().add(this.makeEntry("All IcisAirPollutants persisted."));
+         } else {
+            result.getAuditEntries().add(this.makeEntry("No IcisAirPollutants records were present."));
          }
 
          if(facilities.getIcisAirProgramsList() != null) {
-            this.logger.info(facilities.getIcisAirProgramsList().size() + " IcisAirPrograms records were loaded.");
-            this.logger.info("Persisting.");
+            result.getAuditEntries().add(this.makeEntry(facilities.getIcisAirProgramsList().size() + " IcisAirPrograms records were loaded."));
+            result.getAuditEntries().add(this.makeEntry("Persisting."));
             this.loadStagingData(facilities.getIcisAirProgramsList(), "AirProgramsSubmission", new Class[]{IcisAirPrograms.class});
-            this.logger.info("All IcisAirPrograms persisted.");
+            result.getAuditEntries().add(this.makeEntry("All IcisAirPrograms persisted."));
+         } else {
+            result.getAuditEntries().add(this.makeEntry("No IcisAirPrograms records were present."));
          }
 
          if(facilities.getIcisAirComplianceMonitoringDataList() != null) {
-            this.logger.info(facilities.getIcisAirComplianceMonitoringDataList().size() + " IcisAirComplianceMonitoringData records were loaded.");
+            result.getAuditEntries().add(this.makeEntry(facilities.getIcisAirComplianceMonitoringDataList().size() + " IcisAirComplianceMonitoringData records were loaded."));
             if(finalFile.booleanValue()) {
                this.checkComplianceMonitoringIdentifierDupes(result, facilities.getIcisAirComplianceMonitoringDataList());
-               this.logger.info("Persisting.");
+               result.getAuditEntries().add(this.makeEntry("Persisting."));
                this.loadStagingData(facilities.getIcisAirComplianceMonitoringDataList(), "AirDAComplianceMonitoringSubmission", new Class[]{IcisAirComplianceMonitoringData.class});
             }
 
-            this.logger.info("All IcisAirComplianceMonitoringData persisted.");
+            result.getAuditEntries().add(this.makeEntry("All IcisAirComplianceMonitoringData persisted."));
+         } else {
+            result.getAuditEntries().add(this.makeEntry("No IcisAirComplianceMonitoringData records were present."));
          }
 
          if(facilities.getIcisAirComplianceMonitoringStrategyList() != null) {
-            this.logger.info(facilities.getIcisAirComplianceMonitoringStrategyList().size() + " IcisAirComplianceMonitoringStrategy records were loaded.");
-            this.logger.info("Persisting.");
+            result.getAuditEntries().add(this.makeEntry(facilities.getIcisAirComplianceMonitoringStrategyList().size() + " IcisAirComplianceMonitoringStrategy records were loaded."));
+            result.getAuditEntries().add(this.makeEntry("Persisting."));
             this.loadStagingData(facilities.getIcisAirComplianceMonitoringStrategyList(), "AirComplianceMonitoringStrategySubmission", new Class[]{IcisAirComplianceMonitoringStrategy.class});
-            this.logger.info("All IcisAirComplianceMonitoringStrategy persisted.");
+            result.getAuditEntries().add(this.makeEntry("All IcisAirComplianceMonitoringStrategy persisted."));
+         } else {
+            result.getAuditEntries().add(this.makeEntry("No IcisAirComplianceMonitoringStrategy records were present."));
          }
 
          if(facilities.getAirDaCaseFileList() != null) {
-            this.logger.info(facilities.getAirDaCaseFileList().size() + " IcisAirDaCaseFile records were loaded.");
-            this.logger.info("Persisting.");
+            result.getAuditEntries().add(this.makeEntry(facilities.getAirDaCaseFileList().size() + " IcisAirDaCaseFile records were loaded."));
+
+//            for(IcisAirDaCaseFile caseFile : facilities.getAirDaCaseFileList()) {
+//               if (caseFile.getAirViolationDataList() != null) {
+//                  result.getAuditEntries().add(this.makeEntry("  Found " + caseFile.getAirViolationDataList().size() + " AirDACaseFile records"));
+//                  for (AirViolationData violation : caseFile.getAirViolationDataList()) {
+//                     result.getAuditEntries().add(this.makeEntry("  FRVDeterminationDate: " + violation.getFrvDeterminationDate() + " -> " + violation.getFrvDeterminationDateDb()));
+//                  }
+//               } else {
+//                  result.getAuditEntries().add(this.makeEntry("  No AirDACaseFile records found"));
+//               }
+//            }
+
+            result.getAuditEntries().add(this.makeEntry("Persisting."));
             this.loadStagingData(facilities.getAirDaCaseFileList(), "AirDACaseFileSubmission", new Class[]{IcisAirDaCaseFile.class});
-            this.logger.info("All IcisAirDaCaseFile persisted.");
+            result.getAuditEntries().add(this.makeEntry("All IcisAirDaCaseFile persisted."));
+         } else {
+            result.getAuditEntries().add(this.makeEntry("No IcisAirDaCaseFile records were present."));
          }
 
          if(facilities.getAirDaFormalEnforcementAction() != null) {
-            this.logger.info(facilities.getAirDaFormalEnforcementAction().size() + " IcisAirDaFormalEnforcementAction records were loaded.");
-            this.logger.info("Persisting.");
+            result.getAuditEntries().add(this.makeEntry(facilities.getAirDaFormalEnforcementAction().size() + " IcisAirDaFormalEnforcementAction records were loaded."));
+            result.getAuditEntries().add(this.makeEntry("Persisting."));
             this.loadStagingData(facilities.getAirDaFormalEnforcementAction(), "AirDAFormalEnforcementActionSubmission", new Class[]{IcisAirDaFormalEnforcementAction.class});
-            this.logger.info("All IcisAirDaFormalEnforcementAction persisted.");
+            result.getAuditEntries().add(this.makeEntry("All IcisAirDaFormalEnforcementAction persisted."));
+         } else {
+            result.getAuditEntries().add(this.makeEntry("No IcisAirDaFormalEnforcementAction records were present."));
          }
 
          if(facilities.getIcisAirDaInformalEnforcementActionList() != null) {
-            this.logger.info(facilities.getIcisAirDaInformalEnforcementActionList().size() + " IcisAirDaInformalEnforcementAction records were loaded.");
-            this.logger.info("Persisting.");
+            result.getAuditEntries().add(this.makeEntry(facilities.getIcisAirDaInformalEnforcementActionList().size() + " IcisAirDaInformalEnforcementAction records were loaded."));
+            result.getAuditEntries().add(this.makeEntry("Persisting."));
             this.loadStagingData(facilities.getIcisAirDaInformalEnforcementActionList(), "AirDAInformalEnforcementActionSubmission", new Class[]{IcisAirDaInformalEnforcementAction.class});
-            this.logger.info("All IcisAirDaInformalEnforcementAction persisted.");
+            result.getAuditEntries().add(this.makeEntry("All IcisAirDaInformalEnforcementAction persisted."));
+         } else {
+            result.getAuditEntries().add(this.makeEntry("No IcisAirDaInformalEnforcementAction records were present."));
          }
 
          if(facilities.getIcisAirTvaccDataList() != null) {
-            this.logger.info(facilities.getIcisAirTvaccDataList().size() + " AirTVACCData records were loaded.");
-            this.logger.info("Persisting.");
+            result.getAuditEntries().add(this.makeEntry(facilities.getIcisAirTvaccDataList().size() + " AirTVACCData records were loaded."));
+            result.getAuditEntries().add(this.makeEntry("Persisting."));
             this.loadStagingData(facilities.getIcisAirTvaccDataList(), "AirTVACCSubmission", new Class[]{IcisAirTvaccData.class});
-            this.logger.info("All AirTVACCData persisted.");
+            result.getAuditEntries().add(this.makeEntry("All AirTVACCData persisted."));
+         } else {
+            result.getAuditEntries().add(this.makeEntry("No AirTVACCData records were present."));
          }
 
          if(facilities.getIcisAirDaEnforcementActionLinkage() != null) {
-            this.logger.info(facilities.getIcisAirDaEnforcementActionLinkage().size() + " IcisAirDaEnforcementActionLinkage records were loaded.");
-            this.logger.info("Persisting.");
+            result.getAuditEntries().add(this.makeEntry(facilities.getIcisAirDaEnforcementActionLinkage().size() + " IcisAirDaEnforcementActionLinkage records were loaded."));
+            result.getAuditEntries().add(this.makeEntry("Persisting."));
             this.loadStagingData(facilities.getIcisAirDaEnforcementActionLinkage(), "AirDAEnforcementActionLinkageSubmission", new Class[]{IcisAirDaEnforcementActionLinkage.class});
-            this.logger.info("All IcisAirDaEnforcementActionLinkage persisted.");
+            result.getAuditEntries().add(this.makeEntry("All IcisAirDaEnforcementActionLinkage persisted."));
+         } else {
+            result.getAuditEntries().add(this.makeEntry("No IcisAirDaEnforcementActionLinkage records were present."));
          }
 
          if(facilities.getComplianceMonitoringLinkageList() != null) {
-            this.logger.info(facilities.getComplianceMonitoringLinkageList().size() + " ComplianceMonitoringLinkage records were loaded.");
-            this.logger.info("Persisting.");
+            result.getAuditEntries().add(this.makeEntry(facilities.getComplianceMonitoringLinkageList().size() + " ComplianceMonitoringLinkage records were loaded."));
+            result.getAuditEntries().add(this.makeEntry("Persisting."));
             this.loadStagingData(facilities.getComplianceMonitoringLinkageList(), "ComplianceMonitoringLinkageSubmission", new Class[]{ComplianceMonitoringLinkage.class});
-            this.logger.info("All ComplianceMonitoringLinkage persisted.");
+            result.getAuditEntries().add(this.makeEntry("All ComplianceMonitoringLinkage persisted."));
+         } else {
+            result.getAuditEntries().add(this.makeEntry("No ComplianceMonitoringLinkage records were present."));
          }
 
          if(facilities.getCaseFileLinkageList() != null) {
-            this.logger.info(facilities.getCaseFileLinkageList().size() + " CaseFileLinkage records were loaded.");
-            this.logger.info("Persisting.");
+            result.getAuditEntries().add(this.makeEntry(facilities.getCaseFileLinkageList().size() + " CaseFileLinkage records were loaded."));
+            result.getAuditEntries().add(this.makeEntry("Persisting."));
             this.loadStagingData(facilities.getCaseFileLinkageList(), "CaseFileLinkageSubmission", new Class[]{CaseFileLinkage.class});
-            this.logger.info("All CaseFileLinkage persisted.");
+            result.getAuditEntries().add(this.makeEntry("All CaseFileLinkage persisted."));
+         } else {
+            result.getAuditEntries().add(this.makeEntry("No CaseFileLinkage records were present."));
          }
+      } else {
+         result.getAuditEntries().add(this.makeEntry("Data file contains no data to process"));
       }
 
       return facilities;
@@ -297,12 +320,15 @@ public class IcisAirStagingTablePopulator extends BaseWnosPlugin {
          em.getTransaction().begin();
       }
 
-      CriteriaBuilder builder = em.getCriteriaBuilder();
-      CriteriaQuery query = builder.createQuery(IcisAirPayload.class);
-      Root root = query.from(IcisAirPayload.class);
-      query.where(builder.equal(root.get("operation"), payloadName));
-      TypedQuery typedQuery = em.createQuery(query);
-      typedQuery.setParameter("operation", payloadName);
+//      CriteriaBuilder builder = em.getCriteriaBuilder();
+//      CriteriaQuery query = builder.createQuery(IcisAirPayload.class);
+//      Root root = query.from(IcisAirPayload.class);
+//      query.where(builder.equal(root.get("operation"), payloadName));
+//      TypedQuery typedQuery = em.createQuery(query);
+//      typedQuery.setParameter("operation", payloadName);
+      TypedQuery typedQuery = em.createQuery(
+              "SELECT t FROM " + IcisAirPayload.class.getName() + " t WHERE t.operation = '" + payloadName + "'",
+              IcisAirPayload.class);
       IcisAirPayload payload = (IcisAirPayload)typedQuery.getSingleResult();
       this.loadAndDelete(em, dataClass[dataClass.length - 1]);
 
@@ -327,13 +353,32 @@ public class IcisAirStagingTablePopulator extends BaseWnosPlugin {
    }
 
    private EntityManager getEntityManager() {
-      HashMap properties = new HashMap();
-      properties.put("javax.persistence.nonJtaDataSource", this.getDataSources().get("Target Data Provider"));
-      properties.put("javax.persistence.transactionType", PersistenceUnitTransactionType.RESOURCE_LOCAL.name());
-      properties.put("eclipselink.classloader", IcisAirStagingTablePopulator.class.getClassLoader());
-      EntityManagerFactory emf = Persistence.createEntityManagerFactory("icis-air", properties);
-      EntityManager em = emf.createEntityManager();
-      return em;
+//      HashMap properties = new HashMap();
+//      properties.put("javax.persistence.nonJtaDataSource", this.getDataSources().get("Target Data Provider"));
+//      properties.put("javax.persistence.transactionType", PersistenceUnitTransactionType.RESOURCE_LOCAL.name());
+//      properties.put("eclipselink.classloader", IcisAirStagingTablePopulator.class.getClassLoader());
+//      EntityManagerFactory emf = Persistence.createEntityManagerFactory("icis-air", properties);
+//      EntityManager em = emf.createEntityManager();
+//      return em;
+
+      IcisAirStagingPersistenceProvider provider = new IcisAirStagingPersistenceProvider();
+      EntityManagerFactory emf = provider.createEntityManagerFactory(
+              getDataSources().get(ARG_DS_TARGET),
+              new PluginPersistenceConfig()
+                      .classLoader(ObjectFactory.class.getClassLoader())
+                      .debugSql(Boolean.TRUE)
+                      .rootEntityPackage("com.windsor.node.plugin.oepa.domain")
+                      .setBatchFetchSize(1000));
+      EntityManager entityManager = null;
+
+      try {
+         entityManager = emf.createEntityManager();
+      } catch(Exception exception) {
+         throw new RuntimeException("The data source is not configured correctly! I received the following error " +
+                 "when I tried to setup the data source: " + exception.getMessage(), exception);
+      }
+
+      return entityManager;
    }
 
    private String getDataDaemonDirectory(NodeTransaction transaction) {

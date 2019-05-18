@@ -11,12 +11,28 @@
     <name>Node Plugin - OH STARS2 to ICIS AIR Importer</name>
     <properties>
         <node.plugin.name>oh-icis-air</node.plugin.name>
-        <node.plugin.build.number>10</node.plugin.build.number>
+        <node.plugin.build.number>12</node.plugin.build.number>
         <node.plugin.description>Imports ICIS AIR data that was exported from STARS2 via the OH Web Daemon</node.plugin.description>
         <node.plugin.help.text>OH Specific Plugin - STARS2 to ICIS AIR</node.plugin.help.text>
     </properties>
     <build>
         <finalName>${node.plugin.name}</finalName>
+
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -29,6 +45,21 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
+                <configuration>
+                    <artifactSet>
+                        <excludes>
+                            <exclude>org.eclipse.persistence:eclipselink</exclude>
+                        </excludes>
+                    </artifactSet>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -37,6 +68,11 @@
         </plugins>
     </build>
     <dependencies>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>2.7.4</version>
+        </dependency>
         <dependency>
             <groupId>com.windsor.node.plugin</groupId>
             <artifactId>node-plugin-common</artifactId>
