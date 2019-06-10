@@ -13,6 +13,7 @@ import com.windsor.node.common.domain.ServiceType;
 import com.windsor.node.common.domain.TransactionStatus;
 import com.windsor.node.common.util.NodeClientService;
 import com.windsor.node.data.dao.PluginServiceParameterDescriptor;
+import com.windsor.node.plugin.common.ValidUtf8XmlInputStream;
 import com.windsor.node.plugin.rcra57.domain.HazardousWasteEmanifestsDataType;
 import com.windsor.node.plugin.rcra57.domain.SolicitHistory;
 import com.windsor.node.plugin.rcra57.download.DownloadRequest;
@@ -322,14 +323,21 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
         });
 
         cleanupData(type, result);
-        if (type.getDbInfo() == DbInfo.EM) {
-            HazardousWasteEmanifestsDataType submissionDataType = (HazardousWasteEmanifestsDataType) unmarshaller.unmarshal(inputStream);
-            persistData(submissionDataType);
-        } else {
-            JAXBElement submissionDataType = (JAXBElement) unmarshaller.unmarshal(inputStream);
-            Object value = submissionDataType.getValue();
-            logger.info("submissionDataType value=" + value);
-            persistData(value );
+        for (int i = 0; i < 2; i++) {
+            try(InputStream is = i == 0 ? inputStream : new ValidUtf8XmlInputStream(inputStream, ' ')) {
+                if (type.getDbInfo() == DbInfo.EM) {
+                    HazardousWasteEmanifestsDataType submissionDataType = (HazardousWasteEmanifestsDataType) unmarshaller.unmarshal(inputStream);
+                    persistData(submissionDataType);
+                } else {
+                    JAXBElement submissionDataType = (JAXBElement) unmarshaller.unmarshal(inputStream);
+                    Object value = submissionDataType.getValue();
+                    persistData(value);
+                }
+            } catch (JAXBException e) {
+                logger.warn("Error parsing the file" + (i == 0 ? " -- retrying with bad xml chars stripped" : ""), e);
+            } catch (IOException e) {
+                throw new JAXBException("Error closing the input stream", e);
+            }
         }
     }
 
