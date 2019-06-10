@@ -176,7 +176,6 @@
     <jaxb:bindings node="//xsd:element[@ref='RC:PcbInfo']">
         <hj:one-to-many>
             <orm:join-column name="EM_WASTE_ID" updatable="false" nullable="false"/>
-            <orm:order-column name="ORDER_NUM" nullable="false"/>
         </hj:one-to-many>
     </jaxb:bindings>
 
@@ -254,7 +253,6 @@
         <hj:one-to-many>
             <orm:join-column name="EM_WASTE_ID" referenced-column-name="EM_WASTE_ID"
                              updatable="false" nullable="false"/>
-            <orm:order-column name="ORDER_NUM"/>
         </hj:one-to-many>
     </jaxb:bindings>
 
@@ -292,7 +290,7 @@
             <orm:table name="RCRA_EM_WASTE_CD_FED"/>
         </hj:entity>
         <hj:generated-id name="Dbid">
-            <orm:column name="EM_WASTE_CD_ID"/>
+            <orm:column name="EM_WASTE_CD_FED_ID"/>
         </hj:generated-id>
         <jaxb:bindings
                 node="//xsd:complexType[@name='FedManifestWasteCodeDescriptionDataType']//xsd:element[@ref='RC:ManifestWasteCode']">
@@ -313,7 +311,7 @@
             <orm:table name="RCRA_EM_WASTE_CD_GEN"/>
         </hj:entity>
         <hj:generated-id name="Dbid">
-            <orm:column name="EM_WASTE_CD_ID"/>
+            <orm:column name="EM_WASTE_CD_GEN_ID"/>
         </hj:generated-id>
         <jaxb:bindings
                 node="//xsd:complexType[@name='GenManifestWasteCodeDescriptionDataType']//xsd:element[@ref='RC:ManifestWasteCode']">
@@ -334,7 +332,7 @@
             <orm:table name="RCRA_EM_WASTE_CD_TSDF"/>
         </hj:entity>
         <hj:generated-id name="Dbid">
-            <orm:column name="EM_WASTE_CD_ID"/>
+            <orm:column name="EM_WASTE_CD_TSDF_ID"/>
         </hj:generated-id>
         <jaxb:bindings
                 node="//xsd:complexType[@name='TsdfManifestWasteCodeDescriptionDataType']//xsd:element[@ref='RC:ManifestWasteCode']">
@@ -386,7 +384,6 @@
         <hj:one-to-many>
             <orm:join-column table="RCRA_EM_WASTE_CD_FED" referenced-column-name="EM_WASTE_ID" name="EM_WASTE_ID"
                              updatable="false" nullable="false"/>
-            <orm:order-column name="ORDER_NUM"/>
         </hj:one-to-many>
     </jaxb:bindings>
 
@@ -394,7 +391,6 @@
         <hj:one-to-many>
             <orm:join-column table="RCRA_EM_WASTE_CD_TSDF" referenced-column-name="EM_WASTE_ID" name="EM_WASTE_ID"
                              updatable="false" nullable="false"/>
-            <orm:order-column name="ORDER_NUM"/>
         </hj:one-to-many>
     </jaxb:bindings>
 
@@ -402,7 +398,6 @@
         <hj:one-to-many>
             <orm:join-column table="RCRA_EM_WASTE_CD_GEN" referenced-column-name="EM_WASTE_ID" name="EM_WASTE_ID"
                              updatable="false" nullable="false"/>
-            <orm:order-column name="ORDER_NUM"/>
         </hj:one-to-many>
     </jaxb:bindings>
 
@@ -416,17 +411,15 @@
                 <orm:join-column name="EM_WASTE_ID" updatable="false"/>
             </orm:collection-table>
             <orm:column name="WASTE_CODE"/>
-            <orm:order-column name="ORDER_NUM" nullable="false"/>
         </hj:element-collection>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:OriginalManifestTrackingNumber']">
         <hj:element-collection name="originalManifestTrackingNumber">
-            <orm:collection-table name="RCRA_EM_WASTE_TR_NUM_ORIG">
+            <orm:collection-table name="RCRA_EM_TR_NUM_WASTE">
                 <orm:join-column name="EM_WASTE_ID" updatable="false" nullable="false"/>
             </orm:collection-table>
             <orm:column name="MANIFEST_TRACKING_NUM"/>
-            <orm:order-column name="ORDER_NUM" nullable="false"/>
         </hj:element-collection>
     </jaxb:bindings>
 

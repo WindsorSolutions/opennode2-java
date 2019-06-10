@@ -2,9 +2,16 @@
 <jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
-               jaxb:extensionBindingPrefixes="hj orm annox inheritance" schemaLocation="../xsd/5/7/RCRA_Emanifest_v5.7.xsd">
+               xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+               jaxb:extensionBindingPrefixes="hj orm annox inheritance"
+               schemaLocation="../xsd/5/7/RCRA_Emanifest_v5.7.xsd">
+
+    <jaxb:bindings node="//xsd:simpleType[@name='SubmissionTypeDataType']/xsd:restriction/xsd:enumeration[@value='DataImage5Copy']">
+        <jaxb:typesafeEnumMember name="DataImage5Copy"/>
+    </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:complexType[@name='EmanifestDataType']">
+        <inheritance:extends>com.windsor.node.plugin.rcra57.domain.AbstractEmanifest</inheritance:extends>
         <hj:entity>
             <orm:table name="RCRA_EM_EMANIFEST"/>
         </hj:entity>
@@ -88,21 +95,21 @@
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:Generator']">
-        <hj:many-to-one>
-            <orm:join-column name="GENERATOR_ID" updatable="false"/>
-        </hj:many-to-one>
+        <hj:one-to-one>
+            <orm:join-column name="EM_EMANIFEST_ID" insertable="true" updatable="false"/>
+        </hj:one-to-one>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:Transporter']">
         <hj:one-to-many>
-            <orm:join-column name="EM_EMANIFEST_ID"/>
+            <orm:join-column name="EM_EMANIFEST_ID" insertable="true" updatable="false"/>
         </hj:one-to-many>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:DesignatedFacility']">
-        <hj:many-to-one>
-            <orm:join-column name="DESIGNATED_FACILITY_ID" updatable="false"/>
-        </hj:many-to-one>
+        <hj:one-to-one>
+            <orm:join-column name="EM_EMANIFEST_ID" insertable="true" updatable="false"/>
+        </hj:one-to-one>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:Waste']">
@@ -163,7 +170,7 @@
 
             <orm:attribute-override
                     name="generatorElectronicSignature.humanReadableDocument.mimeType">
-                <orm:column name="REJ_GEN_ES_DOC_MIME_TYPE"/>
+                <orm:column name="REJ_GEN_ES_DOC_MIME_TYPE"/>E
             </orm:attribute-override>
 
             <orm:attribute-override name="generatorElectronicSignature.cromerrActivityId">
@@ -174,19 +181,39 @@
                 <orm:column name="REJ_GEN_ES_CROMERR_DOC_ID"/>
             </orm:attribute-override>
 
+            <!--
+            <orm:association-override name="alternateDesignatedFacility">
+                <hj:ignored/>
+            </orm:association-override>
+            -->
+
+        <orm:association-override name="alternateDesignatedFacility">
+            <orm:join-column name="EM_EMANIFEST_ID" insertable="true" updatable="false"/>
+        </orm:association-override>
+
+            <!--
             <orm:association-override name="alternateDesignatedFacility">
                 <orm:join-column name="REJ_ALT_DES_FAC_ID" updatable="false"/>
             </orm:association-override>
+            -->
 
+            <!--
             <orm:association-override name="newManifestTrackingNumber">
-                <orm:join-table name="RCRA_EM_EMAN_TR_NUM_REJ"/>
+                <orm:join-table name="RCRA_EM_TR_NUM_REJ" />
             </orm:association-override>
+            -->
 
             <orm:attribute-override name="rejectionComments">
                 <orm:column name="REJ_COMMENTS"/>
             </orm:attribute-override>
 
         </hj:embedded>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AlternateDesignatedFacility']">
+        <hj:one-to-one>
+            <orm:join-column name="EM_EMANIFEST_ID" insertable="true" updatable="false"/>
+        </hj:one-to-one>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:Discrepancy']">
@@ -203,10 +230,9 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:ResidueNewManifestTrackingNumber']">
         <hj:element-collection name="residueNewManifestTrackingNumber">
-            <orm:collection-table name="RCRA_EM_EMAN_TR_NUM_RES">
+            <orm:collection-table name="RCRA_EM_TR_NUM_RESIDUE_NEW">
                 <orm:join-column name="EM_EMANIFEST_ID" updatable="false"/>
             </orm:collection-table>
-            <orm:order-column name="ORDER_NUM"/>
             <orm:column name="MANIFEST_TRACKING_NUM"/>
         </hj:element-collection>
     </jaxb:bindings>
@@ -293,16 +319,15 @@
         <hj:one-to-many>
             <orm:join-column name="EM_EMANIFEST_ID" referenced-column-name="EM_EMANIFEST_ID"
                              updatable="false" nullable="false"/>
-            <orm:order-column name="ORDER_NUM"/>
         </hj:one-to-many>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:complexType[@name='ManifestCommentDataType']">
         <hj:entity>
-            <orm:table name="RCRA_EM_EMAN_COMMENT"/>
+            <orm:table name="RCRA_EM_EMANIFEST_COMMENT"/>
         </hj:entity>
         <hj:generated-id name="Dbid">
-            <orm:column name="EM_EMAN_COMMENT_ID"/>
+            <orm:column name="EM_EMANIFEST_COMMENT_ID"/>
         </hj:generated-id>
         <jaxb:bindings node="//xsd:element[@ref='RC:CommentDescription']">
             <hj:basic>
@@ -327,13 +352,13 @@
                 <orm:join-column name="EM_EMANIFEST_ID" updatable="false" nullable="false"/>
             </orm:association-override>
             <orm:attribute-override name="newManifestDestination">
-                <orm:column name="ADD_NEW_MAN_DEST"/>
+                <orm:column name="ADD_INFO_NEW_MAN_DEST"/>
             </orm:attribute-override>
             <orm:attribute-override name="consentNumber">
-                <orm:column name="ADD_CONSENT_NUM"/>
+                <orm:column name="ADD_INFO_CONSENT_NUM"/>
             </orm:attribute-override>
             <orm:attribute-override name="handlingInstructions">
-                <orm:column name="ADD_HAND_INSTR"/>
+                <orm:column name="ADD_INFO_HAND_INSTR"/>
             </orm:attribute-override>
         </hj:embedded>
     </jaxb:bindings>
@@ -381,22 +406,23 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:OriginalManifestTrackingNumber']">
         <hj:element-collection name="originalManifestTrackingNumber">
-            <orm:collection-table name="RCRA_EM_EMAN_TR_NUM_ORIG">
+            <orm:collection-table name="RCRA_EM_TR_NUM_ORIG">
                 <orm:join-column name="EM_EMANIFEST_ID" updatable="false" nullable="false"/>
             </orm:collection-table>
             <orm:column name="MANIFEST_TRACKING_NUM"/>
-            <orm:order-column name="ORDER_NUM" nullable="false"/>
         </hj:element-collection>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:NewManifestTrackingNumber']">
+        <!--
         <hj:element-collection name="newManifestTrackingNumber">
-            <orm:collection-table name="RCRA_EM_EMAN_TR_NUM_REJ">
+            <orm:collection-table name="RCRA_EM_TR_NUM_REJ">
                 <orm:join-column name="EM_EMANIFEST_ID" updatable="false" nullable="false"/>
             </orm:collection-table>
             <orm:column name="MANIFEST_TRACKING_NUM"/>
-            <orm:order-column name="ORDER_NUM" nullable="false"/>
         </hj:element-collection>
+        -->
+        <hj:ignored/>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:complexType[@name='RejectionInfoDataType']">

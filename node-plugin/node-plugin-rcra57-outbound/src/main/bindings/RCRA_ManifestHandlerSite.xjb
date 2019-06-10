@@ -2,15 +2,17 @@
 <jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+               xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
                jaxb:extensionBindingPrefixes="hj orm inheritance"
                schemaLocation="../xsd/5/7/RCRA_ManifestHandlerSite_v5.7.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='ManifestHandlerSiteDataType']">
+        <inheritance:extends>com.windsor.node.plugin.rcra57.domain.AbstractManifestHandler</inheritance:extends>
         <hj:entity>
             <orm:table name="RCRA_EM_HANDLER"/>
         </hj:entity>
         <hj:generated-id name="Dbid">
-            <orm:column name="EM_HAND_ID"/>
+            <orm:column name="EM_HANDLER_ID"/>
         </hj:generated-id>
     </jaxb:bindings>
 

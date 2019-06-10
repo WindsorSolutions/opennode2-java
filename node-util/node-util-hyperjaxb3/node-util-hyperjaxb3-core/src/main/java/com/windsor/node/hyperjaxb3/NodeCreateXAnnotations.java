@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import com.sun.java.xml.ns.persistence.orm.Basic;
 import org.jvnet.annox.model.XAnnotation;
 import org.jvnet.hyperjaxb3.ejb.jpa2.strategy.annotate.CreateXAnnotations;
 
@@ -18,6 +19,7 @@ import com.sun.java.xml.ns.persistence.orm.ElementCollection;
 public class NodeCreateXAnnotations extends CreateXAnnotations {
 
 	private boolean createOrderColumn = false;
+	private boolean createEnumerated = true;
 
 	public boolean isCreateOrderColumn() {
 		return createOrderColumn;
@@ -27,7 +29,30 @@ public class NodeCreateXAnnotations extends CreateXAnnotations {
 		this.createOrderColumn = createOrderColumn;
 	}
 
+	public boolean isCreateEnumerated() {
+		return createEnumerated;
+	}
+
+	public void setCreateEnumerated(boolean createEnumerated) {
+		this.createEnumerated = createEnumerated;
+	}
+
+	private Collection<XAnnotation> getBasicAnnotations(Basic cBasic) {
+		Collection<XAnnotation> allList = Arrays.asList(
+				createBasic(cBasic),
+				//
+				createColumn(cBasic.getColumn()),
+				//
+				createLob(cBasic.getLob()),
+				//
+				createTemporal(cBasic.getTemporal()),
+				//
+				createEnumerated(isCreateEnumerated() ? cBasic.getEnumerated() : null));
+		return allList;
+	}
+
 	private Collection<XAnnotation> getNonNullAnnotations(final ElementCollection source) {
+		System.out.println("!!!!!!!!!!!!!!!!! createEnumerated=" + createEnumerated);
 		Collection<XAnnotation> allList = Arrays.asList(
 				createElementCollection(source),
 				//
@@ -53,7 +78,7 @@ public class NodeCreateXAnnotations extends CreateXAnnotations {
 				//
 				createTemporal(source.getTemporal()),
 				//
-				createEnumerated(source.getEnumerated()),
+				createEnumerated(isCreateEnumerated() ? source.getEnumerated() : null), // : null,
 				//
 				createLob(source.getLob()),
 				//
@@ -84,6 +109,11 @@ public class NodeCreateXAnnotations extends CreateXAnnotations {
 			annotations = annotations(nonNullAnnotations.toArray(new XAnnotation[0]));
 		}
 		return annotations;
+	}
+
+	@Override
+	public Collection<XAnnotation> createBasicAnnotations(Basic cBasic) {
+		return cBasic == null ? Collections.<XAnnotation> emptyList() : getBasicAnnotations(cBasic);
 	}
 
 }
