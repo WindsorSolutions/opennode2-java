@@ -52,7 +52,6 @@ public class NodeCreateXAnnotations extends CreateXAnnotations {
 	}
 
 	private Collection<XAnnotation> getNonNullAnnotations(final ElementCollection source) {
-		System.out.println("!!!!!!!!!!!!!!!!! createEnumerated=" + createEnumerated);
 		Collection<XAnnotation> allList = Arrays.asList(
 				createElementCollection(source),
 				//
