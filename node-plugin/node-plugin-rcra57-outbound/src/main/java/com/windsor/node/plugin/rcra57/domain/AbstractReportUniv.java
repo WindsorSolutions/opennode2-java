@@ -10,7 +10,7 @@ public class AbstractReportUniv {
     private ReportUnivsDataType parent;
 
     @ManyToOne
-    @JoinColumn(name = "RU_SUBM_ID", insertable = true, updatable = false, nullable = false)
+    @JoinColumn(name = "RU_REPORT_UNIV_SUBM_ID", insertable = true, updatable = false, nullable = false)
     public ReportUnivsDataType getParent() {
         return parent;
     }

@@ -15,11 +15,12 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:ReportUnivs']">
         <hj:one-to-many>
-            <orm:join-column name="RU_SUBM_ID" nullable="false" updatable="false"/>
+            <orm:join-column name="RU_SUBM_ID" insertable="false" updatable="false"/>
         </hj:one-to-many>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:complexType[@name='ReportUnivsDataType']">
+        <inheritance:extends>com.windsor.node.plugin.rcra57.domain.AbstractReportUnivs</inheritance:extends>
         <hj:entity>
             <orm:table name="RCRA_RU_REPORT_UNIV_SUBM"/>
         </hj:entity>
@@ -30,7 +31,7 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:ReportUniv']">
         <hj:one-to-many>
-            <orm:join-column name="RU_REPORT_UNIV_SUBM_ID" nullable="false" updatable="false"/>
+            <orm:join-column name="RU_REPORT_UNIV_SUBM_ID" insertable="false" updatable="false"/>
         </hj:one-to-many>
     </jaxb:bindings>
 

@@ -167,8 +167,10 @@ public enum DbInfo {
                 @Override
                 public Object createParent(EntityManager em) {
                     HazardousWasteReportUnivDataType p = new HazardousWasteReportUnivDataType();
+                    em.persist(p);
                     ReportUnivsDataType ru = new ReportUnivsDataType();
-                    p.setReportUnivs(Arrays.asList(ru));
+                    ru.setParent(p);
+                    em.persist(ru);
                     return ru;
                 }
             },
