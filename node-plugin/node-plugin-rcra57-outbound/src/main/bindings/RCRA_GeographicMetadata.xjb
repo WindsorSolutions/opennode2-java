@@ -31,16 +31,76 @@
     <jaxb:bindings node="//xsd:element[@ref='RC:HorizontalCoordinateReferenceSystemDatumName']">
         <hj:ignored />
     </jaxb:bindings>
-    
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:CoordinateDataSourceDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="COORD_DATA_SRC_DATA_OWNER_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:CoordinateDataSourceCode']">
+        <hj:basic>
+            <orm:column name="COORD_DATA_SRC_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeographicReferencePointDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="GEO_REF_PT_DATA_OWNER_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeographicReferencePointCode']">
+        <hj:basic>
+            <orm:column name="GEO_REF_PT_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeometricTypeDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="GEOM_TYPE_DATA_OWNER_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeometricTypeCode']">
+        <hj:basic>
+            <orm:column name="GEOM_TYPE_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HorizontalCollectionMethodDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="HORZ_COLL_METH_DATA_OWNER_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HorizontalCollectionMethodCode']">
+        <hj:basic>
+            <orm:column name="HORZ_COLL_METH_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
     <jaxb:bindings node="//xsd:element[@ref='RC:HorizontalCoordinateReferenceSystemDatumDataOwnerCode']">
         <hj:basic>
             <orm:column name="HRZ_CRD_RF_SYS_DTM_DTA_OWN_CDE"/>
         </hj:basic>
     </jaxb:bindings>
-    
-    <jaxb:bindings node="//xsd:element[@ref='RC:GeometricTypeCode']">
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HorizontalCoordinateReferenceSystemDatumCode']">
         <hj:basic>
-            <orm:column name="GEOM_TYPE_CODE"/>
+            <orm:column name="HORZ_COORD_REF_SYS_DATUM_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:VerificationMethodDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="VERF_METH_DATA_OWNER_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:VerificationMethodCode']">
+        <hj:basic>
+            <orm:column name="VERF_METH_CODE"/>
         </hj:basic>
     </jaxb:bindings>
     

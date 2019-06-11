@@ -19,7 +19,6 @@ import com.windsor.node.plugin.rcra57.domain.ReportUnivDataType;
 import com.windsor.node.plugin.rcra57.domain.ReportUnivsDataType;
 
 import javax.persistence.EntityManager;
-import java.util.Arrays;
 
 public enum DbInfo {
 

@@ -31,7 +31,13 @@
     
     <jaxb:bindings node="//xsd:element[@ref='RC:GISFacilitySubmission']">
         <hj:one-to-many>
-            <orm:join-column name="GIS_SUBM_ID"/>
+            <orm:join-column name="GIS_SUBM_ID" updatable="false" insertable="false"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeographicInformation']">
+        <hj:one-to-many>
+            <orm:join-column name="GIS_FAC_SUBM_ID" insertable="true" updatable="false" nullable="false"/>
         </hj:one-to-many>
     </jaxb:bindings>
 

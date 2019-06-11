@@ -17,6 +17,12 @@
             <orm:column name="AREA_MEAS_SRC_CODE"/>
         </hj:basic>
     </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AreaMeasureSourceDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="AREA_MEAS_SRC_DATA_OWNER_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
     
 </jaxb:bindings>
 
