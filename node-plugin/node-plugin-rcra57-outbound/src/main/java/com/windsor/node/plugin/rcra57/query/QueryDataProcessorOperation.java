@@ -14,6 +14,7 @@ import com.windsor.node.common.domain.TransactionStatus;
 import com.windsor.node.common.util.NodeClientService;
 import com.windsor.node.data.dao.PluginServiceParameterDescriptor;
 import com.windsor.node.plugin.common.ValidUtf8XmlInputStream;
+import com.windsor.node.plugin.rcra57.domain.EmanifestDataType;
 import com.windsor.node.plugin.rcra57.domain.HazardousWasteEmanifestsDataType;
 import com.windsor.node.plugin.rcra57.domain.SolicitHistory;
 import com.windsor.node.plugin.rcra57.download.DownloadRequest;
@@ -34,6 +35,7 @@ import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.SQLServerDialect;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -42,6 +44,10 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
 import javax.xml.bind.ValidationException;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.XMLEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -284,12 +290,12 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
      * @throws JAXBException On any issue reading the XML data
      */
     private void processData(final ProcessContentResult result, InputStream inputStream, SolicitRequestType type) throws JAXBException {
-        JAXBContext jaxbContext = null;
-        if (type.getDbInfo() == DbInfo.EM) {
-            jaxbContext = JAXBContext.newInstance(HazardousWasteEmanifestsDataType.class);
-        } else {
-            jaxbContext = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",getClassLoader());
-        }
+        JAXBContext jaxbContext = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",getClassLoader());
+//        if (type.getDbInfo() == DbInfo.EM) {
+//            jaxbContext = JAXBContext.newInstance(HazardousWasteEmanifestsDataType.class);
+//        } else {
+//            jaxbContext = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",getClassLoader());
+//        }
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
         // handle any validation events
@@ -326,17 +332,63 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
         for (int i = 0; i < 2; i++) {
             try(InputStream is = i == 0 ? inputStream : new ValidUtf8XmlInputStream(inputStream, ' ')) {
                 if (type.getDbInfo() == DbInfo.EM) {
-                    HazardousWasteEmanifestsDataType submissionDataType = (HazardousWasteEmanifestsDataType) unmarshaller.unmarshal(inputStream);
-                    persistData(submissionDataType);
+                    handleEmanifest(inputStream, "Emanifest");
                 } else {
                     JAXBElement submissionDataType = (JAXBElement) unmarshaller.unmarshal(inputStream);
                     Object value = submissionDataType.getValue();
                     persistData(value);
                 }
+                break;
             } catch (JAXBException e) {
                 logger.warn("Error parsing the file" + (i == 0 ? " -- retrying with bad xml chars stripped" : ""), e);
             } catch (IOException e) {
                 throw new JAXBException("Error closing the input stream", e);
+            }
+        }
+    }
+
+
+    // Emanifest
+    private void handleEmanifest(InputStream in, String topLevelElementName) {
+        XMLEventReader xer = null;
+        try {
+            EntityManager em = getTargetEntityManager();
+            em.getTransaction().begin();
+            HazardousWasteEmanifestsDataType topLevel = new HazardousWasteEmanifestsDataType();
+            em.persist(topLevel);
+
+            XMLInputFactory xif = XMLInputFactory.newFactory();
+            xer = xif.createXMLEventReader(in);
+            JAXBContext jc = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",
+                    EmanifestDataType.class.getClassLoader());
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            //while (xer.hasNext()) {
+            for (int i = 0; xer.hasNext(); i++) {
+                XMLEvent peek = xer.peek();
+                if (peek.isStartElement() && peek.asStartElement().getName().getLocalPart().equals(topLevelElementName)) {
+                    JAXBElement<EmanifestDataType> element = (JAXBElement<EmanifestDataType>) unmarshaller.unmarshal(xer);
+                    EmanifestDataType emanifest = element.getValue();
+                    emanifest.setSubmission(topLevel);
+                    em.persist(emanifest);
+                } else {
+                    xer.nextEvent();
+                }
+                if (i + 1 % 10 == 0) {
+                    em.flush();
+                    em.clear();
+                    topLevel = em.merge(topLevel);
+                }
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (xer != null) {
+                try {
+                    xer.close();
+                } catch (XMLStreamException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
@@ -360,16 +412,6 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
 
     private void cleanupData(SolicitRequestType type, ProcessContentResult result) {
         getTargetEntityManager().getTransaction().begin();
-//        List<String> entityClasses = Arrays.asList("HazardousWasteCorrectiveActionDataType",
-//                "HazardousWasteCMESubmissionDataType", "FinancialAssuranceFacilitySubmissionDataType",
-//                "HazardousWasteHandlerSubmissionDataType", "HazardousWastePermitDataType",
-//                "ReportUnivSubmissionDataType", "HazardousWasteEManifestsDataType");
-//        for (String name : entityClasses) {
-//            List<Object> entities = getTargetEntityManager().createQuery(String.format("from %s where 1 = 1", name)).getResultList();
-//            for (Object entity: entities) {
-//                getTargetEntityManager().remove(entity);
-//            }
-//        }
         type.getDbInfo().getCleanupHandler().cleanup(getTargetEntityManager());
         getTargetEntityManager().getTransaction().commit();
     }

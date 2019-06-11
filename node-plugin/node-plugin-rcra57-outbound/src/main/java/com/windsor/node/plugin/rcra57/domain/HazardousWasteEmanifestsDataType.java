@@ -1,17 +1,19 @@
 package com.windsor.node.plugin.rcra57.domain;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import java.util.List;
 
 @XmlRootElement(name = "HazardousWasteEmanifests",  namespace = "http://www.exchangenetwork.net/schema/RCRA/5")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -28,7 +30,11 @@ public class HazardousWasteEmanifestsDataType {
     @XmlTransient
     private String dbid;
 
-    @Embedded
+    @XmlTransient
+    @OneToMany(mappedBy = "submission")
+    private List<EmanifestDataType> emanifests;
+
+    @Transient
     @XmlElement(name = "Emanifests", namespace = "http://www.exchangenetwork.net/schema/RCRA/5")
     private Emanifests manifests = new Emanifests();
 

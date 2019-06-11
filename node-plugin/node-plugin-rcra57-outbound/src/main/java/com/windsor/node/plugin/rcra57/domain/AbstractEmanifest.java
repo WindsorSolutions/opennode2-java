@@ -1,5 +1,7 @@
 package com.windsor.node.plugin.rcra57.domain;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -8,6 +10,8 @@ import java.util.List;
 
 @MappedSuperclass
 public abstract class AbstractEmanifest {
+
+    private HazardousWasteEmanifestsDataType submission;
 
     @Transient
     public abstract ManifestHandlerSiteDataType getGenerator();
@@ -52,4 +56,13 @@ public abstract class AbstractEmanifest {
         }
     }
 
+    @ManyToOne
+    @JoinColumn(name = "EM_SUBM_ID", insertable = true, updatable = false, nullable = false)
+    public HazardousWasteEmanifestsDataType getSubmission() {
+        return submission;
+    }
+
+    public void setSubmission(HazardousWasteEmanifestsDataType submission) {
+        this.submission = submission;
+    }
 }
