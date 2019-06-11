@@ -6,10 +6,6 @@
                jaxb:extensionBindingPrefixes="hj orm annox inheritance"
                schemaLocation="../xsd/5/7/RCRA_Emanifest_v5.7.xsd">
 
-    <jaxb:bindings node="//xsd:simpleType[@name='SubmissionTypeDataType']/xsd:restriction/xsd:enumeration[@value='DataImage5Copy']">
-        <jaxb:typesafeEnumMember name="DataImage5Copy"/>
-    </jaxb:bindings>
-
     <jaxb:bindings node="//xsd:complexType[@name='EmanifestDataType']">
         <inheritance:extends>com.windsor.node.plugin.rcra57.domain.AbstractEmanifest</inheritance:extends>
         <hj:entity>
@@ -170,7 +166,7 @@
 
             <orm:attribute-override
                     name="generatorElectronicSignature.humanReadableDocument.mimeType">
-                <orm:column name="REJ_GEN_ES_DOC_MIME_TYPE"/>E
+                <orm:column name="REJ_GEN_ES_DOC_MIME_TYPE"/>
             </orm:attribute-override>
 
             <orm:attribute-override name="generatorElectronicSignature.cromerrActivityId">
@@ -181,27 +177,13 @@
                 <orm:column name="REJ_GEN_ES_CROMERR_DOC_ID"/>
             </orm:attribute-override>
 
-            <!--
             <orm:association-override name="alternateDesignatedFacility">
-                <hj:ignored/>
+                <orm:join-column name="EM_EMANIFEST_ID" insertable="true" updatable="false"/>
             </orm:association-override>
-            -->
 
-        <orm:association-override name="alternateDesignatedFacility">
-            <orm:join-column name="EM_EMANIFEST_ID" insertable="true" updatable="false"/>
-        </orm:association-override>
-
-            <!--
-            <orm:association-override name="alternateDesignatedFacility">
-                <orm:join-column name="REJ_ALT_DES_FAC_ID" updatable="false"/>
-            </orm:association-override>
-            -->
-
-            <!--
             <orm:association-override name="newManifestTrackingNumber">
                 <orm:join-table name="RCRA_EM_TR_NUM_REJ" />
             </orm:association-override>
-            -->
 
             <orm:attribute-override name="rejectionComments">
                 <orm:column name="REJ_COMMENTS"/>
@@ -414,15 +396,12 @@
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:NewManifestTrackingNumber']">
-        <!--
         <hj:element-collection name="newManifestTrackingNumber">
             <orm:collection-table name="RCRA_EM_TR_NUM_REJ">
                 <orm:join-column name="EM_EMANIFEST_ID" updatable="false" nullable="false"/>
             </orm:collection-table>
             <orm:column name="MANIFEST_TRACKING_NUM"/>
         </hj:element-collection>
-        -->
-        <hj:ignored/>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:complexType[@name='RejectionInfoDataType']">

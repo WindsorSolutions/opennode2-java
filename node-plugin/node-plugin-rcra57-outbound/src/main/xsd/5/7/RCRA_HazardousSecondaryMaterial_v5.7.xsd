@@ -15,7 +15,7 @@
 			<xsd:documentation>Description of the Hazardous Secondary Material managed by the Handler</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
-	<!--xsd:element name="RecyclerIndicator" type="RC:RecyclerIndicatorDataType">
+	<xsd:element name="RecyclerIndicator" type="RC:RecyclerIndicatorDataType">
 		<xsd:annotation>
 			<xsd:documentation>Code for recycling hazardous waste.</xsd:documentation>
 		</xsd:annotation>
@@ -34,7 +34,7 @@
 		<xsd:restriction base="xsd:string">
 			<xsd:maxLength value="4000"/>
 		</xsd:restriction>
-	</xsd:simpleType-->
+	</xsd:simpleType>
 	<xsd:complexType name="HazardousSecondaryMaterialDataType">
 		<xsd:annotation>
 			<xsd:documentation>Description of the Hazardous Secondary Material managed by the Handler.</xsd:documentation>
@@ -46,8 +46,8 @@
 			<xsd:element ref="RC:EffectiveDate" minOccurs="0"/>
 			<xsd:element ref="RC:FinancialAssuranceIndicator" minOccurs="0"/>
 			<xsd:element ref="RC:HazardousSecondaryMaterialActivity" minOccurs="0" maxOccurs="unbounded"/>
-			<!--xsd:element ref="RC:RecyclerIndicator" minOccurs="0"/>
-			<xsd:element ref="RC:RecyclerNotes" minOccurs="0"/-->
+			<xsd:element ref="RC:RecyclerIndicator" minOccurs="0"/>
+			<xsd:element ref="RC:RecyclerNotes" minOccurs="0"/>
 		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>
