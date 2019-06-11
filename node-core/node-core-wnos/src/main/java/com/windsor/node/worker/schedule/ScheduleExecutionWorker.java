@@ -334,7 +334,7 @@ public class ScheduleExecutionWorker extends NodeWorker implements ScheduleItemE
             schedule.setExecuteStatus(ScheduleExecuteStatus.Failure);
         }
 
-        logger.error("Cleaning up at the end of the ScheduleExecutionWorker");
+        logger.info("Cleaning up at the end of the ScheduleExecutionWorker");
         getActivityService().insert(logEntry);
         schedule.setLastExecutionActivity(logEntry);
         schedule.setLastExecutedOn(new Timestamp(new Date().getTime()));
