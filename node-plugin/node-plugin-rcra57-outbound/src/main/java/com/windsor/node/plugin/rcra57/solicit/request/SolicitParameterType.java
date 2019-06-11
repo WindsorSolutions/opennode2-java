@@ -13,7 +13,8 @@ public enum SolicitParameterType {
     SOURCE_TYPE("sourceType"),
     CHANGE_DATE("changeDate"),
     FROM_DATE("fromDate"),
-    TO_DATE("toDate");
+    TO_DATE("toDate"),
+    END_DATE("endDate");
 
     private String type;
 

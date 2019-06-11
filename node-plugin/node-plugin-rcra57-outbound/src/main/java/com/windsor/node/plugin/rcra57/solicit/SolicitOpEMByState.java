@@ -35,7 +35,16 @@ public class SolicitOpEMByState extends SolicitOperation {
             throws RcraOutboundException {
 
         String state = namedParams.get(SolicitOperation.PARAM_STATE_REQ.getName()).toString();
-        String changeDate = namedParams.get(SolicitOperation.PARAM_CHANGE_DATE.getName()).toString();
+
+        String changeDate = null;
+        if (namedParams.containsKey(SolicitOperation.PARAM_CHANGE_DATE.getName())) {
+            changeDate = namedParams.get(SolicitOperation.PARAM_CHANGE_DATE.getName()).toString();
+        }
+
+        String endDate = null;
+        if (namedParams.containsKey(SolicitOperation.PARAM_END_DATE.getName())) {
+            endDate = namedParams.get(SolicitOperation.PARAM_END_DATE.getName()).toString();
+        }
 
         if(getUseHistory() != null && getUseHistory()) {
             SolicitHistory history = getSolicitHistoryLast(SolicitHistory.Status.COMPLETE);
@@ -50,7 +59,7 @@ public class SolicitOpEMByState extends SolicitOperation {
                     "the database and the change date is set to \"" + changeDate + "\".");
         }
 
-        return requestFactory.getEMDataByState(state, changeDate);
+        return requestFactory.getEMDataByState(state, changeDate, endDate);
     }
 
 }

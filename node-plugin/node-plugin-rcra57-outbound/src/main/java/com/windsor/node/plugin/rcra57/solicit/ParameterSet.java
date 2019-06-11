@@ -3,6 +3,7 @@ package com.windsor.node.plugin.rcra57.solicit;
 import com.windsor.node.data.dao.PluginServiceParameterDescriptor;
 import com.windsor.node.plugin.rcra57.solicit.request.SolicitRequestType;
 
+import static com.windsor.node.plugin.rcra57.outbound.BaseRcraPlugin.PARAM_END_DATE;
 import static com.windsor.node.plugin.rcra57.solicit.SolicitOperation.PARAM_AGENCY;
 import static com.windsor.node.plugin.rcra57.solicit.SolicitOperation.PARAM_CHANGE_DATE;
 import static com.windsor.node.plugin.rcra57.solicit.SolicitOperation.PARAM_FROM_DATE;
@@ -51,7 +52,7 @@ public enum ParameterSet {
             PARAM_USE_SOLICIT_HISTORY, PARAM_HANDLER_ID_REQ, PARAM_CHANGE_DATE, PARAM_STATE, PARAM_SOURCE_TYPE, PARAM_SEQUENCE_NUMBER
     }),
     HD_BY_STATE(SolicitRequestType.HD_BY_STATE, new PluginServiceParameterDescriptor[] {
-            PARAM_USE_SOLICIT_HISTORY, PARAM_STATE_REQ, PARAM_CHANGE_DATE
+            PARAM_USE_SOLICIT_HISTORY, PARAM_STATE_REQ, PARAM_CHANGE_DATE, PARAM_END_DATE
     }),
     PM_DATA_BY_HANDLER(SolicitRequestType.PM_BY_HANDLER, new PluginServiceParameterDescriptor[] {
             PARAM_USE_SOLICIT_HISTORY, PARAM_HANDLER_ID_REQ, PARAM_CHANGE_DATE
@@ -69,7 +70,7 @@ public enum ParameterSet {
             PARAM_USE_SOLICIT_HISTORY, PARAM_HANDLER_ID_REQ, PARAM_CHANGE_DATE
     }),
     EM_DATA_BY_STATE(SolicitRequestType.EM_BY_STATE, new PluginServiceParameterDescriptor[] {
-            PARAM_USE_SOLICIT_HISTORY, PARAM_STATE_REQ, PARAM_CHANGE_DATE
+            PARAM_USE_SOLICIT_HISTORY, PARAM_STATE_REQ, PARAM_CHANGE_DATE, PARAM_END_DATE
     }),
     HD_MAX_SEQUENCE(SolicitRequestType.HD_MAX_SEQUENCE, new PluginServiceParameterDescriptor[] {
             PARAM_USE_SOLICIT_HISTORY, PARAM_HANDLER_ID_REQ, PARAM_SOURCE_TYPE, PARAM_STATE

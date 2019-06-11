@@ -37,6 +37,7 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -290,94 +291,127 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
      * @throws JAXBException On any issue reading the XML data
      */
     private void processData(final ProcessContentResult result, InputStream inputStream, SolicitRequestType type) throws JAXBException {
-        JAXBContext jaxbContext = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",getClassLoader());
+        //JAXBContext jaxbContext = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",getClassLoader());
 //        if (type.getDbInfo() == DbInfo.EM) {
 //            jaxbContext = JAXBContext.newInstance(HazardousWasteEmanifestsDataType.class);
 //        } else {
 //            jaxbContext = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",getClassLoader());
 //        }
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-
-        // handle any validation events
-        unmarshaller.setEventHandler(new ValidationEventHandler() {
-
-            @Override
-            public boolean handleEvent(ValidationEvent event) {
-
-                StringBuilder builderError = new StringBuilder();
-                builderError.append("Could not parse the received XML data!\n");
-                builderError.append("  SEVERITY:  " + event.getSeverity() + "\n");
-                builderError.append("  MESSAGE:  " + event.getMessage() + "\n");
-                builderError.append("  LINKED EXCEPTION:  " +
-                        event.getLinkedException() + "\n");
-                builderError.append("  LOCATOR" + "\n");
-                builderError.append("      LINE NUMBER:  " +
-                        event.getLocator().getLineNumber() + "\n");
-                builderError.append("      COLUMN NUMBER:  " +
-                        event.getLocator().getColumnNumber() + "\n");
-                builderError.append("      OFFSET:  " +
-                        event.getLocator().getOffset() + "\n");
-                builderError.append("      OBJECT:  " +
-                        event.getLocator().getObject() + "\n");
-                builderError.append("      NODE:  " +
-                        event.getLocator().getNode() + "\n");
-                builderError.append("      URL:  " +
-                        event.getLocator().getURL());
-                logger.info(builderError.toString());
-                return true;
-            }
-        });
+//        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+//
+//        // handle any validation events
+//        unmarshaller.setEventHandler(new ValidationEventHandler() {
+//
+//            @Override
+//            public boolean handleEvent(ValidationEvent event) {
+//
+//                StringBuilder builderError = new StringBuilder();
+//                builderError.append("Could not parse the received XML data!\n");
+//                builderError.append("  SEVERITY:  " + event.getSeverity() + "\n");
+//                builderError.append("  MESSAGE:  " + event.getMessage() + "\n");
+//                builderError.append("  LINKED EXCEPTION:  " +
+//                        event.getLinkedException() + "\n");
+//                builderError.append("  LOCATOR" + "\n");
+//                builderError.append("      LINE NUMBER:  " +
+//                        event.getLocator().getLineNumber() + "\n");
+//                builderError.append("      COLUMN NUMBER:  " +
+//                        event.getLocator().getColumnNumber() + "\n");
+//                builderError.append("      OFFSET:  " +
+//                        event.getLocator().getOffset() + "\n");
+//                builderError.append("      OBJECT:  " +
+//                        event.getLocator().getObject() + "\n");
+//                builderError.append("      NODE:  " +
+//                        event.getLocator().getNode() + "\n");
+//                builderError.append("      URL:  " +
+//                        event.getLocator().getURL());
+//                logger.info(builderError.toString());
+//                return true;
+//            }
+//        });
 
         cleanupData(type, result);
         for (int i = 0; i < 2; i++) {
             try(InputStream is = i == 0 ? inputStream : new ValidUtf8XmlInputStream(inputStream, ' ')) {
-                if (type.getDbInfo() == DbInfo.EM) {
-                    handleEmanifest(inputStream, "Emanifest");
-                } else {
-                    JAXBElement submissionDataType = (JAXBElement) unmarshaller.unmarshal(inputStream);
-                    Object value = submissionDataType.getValue();
-                    persistData(value);
-                }
+                handleEmanifest(inputStream, type);
+//                if (type.getDbInfo() == DbInfo.EM) {
+//                    handleEmanifest(inputStream, "Emanifest");
+//                } else {
+//                    JAXBElement submissionDataType = (JAXBElement) unmarshaller.unmarshal(inputStream);
+//                    Object value = submissionDataType.getValue();
+//                    persistData(value);
+//                }
                 break;
-            } catch (JAXBException e) {
+            } catch (JAXBException|XMLStreamException e) {
                 logger.warn("Error parsing the file" + (i == 0 ? " -- retrying with bad xml chars stripped" : ""), e);
+                if (i == 1) {
+                    throw new JAXBException("Failed to parse file", e);
+                }
             } catch (IOException e) {
-                throw new JAXBException("Error closing the input stream", e);
+                logger.error("Error closing the input stream", e);
             }
         }
     }
 
-    private void handleEmanifest(InputStream in, String topLevelElementName) {
+
+    // 1. how to make a submission
+    // 2. post-processing for an element
+    private void handleEmanifest(InputStream in, SolicitRequestType type) throws JAXBException, XMLStreamException {
         XMLEventReader xer = null;
+        DbInfo dbInfo = type.getDbInfo();
         try {
             EntityManager em = getTargetEntityManager();
             em.getTransaction().begin();
-            HazardousWasteEmanifestsDataType topLevel = new HazardousWasteEmanifestsDataType();
-            em.persist(topLevel);
+            Object parent = dbInfo.getParentFactory().createParent(em);
             XMLInputFactory xif = XMLInputFactory.newFactory();
             xer = xif.createXMLEventReader(in);
             JAXBContext jc = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",
                     EmanifestDataType.class.getClassLoader());
             Unmarshaller unmarshaller = jc.createUnmarshaller();
+            unmarshaller.setEventHandler(new ValidationEventHandler() {
+
+                @Override
+                public boolean handleEvent(ValidationEvent event) {
+
+                    StringBuilder builderError = new StringBuilder();
+                    builderError.append("Could not parse the received XML data!\n");
+                    builderError.append("  SEVERITY:  " + event.getSeverity() + "\n");
+                    builderError.append("  MESSAGE:  " + event.getMessage() + "\n");
+                    builderError.append("  LINKED EXCEPTION:  " +
+                            event.getLinkedException() + "\n");
+                    builderError.append("  LOCATOR" + "\n");
+                    builderError.append("      LINE NUMBER:  " +
+                            event.getLocator().getLineNumber() + "\n");
+                    builderError.append("      COLUMN NUMBER:  " +
+                            event.getLocator().getColumnNumber() + "\n");
+                    builderError.append("      OFFSET:  " +
+                            event.getLocator().getOffset() + "\n");
+                    builderError.append("      OBJECT:  " +
+                            event.getLocator().getObject() + "\n");
+                    builderError.append("      NODE:  " +
+                            event.getLocator().getNode() + "\n");
+                    builderError.append("      URL:  " +
+                            event.getLocator().getURL());
+                    logger.info(builderError.toString());
+                    return true;
+                }
+            });
             for (int i = 0; xer.hasNext(); i++) {
                 XMLEvent peek = xer.peek();
-                if (peek.isStartElement() && peek.asStartElement().getName().getLocalPart().equals(topLevelElementName)) {
-                    JAXBElement<EmanifestDataType> element = (JAXBElement<EmanifestDataType>) unmarshaller.unmarshal(xer);
-                    EmanifestDataType emanifest = element.getValue();
-                    emanifest.setSubmission(topLevel);
-                    em.persist(emanifest);
+                if (peek.isStartElement() && peek.asStartElement().getName().getLocalPart().equals(dbInfo.getXmlElementName())) {
+                    JAXBElement<?> element = (JAXBElement<?>) unmarshaller.unmarshal(xer);
+                    Object value = element.getValue();
+                    dbInfo.getPrePersistHandler().prePersist(value, parent);
+                    em.persist(value);
                 } else {
                     xer.nextEvent();
                 }
                 if (i + 1 % 100 == 0) {
                     em.flush();
                     em.clear();
-                    topLevel = em.merge(topLevel);
+                    parent = em.merge(parent);
                 }
             }
             em.getTransaction().commit();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         } finally {
             if (xer != null) {
                 try {

@@ -93,18 +93,6 @@
         </hj:basic>
     </jaxb:bindings>
 
-    <jaxb:bindings node="//xsd:element[@ref='RC:HDReportCycleYear']">
-        <hj:basic>
-            <orm:column name="HD_RPT_CYCLE_YR"/>
-        </hj:basic>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@ref='RC:AcknowledgeFlagIndicator']">
-        <hj:basic>
-            <orm:column name="ACK_FLAG_IND"/>
-        </hj:basic>
-    </jaxb:bindings>
-
     <jaxb:bindings node="//xsd:element[@ref='RC:CountyCode']">
         <hj:basic>
             <orm:column name="COUNTY_CODE"/>
@@ -117,21 +105,45 @@
         </hj:basic>
     </jaxb:bindings>
 
-    <jaxb:bindings node="//xsd:element[@ref='RC:HealthcareFacility']">
+    <jaxb:bindings node="//xsd:element[@ref='RC:AcknowledgeFlagIndicator']">
         <hj:basic>
-            <orm:column name="HEALTHCARE_FAC_IND"/>
+            <orm:column name="ACKNOWLEDGE_FLAG_IND"/>
         </hj:basic>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:IncludeInNationalReportIndicator']">
         <hj:basic>
-            <orm:column name="INC_IN_NAT_RPT_IND"/>
+            <orm:column name="INCLUDE_IN_NATIONAL_REPORT_IND"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:LQHUWIndicator']">
+        <hj:basic>
+            <orm:column name="LQHUW_IND"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HDReportCycleYear']">
+        <hj:basic>
+            <orm:column name="HD_REPORT_CYCLE_YEAR"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HealthcareFacility']">
+        <hj:basic>
+            <orm:column name="HEALTHCARE_FAC"/>
         </hj:basic>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:ReverseDistributor']">
         <hj:basic>
-            <orm:column name="REVERSE_DIST_IND"/>
+            <orm:column name="REVERSE_DISTRIBUTOR"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:SubpartPWithdrawal']">
+        <hj:basic>
+            <orm:column name="SUBPART_P_WITHDRAWAL"/>
         </hj:basic>
     </jaxb:bindings>
 

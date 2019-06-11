@@ -11,7 +11,7 @@ import java.util.List;
 @MappedSuperclass
 public abstract class AbstractEmanifest {
 
-    private HazardousWasteEmanifestsDataType submission;
+    private HazardousWasteEmanifestsDataType parent;
 
     @Transient
     public abstract ManifestHandlerSiteDataType getGenerator();
@@ -58,11 +58,11 @@ public abstract class AbstractEmanifest {
 
     @ManyToOne
     @JoinColumn(name = "EM_SUBM_ID", insertable = true, updatable = false, nullable = false)
-    public HazardousWasteEmanifestsDataType getSubmission() {
-        return submission;
+    public HazardousWasteEmanifestsDataType getParent() {
+        return parent;
     }
 
-    public void setSubmission(HazardousWasteEmanifestsDataType submission) {
-        this.submission = submission;
+    public void setParent(HazardousWasteEmanifestsDataType parent) {
+        this.parent = parent;
     }
 }

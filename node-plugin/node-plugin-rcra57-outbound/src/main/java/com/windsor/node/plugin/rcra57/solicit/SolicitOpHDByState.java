@@ -36,6 +36,7 @@ public class SolicitOpHDByState extends SolicitOperation {
 
         String state = null;
         String changeDate = null;
+        String endDate = null;
 
         if(namedParams.get(SolicitOperation.PARAM_STATE_REQ.getName()) != null) {
             state = namedParams.get(SolicitOperation.PARAM_STATE_REQ.getName()).toString();
@@ -48,6 +49,10 @@ public class SolicitOpHDByState extends SolicitOperation {
 
         if(namedParams.get(SolicitOperation.PARAM_CHANGE_DATE.getName()) != null) {
             changeDate = namedParams.get(SolicitOperation.PARAM_CHANGE_DATE.getName()).toString();
+        }
+
+        if(namedParams.get(SolicitOperation.PARAM_END_DATE.getName()) != null) {
+            endDate = namedParams.get(SolicitOperation.PARAM_END_DATE.getName()).toString();
         }
 
         if(getUseHistory() != null && getUseHistory()) {
@@ -63,7 +68,7 @@ public class SolicitOpHDByState extends SolicitOperation {
                     "the database and the change date is set to \"" + changeDate + "\".");
         }
 
-        return requestFactory.getHDDataByState(state, changeDate);
+        return requestFactory.getHDDataByState(state, changeDate, endDate);
     }
 
 }

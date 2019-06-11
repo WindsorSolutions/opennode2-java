@@ -31,7 +31,7 @@ public class HazardousWasteEmanifestsDataType {
     private String dbid;
 
     @XmlTransient
-    @OneToMany(mappedBy = "submission")
+    @OneToMany(mappedBy = "parent")
     private List<EmanifestDataType> emanifests;
 
     @Transient

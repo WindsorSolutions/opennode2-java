@@ -63,6 +63,10 @@ public class SolicitParameterFactory {
         return createParameter(SolicitParameterType.CHANGE_DATE, value);
     }
 
+    public static ParameterType createEndDate(String value) {
+        return createParameter(SolicitParameterType.END_DATE, value);
+    }
+
     public static ParameterType createFromDate(String value) {
         return createParameter(SolicitParameterType.FROM_DATE, value);
     }

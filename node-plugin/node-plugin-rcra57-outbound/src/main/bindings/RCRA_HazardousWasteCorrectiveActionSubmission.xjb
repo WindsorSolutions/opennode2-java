@@ -14,6 +14,7 @@
     </jaxb:bindings>
     
     <jaxb:bindings node="//xsd:complexType[@name='CorrectiveActionFacilitySubmissionDataType']">
+        <inheritance:extends>com.windsor.node.plugin.rcra57.domain.AbstractCorrectiveActionFacilitySubmission</inheritance:extends>
         <hj:entity>
             <orm:table name="RCRA_CA_FAC_SUBM"/>
         </hj:entity>
@@ -24,7 +25,7 @@
     
     <jaxb:bindings node="//xsd:element[@ref='RC:CorrectiveActionFacilitySubmission']">
         <hj:one-to-many>
-            <orm:join-column name="CA_SUBM_ID" insertable="true" updatable="false" nullable="false"/>
+            <orm:join-column name="CA_SUBM_ID" insertable="false" updatable="false" />
         </hj:one-to-many>
     </jaxb:bindings>
 

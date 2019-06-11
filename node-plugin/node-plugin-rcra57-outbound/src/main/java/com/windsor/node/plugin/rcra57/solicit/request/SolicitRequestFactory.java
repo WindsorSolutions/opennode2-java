@@ -142,8 +142,8 @@ public class SolicitRequestFactory {
         return createForState(SolicitRequestType.HD_BY_STATE, state, changeDate);
     }
 
-    public SolicitRequest getHDDataByState(String state, String changeDate) {
-        return createForState(SolicitRequestType.HD_BY_STATE, state, changeDate);
+    public SolicitRequest getHDDataByState(String state, String changeDate, String endDate) {
+        return createForState(SolicitRequestType.HD_BY_STATE, state, changeDate, endDate);
     }
 
     public SolicitRequest getPMDataByHandler(String handlerId, Date changeDate) {
@@ -190,8 +190,8 @@ public class SolicitRequestFactory {
         return createForState(SolicitRequestType.EM_BY_STATE, state, changeDate);
     }
 
-    public SolicitRequest getEMDataByState(String state, String changeDate) {
-        return createForState(SolicitRequestType.EM_BY_STATE, state, changeDate);
+    public SolicitRequest getEMDataByState(String state, String changeDate, String endDate) {
+        return createForState(SolicitRequestType.EM_BY_STATE, state, changeDate, endDate);
     }
 
     public SolicitRequest getHDMaxSequence(String handlerId, String sourceType, String stateId) {
@@ -234,6 +234,18 @@ public class SolicitRequestFactory {
         return parameters;
     }
 
+    private List<ParameterType> createParametersForState(String state, String changeDate, String endDate) {
+        List<ParameterType> parameters = new ArrayList<>();
+        parameters.add(SolicitParameterFactory.createState(state));
+//        if (changeDate != null) {
+            parameters.add(SolicitParameterFactory.createChangeDate(changeDate));
+//        }
+//        if (endDate != null) {
+            parameters.add(SolicitParameterFactory.createEndDate(endDate));
+//        }
+        return parameters;
+    }
+
     private List<ParameterType> createParametersForHandlerState(String handlerId, String state, Date changeDate) {
         List<ParameterType> parameters = createParametersForHandler(handlerId, changeDate);
         parameters.add(SolicitParameterFactory.createState(state));
@@ -270,5 +282,10 @@ public class SolicitRequestFactory {
     private SolicitRequest createForState(SolicitRequestType type, String state, String changeDate) {
         return new SolicitRequest(endpoint, securityToken, recipient, type, createParametersForState(state,
                 changeDate));
+    }
+
+    private SolicitRequest createForState(SolicitRequestType type, String state, String changeDate, String endDate) {
+        return new SolicitRequest(endpoint, securityToken, recipient, type, createParametersForState(state,
+                changeDate, endDate));
     }
 }

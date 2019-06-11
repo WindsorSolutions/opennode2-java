@@ -121,6 +121,10 @@ public abstract class BaseRcraPlugin extends BaseWnosJaxbPlugin implements Dispo
             "Use Solicit History", PluginServiceParameterDescriptor.TYPE_BOOLEAN, true,
             "If true, track the successful transactions and used the most recent as the \"Change Date\" for subsequent fetches");
 
+    public final static PluginServiceParameterDescriptor PARAM_END_DATE = new PluginServiceParameterDescriptor(
+            "End Date", PluginServiceParameterDescriptor.TYPE_DATE, false,
+            "The ending date in which to retrieve RCRA data");
+
     /**
      * Required, name of partner to solicit.
      */

@@ -14,6 +14,7 @@
     </jaxb:bindings>
     
     <jaxb:bindings node="//xsd:complexType[@name='GISFacilitySubmissionDataType']">
+        <inheritance:extends>com.windsor.node.plugin.rcra57.domain.AbstractGISFacilitySubmission</inheritance:extends>
         <hj:entity>
             <orm:table name="RCRA_GIS_FAC_SUBM"/>
         </hj:entity>

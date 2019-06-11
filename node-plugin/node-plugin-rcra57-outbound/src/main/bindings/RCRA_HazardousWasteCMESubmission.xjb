@@ -14,6 +14,7 @@
     </jaxb:bindings>
     
     <jaxb:bindings node="//xsd:complexType[@name='CMEFacilitySubmissionDataType']">
+        <inheritance:extends>com.windsor.node.plugin.rcra57.domain.AbstractCMEFacilitySubmission</inheritance:extends>
         <hj:entity>
             <orm:table name="RCRA_CME_FAC_SUBM"/>
         </hj:entity>
@@ -48,7 +49,7 @@
     
     <jaxb:bindings node="//xsd:element[@ref='RC:CMEFacilitySubmission']">
         <hj:one-to-many>
-            <orm:join-column name="CME_SUBM_ID" nullable="false" insertable="true" updatable="false"/>
+            <orm:join-column name="CME_SUBM_ID" insertable="false" updatable="false"/>
         </hj:one-to-many>
     </jaxb:bindings>
 
