@@ -85,7 +85,7 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:FinancialAssuranceReqD']">
         <hj:basic>
-            <orm:column name="FIN_ASSURE_REQD_IND"/>
+            <orm:column name="FA_REQUIRED"/>
         </hj:basic>
     </jaxb:bindings>
  
