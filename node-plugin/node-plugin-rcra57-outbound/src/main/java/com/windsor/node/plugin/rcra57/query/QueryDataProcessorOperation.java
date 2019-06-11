@@ -347,8 +347,6 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
         }
     }
 
-
-    // Emanifest
     private void handleEmanifest(InputStream in, String topLevelElementName) {
         XMLEventReader xer = null;
         try {
@@ -356,13 +354,11 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
             em.getTransaction().begin();
             HazardousWasteEmanifestsDataType topLevel = new HazardousWasteEmanifestsDataType();
             em.persist(topLevel);
-
             XMLInputFactory xif = XMLInputFactory.newFactory();
             xer = xif.createXMLEventReader(in);
             JAXBContext jc = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",
                     EmanifestDataType.class.getClassLoader());
             Unmarshaller unmarshaller = jc.createUnmarshaller();
-            //while (xer.hasNext()) {
             for (int i = 0; xer.hasNext(); i++) {
                 XMLEvent peek = xer.peek();
                 if (peek.isStartElement() && peek.asStartElement().getName().getLocalPart().equals(topLevelElementName)) {
@@ -373,7 +369,7 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
                 } else {
                     xer.nextEvent();
                 }
-                if (i + 1 % 10 == 0) {
+                if (i + 1 % 100 == 0) {
                     em.flush();
                     em.clear();
                     topLevel = em.merge(topLevel);
