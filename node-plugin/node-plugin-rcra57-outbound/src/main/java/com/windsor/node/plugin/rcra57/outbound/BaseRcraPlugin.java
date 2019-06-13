@@ -196,10 +196,11 @@ public abstract class BaseRcraPlugin extends BaseWnosJaxbPlugin implements Dispo
                 getDataSources().get(ARG_DS_TARGET),
                 new PluginPersistenceConfig()
                         .classLoader(EmanifestDataType.class.getClassLoader())
-                        .debugSql(Boolean.TRUE)
+                        //.debugSql(Boolean.TRUE)
                         .rootEntityPackage("com.windsor.node.plugin.rcra57.domain")
                         .additionalEntityPackages("net.opengis.gml", "org.georss.georss._10")
-                        .setBatchFetchSize(1000));
+                        .setBatchFetchSize(1000)
+                        .setBatchSize(50));
 
         EntityManager entityManager = null;
 

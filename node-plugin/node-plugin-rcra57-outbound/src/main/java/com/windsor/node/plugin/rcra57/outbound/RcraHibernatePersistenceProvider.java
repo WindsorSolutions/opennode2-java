@@ -33,6 +33,10 @@ public class RcraHibernatePersistenceProvider {
             jpaProperties.put(Environment.DEFAULT_BATCH_FETCH_SIZE, config.getBatchFetchSize());
         }
 
+        if (config.getBatchSize() != null) {
+            jpaProperties.put(Environment.STATEMENT_BATCH_SIZE, config.getBatchSize());
+        }
+
         if (StringUtils.isNotBlank(config.getHibernateDialect())) {
             jpaProperties.put(Environment.DIALECT, config.getHibernateDialect());
         }

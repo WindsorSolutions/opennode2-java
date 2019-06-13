@@ -405,7 +405,7 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
                 } else {
                     xer.nextEvent();
                 }
-                if (i + 1 % 100 == 0) {
+                if ((i + 1) % 100 == 0) {
                     em.flush();
                     em.clear();
                     parent = em.merge(parent);
