@@ -26,7 +26,7 @@
 			<xsd:element ref="RC:ActivityLocationCode" minOccurs="1"/>
 			<xsd:element ref="RC:SourceTypeCode" minOccurs="0"/>
 			<xsd:element ref="RC:SequenceNumber" minOccurs="0"/>
-			<xsd:element name="ReceiveDate" type="RC:RUReceiveDateDataType" minOccurs="0"/>
+			<xsd:element name="ReceiveDate" type="RC:RUReceiveDateDataType" minOccurs="0" />
 			<xsd:element ref="RC:HandlerName" minOccurs="0"/>
 			<xsd:element ref="RC:NonNotifierIndicator" minOccurs="0"/>
 			<xsd:element ref="RC:Accessibility" minOccurs="0"/>
@@ -136,6 +136,7 @@
 			<xsd:element ref="RC:LqgClosureIndicator" minOccurs="0"/-->
 		</xsd:sequence>
 	</xsd:complexType>
+
 	<xsd:simpleType name="RUReceiveDateDataType">
 		<xsd:annotation>
 			<xsd:documentation>Date that the form (indicated by the associated Source) was received from the handler by the appropriate authority.</xsd:documentation>
