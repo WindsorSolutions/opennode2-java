@@ -32,7 +32,7 @@ public class WqxTestUtil {
 	/**
 	 * Name of the package containing the WQX entity classes.
 	 */
-	public static final String JAVA_PACKAGE_NAME = "com.windsor.node.plugin.wqx.domain.generated";
+	public static final String JAVA_PACKAGE_NAME = "com.windsor.node.plugin.wqx.domain";
 
 	/**
 	 * Path to the root schema file, relative to the classpath.
