@@ -86,6 +86,10 @@ public abstract class AbstractJpaIT {
 					.debugSql(showSql()) //
 					.setBatchFetchSize(getBatchFetchSize()) //
 					.rootEntityPackage(getRootEntityPackage());
+			ClassLoader classLoader = getClassLoader();
+			if (classLoader != null) {
+				config.classLoader(classLoader);
+			}
 			final EntityManagerFactory emf = provider.createEntityManagerFactory(getDataSource(),
 					config);
 			entityManager = emf.createEntityManager();
@@ -109,6 +113,10 @@ public abstract class AbstractJpaIT {
 	 */
 	protected int getBatchFetchSize() {
 		return 1000;
+	}
+
+	protected ClassLoader getClassLoader() {
+		return null;
 	}
 
 }

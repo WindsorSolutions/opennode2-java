@@ -2,8 +2,6 @@ package com.windsor.node.plugin.rcra56.solicit.request;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 /**
  * Provides an enumeration of valid RCRAInfo solicit request types.

@@ -213,4 +213,8 @@ public class WqxTempDbIT extends AbstractWqxTempDbIT {
 		// FIXME: other fields
 	}
 
+	@Override
+	protected ClassLoader getClassLoader() {
+		return ResultDataType.class.getClassLoader();
+	}
 }

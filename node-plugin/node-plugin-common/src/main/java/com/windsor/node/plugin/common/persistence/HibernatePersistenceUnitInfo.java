@@ -1,5 +1,8 @@
 package com.windsor.node.plugin.common.persistence;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -25,6 +28,8 @@ import javax.sql.DataSource;
  *
  */
 public class HibernatePersistenceUnitInfo implements PersistenceUnitInfo {
+
+    private static final Logger logger = LoggerFactory.getLogger(HibernatePersistenceUnitInfo.class);
 
     private final Properties jpaProperties;
     private final String entityPackageName;
@@ -110,12 +115,20 @@ public class HibernatePersistenceUnitInfo implements PersistenceUnitInfo {
 
             try {
                 for (Class<?> k : listEntitiesInPackage(packageName)) {
-                    classes.add(k.getCanonicalName());
+                    String className = k.getCanonicalName();
+                    classes.add(className);
+                    logger.debug("Adding class: " + className);
                 }
 
             } catch (Exception e) {
                 throw new RuntimeException("Unable to build list of Entity classes.", e);
             }
+            /*
+             * Also add the package itself -- Hibernate will look for the package-info.java
+             * file for the package and find any annotations.
+             */
+            logger.debug("Adding package: " + packageName);
+            classes.add(packageName);
         }
 
         return classes;

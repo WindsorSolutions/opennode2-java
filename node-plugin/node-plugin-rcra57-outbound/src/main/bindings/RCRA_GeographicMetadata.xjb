@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations" xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+    xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance" xmlns:annox="http://annox.dev.java.net"
+    jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/7/RCRA_GeographicMetadata_v5.7.xsd">
+    
+    <jaxb:bindings node="//xsd:complexType[@name='GeographicMetadataDataType']">
+        <hj:embeddable />
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="//xsd:element[@ref='RC:VerificationMethodName']">
+        <hj:ignored />
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeometricTypeName']">
+        <hj:ignored />
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="//xsd:element[@ref='RC:CoordinateDataSourceName']">
+        <hj:ignored />
+    </jaxb:bindings>
+    
+     <jaxb:bindings node="//xsd:element[@ref='RC:GeographicReferencePointName']">
+        <hj:ignored />
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="//xsd:element[@ref='RC:HorizontalCollectionMethodName']">
+        <hj:ignored />
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="//xsd:element[@ref='RC:HorizontalCoordinateReferenceSystemDatumName']">
+        <hj:ignored />
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:CoordinateDataSourceDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="COORD_DATA_SRC_DATA_OWNER_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:CoordinateDataSourceCode']">
+        <hj:basic>
+            <orm:column name="COORD_DATA_SRC_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeographicReferencePointDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="GEO_REF_PT_DATA_OWNER_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeographicReferencePointCode']">
+        <hj:basic>
+            <orm:column name="GEO_REF_PT_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeometricTypeDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="GEOM_TYPE_DATA_OWNER_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeometricTypeCode']">
+        <hj:basic>
+            <orm:column name="GEOM_TYPE_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HorizontalCollectionMethodDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="HORZ_COLL_METH_DATA_OWNER_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HorizontalCollectionMethodCode']">
+        <hj:basic>
+            <orm:column name="HORZ_COLL_METH_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HorizontalCoordinateReferenceSystemDatumDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="HRZ_CRD_RF_SYS_DTM_DTA_OWN_CDE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HorizontalCoordinateReferenceSystemDatumCode']">
+        <hj:basic>
+            <orm:column name="HORZ_COORD_REF_SYS_DATUM_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:VerificationMethodDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="VERF_METH_DATA_OWNER_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:VerificationMethodCode']">
+        <hj:basic>
+            <orm:column name="VERF_METH_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+    
+</jaxb:bindings>

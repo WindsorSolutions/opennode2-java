@@ -11,6 +11,7 @@ public class PluginPersistenceConfig {
     private boolean debugSql = Boolean.FALSE;
 
     private Integer batchFetchSize;
+    private Integer batchSize;
 
     public Integer getBatchFetchSize() {
         return batchFetchSize;
@@ -70,6 +71,15 @@ public class PluginPersistenceConfig {
     public String getHibernateDialect()
     {
         return hibernateDialect;
+    }
+
+    public Integer getBatchSize() {
+        return batchSize;
+    }
+
+    public PluginPersistenceConfig setBatchSize(Integer batchSize) {
+        this.batchSize = batchSize;
+        return this;
     }
 }
 
