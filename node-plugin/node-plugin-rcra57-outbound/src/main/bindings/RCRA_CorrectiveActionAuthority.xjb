@@ -137,6 +137,12 @@
         </hj:basic>
     </jaxb:bindings>
 
+    <jaxb:bindings node="//xsd:element[@name='CorrectiveActionRelatedEvent']">
+        <hj:one-to-many>
+            <orm:join-column name="CA_AUTHORITY_ID" updatable="false" nullable="false"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
     <jaxb:bindings node="//xsd:complexType[@name='AuthCorrectiveActionRelatedEventDataType']//xsd:element[@ref='RC:AgencyText']">
         <hj:ignored/>
     </jaxb:bindings>
