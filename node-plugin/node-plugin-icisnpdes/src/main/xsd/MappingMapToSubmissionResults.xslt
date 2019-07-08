@@ -1331,7 +1331,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var328_create_MonitoringPeriodEndDate">
 		<xsl:param name="var327_current"/>
-		<MonitoringPeriodEndDate>
+		<MonitoringPeriodEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var327_current/ns0:MonitoringPeriodEndDate)"/>
 		</MonitoringPeriodEndDate>
 	</xsl:template>
@@ -1345,7 +1345,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var332_create_MonitoringPeriodEndDate">
 		<xsl:param name="var331_current"/>
-		<MonitoringPeriodEndDate>
+		<MonitoringPeriodEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var331_current/ns0:MonitoringPeriodEndDate)"/>
 		</MonitoringPeriodEndDate>
 	</xsl:template>
@@ -1359,7 +1359,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var336_create_MonitoringPeriodEndDate">
 		<xsl:param name="var335_current"/>
-		<MonitoringPeriodEndDate>
+		<MonitoringPeriodEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var335_current/ns0:MonitoringPeriodEndDate)"/>
 		</MonitoringPeriodEndDate>
 	</xsl:template>
@@ -1381,7 +1381,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var342_create_MonitoringPeriodEndDate">
 		<xsl:param name="var341_current"/>
-		<MonitoringPeriodEndDate>
+		<MonitoringPeriodEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var341_current/ns0:MonitoringPeriodEndDate)"/>
 		</MonitoringPeriodEndDate>
 	</xsl:template>
@@ -1395,7 +1395,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var346_create_MonitoringPeriodEndDate">
 		<xsl:param name="var345_current"/>
-		<MonitoringPeriodEndDate>
+		<MonitoringPeriodEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var345_current/ns0:MonitoringPeriodEndDate)"/>
 		</MonitoringPeriodEndDate>
 	</xsl:template>
@@ -1409,7 +1409,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var350_create_MonitoringPeriodEndDate">
 		<xsl:param name="var349_current"/>
-		<MonitoringPeriodEndDate>
+		<MonitoringPeriodEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var349_current/ns0:MonitoringPeriodEndDate)"/>
 		</MonitoringPeriodEndDate>
 	</xsl:template>
@@ -1707,7 +1707,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var434_create_LimitStartDate">
 		<xsl:param name="var433_current"/>
-		<LimitStartDate>
+		<LimitStartDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var433_current/ns0:LimitStartDate)"/>
 		</LimitStartDate>
 	</xsl:template>
@@ -1721,7 +1721,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var438_create_LimitStartDate">
 		<xsl:param name="var437_current"/>
-		<LimitStartDate>
+		<LimitStartDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var437_current/ns0:LimitStartDate)"/>
 		</LimitStartDate>
 	</xsl:template>
@@ -1735,7 +1735,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var442_create_LimitEndDate">
 		<xsl:param name="var441_current"/>
-		<LimitEndDate>
+		<LimitEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var441_current/ns0:LimitEndDate)"/>
 		</LimitEndDate>
 	</xsl:template>
@@ -1749,7 +1749,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var446_create_LimitEndDate">
 		<xsl:param name="var445_current"/>
-		<LimitEndDate>
+		<LimitEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var445_current/ns0:LimitEndDate)"/>
 		</LimitEndDate>
 	</xsl:template>
@@ -1763,7 +1763,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var450_create_LimitModificationEffectiveDate">
 		<xsl:param name="var449_current"/>
-		<LimitModificationEffectiveDate>
+		<LimitModificationEffectiveDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var449_current)"/>
 		</LimitModificationEffectiveDate>
 	</xsl:template>
@@ -1785,7 +1785,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var456_create_TradeID">
 		<xsl:param name="var455_current"/>
-		<TradeID>
+		<TradeID  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var455_current/ns0:TradeID)"/>
 		</TradeID>
 	</xsl:template>
@@ -1849,7 +1849,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var474_create_CSOEventDate">
 		<xsl:param name="var473_current"/>
-		<CSOEventDate>
+		<CSOEventDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var473_current/ns0:CSOEventDate)"/>
 		</CSOEventDate>
 	</xsl:template>
@@ -1863,7 +1863,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var478_create_CSOEventDate">
 		<xsl:param name="var477_current"/>
-		<CSOEventDate>
+		<CSOEventDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var477_current/ns0:CSOEventDate)"/>
 		</CSOEventDate>
 	</xsl:template>
@@ -1885,7 +1885,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var484_create_DateStormEventSampled">
 		<xsl:param name="var483_current"/>
-		<DateStormEventSampled>
+		<DateStormEventSampled  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var483_current/ns0:DateStormEventSampled)"/>
 		</DateStormEventSampled>
 	</xsl:template>
@@ -1899,7 +1899,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var488_create_DateStormEventSampled">
 		<xsl:param name="var487_current"/>
-		<DateStormEventSampled>
+		<DateStormEventSampled  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var487_current/ns0:DateStormEventSampled)"/>
 		</DateStormEventSampled>
 	</xsl:template>
@@ -1921,7 +1921,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var494_create_DateStormEventSampled">
 		<xsl:param name="var493_current"/>
-		<DateStormEventSampled>
+		<DateStormEventSampled  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var493_current/ns0:DateStormEventSampled)"/>
 		</DateStormEventSampled>
 	</xsl:template>
@@ -1943,7 +1943,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var500_create_PermitEffectiveDate">
 		<xsl:param name="var499_current"/>
-		<PermitEffectiveDate>
+		<PermitEffectiveDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var499_current/ns0:PermitEffectiveDate)"/>
 		</PermitEffectiveDate>
 	</xsl:template>
@@ -1957,7 +1957,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var504_create_PermitTrackingEventCode">
 		<xsl:param name="var503_current"/>
-		<PermitTrackingEventCode>
+		<PermitTrackingEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var503_current/ns0:PermitTrackingEventCode)"/>
 		</PermitTrackingEventCode>
 	</xsl:template>
@@ -1971,7 +1971,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var508_create_PermitTrackingEventDate">
 		<xsl:param name="var507_current"/>
-		<PermitTrackingEventDate>
+		<PermitTrackingEventDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var507_current/ns0:PermitTrackingEventDate)"/>
 		</PermitTrackingEventDate>
 	</xsl:template>
@@ -2057,7 +2057,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var532_create_ScheduleEventCode">
 		<xsl:param name="var531_current"/>
-		<ScheduleEventCode>
+		<ScheduleEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var531_current/ns0:ScheduleEventCode)"/>
 		</ScheduleEventCode>
 	</xsl:template>
@@ -2071,7 +2071,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var536_create_ScheduleEventCode">
 		<xsl:param name="var535_current"/>
-		<ScheduleEventCode>
+		<ScheduleEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var535_current/ns0:ScheduleEventCode)"/>
 		</ScheduleEventCode>
 	</xsl:template>
@@ -2085,7 +2085,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var540_create_ScheduleEventCode">
 		<xsl:param name="var539_current"/>
-		<ScheduleEventCode>
+		<ScheduleEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var539_current/ns0:ScheduleEventCode)"/>
 		</ScheduleEventCode>
 	</xsl:template>
@@ -2107,7 +2107,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var546_create_ScheduleEventCode">
 		<xsl:param name="var545_current"/>
-		<ScheduleEventCode>
+		<ScheduleEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var545_current/ns0:ScheduleEventCode)"/>
 		</ScheduleEventCode>
 	</xsl:template>
@@ -2129,7 +2129,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var552_create_ScheduleEventCode">
 		<xsl:param name="var551_current"/>
-		<ScheduleEventCode>
+		<ScheduleEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var551_current/ns0:ScheduleEventCode)"/>
 		</ScheduleEventCode>
 	</xsl:template>
@@ -2151,7 +2151,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var558_create_ScheduleEventCode">
 		<xsl:param name="var557_current"/>
-		<ScheduleEventCode>
+		<ScheduleEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var557_current/ns0:ScheduleEventCode)"/>
 		</ScheduleEventCode>
 	</xsl:template>
@@ -2173,7 +2173,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var564_create_ScheduleDate">
 		<xsl:param name="var563_current"/>
-		<ScheduleDate>
+		<ScheduleDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var563_current/ns0:ScheduleDate)"/>
 		</ScheduleDate>
 	</xsl:template>
@@ -2187,7 +2187,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var568_create_ScheduleDate">
 		<xsl:param name="var567_current"/>
-		<ScheduleDate>
+		<ScheduleDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var567_current/ns0:ScheduleDate)"/>
 		</ScheduleDate>
 	</xsl:template>
@@ -2201,7 +2201,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var572_create_ScheduleDate">
 		<xsl:param name="var571_current"/>
-		<ScheduleDate>
+		<ScheduleDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var571_current/ns0:ScheduleDate)"/>
 		</ScheduleDate>
 	</xsl:template>
@@ -2223,7 +2223,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var578_create_ScheduleDate">
 		<xsl:param name="var577_current"/>
-		<ScheduleDate>
+		<ScheduleDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var577_current/ns0:ScheduleDate)"/>
 		</ScheduleDate>
 	</xsl:template>
@@ -2245,7 +2245,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var584_create_ScheduleDate">
 		<xsl:param name="var583_current"/>
-		<ScheduleDate>
+		<ScheduleDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var583_current/ns0:ScheduleDate)"/>
 		</ScheduleDate>
 	</xsl:template>
@@ -2267,7 +2267,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var590_create_ScheduleDate">
 		<xsl:param name="var589_current"/>
-		<ScheduleDate>
+		<ScheduleDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var589_current/ns0:ScheduleDate)"/>
 		</ScheduleDate>
 	</xsl:template>
@@ -2289,7 +2289,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var596_create_NumericReportCode">
 		<xsl:param name="var595_current"/>
-		<NumericReportCode>
+		<NumericReportCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var595_current/ns0:NumericReportCode)"/>
 		</NumericReportCode>
 	</xsl:template>
@@ -2303,7 +2303,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var600_create_NumericReportViolationCode">
 		<xsl:param name="var599_current"/>
-		<NumericReportViolationCode>
+		<NumericReportViolationCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var599_current/ns0:NumericReportViolationCode)"/>
 		</NumericReportViolationCode>
 	</xsl:template>
@@ -2317,7 +2317,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var604_create_PermittingAuthorityReportRecei">
 		<xsl:param name="var603_current"/>
-		<PermittingAuthorityReportReceivedDate>
+		<PermittingAuthorityReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var603_current/ns0:PermittingAuthorityReportReceivedDate)"/>
 		</PermittingAuthorityReportReceivedDate>
 	</xsl:template>
@@ -2331,7 +2331,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var608_create_PermittingAuthorityReportRecei">
 		<xsl:param name="var607_current"/>
-		<PermittingAuthorityReportReceivedDate>
+		<PermittingAuthorityReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var607_current/ns0:LocalLimitsPermittingAuthorityReportReceivedDate)"/>
 		</PermittingAuthorityReportReceivedDate>
 	</xsl:template>
@@ -2345,7 +2345,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var612_create_PermittingAuthorityReportRecei">
 		<xsl:param name="var611_current"/>
-		<PermittingAuthorityReportReceivedDate>
+		<PermittingAuthorityReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var611_current/ns0:PermittingAuthorityReportReceivedDate)"/>
 		</PermittingAuthorityReportReceivedDate>
 	</xsl:template>
@@ -2367,7 +2367,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var618_create_PermittingAuthorityReportRecei">
 		<xsl:param name="var617_current"/>
-		<PermittingAuthorityReportReceivedDate>
+		<PermittingAuthorityReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var617_current/ns0:LocalLimitsPermittingAuthorityReportReceivedDate)"/>
 		</PermittingAuthorityReportReceivedDate>
 	</xsl:template>
@@ -2389,7 +2389,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var624_create_PretreatmentPerformanceSummary">
 		<xsl:param name="var623_current"/>
-		<PretreatmentPerformanceSummaryEndDate>
+		<PretreatmentPerformanceSummaryEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var623_current/ns0:PretreatmentPerformanceSummaryEndDate)"/>
 		</PretreatmentPerformanceSummaryEndDate>
 	</xsl:template>
@@ -2403,7 +2403,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var628_create_PretreatmentPerformanceSummary">
 		<xsl:param name="var627_current"/>
-		<PretreatmentPerformanceSummaryEndDate>
+		<PretreatmentPerformanceSummaryEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var627_current/ns0:PretreatmentPerformanceSummaryEndDate)"/>
 		</PretreatmentPerformanceSummaryEndDate>
 	</xsl:template>
@@ -2425,7 +2425,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var634_create_ReportCoverageEndDate">
 		<xsl:param name="var633_current"/>
-		<ReportCoverageEndDate>
+		<ReportCoverageEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var633_current/ns0:ReportCoverageEndDate)"/>
 		</ReportCoverageEndDate>
 	</xsl:template>
@@ -2439,7 +2439,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var638_create_ReportCoverageEndDate">
 		<xsl:param name="var637_current"/>
-		<ReportCoverageEndDate>
+		<ReportCoverageEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var637_current/ns0:ReportCoverageEndDate)"/>
 		</ReportCoverageEndDate>
 	</xsl:template>
@@ -2461,7 +2461,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var644_create_ReportCoverageEndDate">
 		<xsl:param name="var643_current"/>
-		<ReportCoverageEndDate>
+		<ReportCoverageEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var643_current/ns0:ReportCoverageEndDate)"/>
 		</ReportCoverageEndDate>
 	</xsl:template>
@@ -2483,7 +2483,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var650_create_SingleEventViolationCode">
 		<xsl:param name="var649_current"/>
-		<SingleEventViolationCode>
+		<SingleEventViolationCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var649_current/ns0:SingleEventViolationCode)"/>
 		</SingleEventViolationCode>
 	</xsl:template>
@@ -2497,7 +2497,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var654_create_SingleEventViolationCode">
 		<xsl:param name="var653_current"/>
-		<SingleEventViolationCode>
+		<SingleEventViolationCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var653_current/ns0:SingleEventViolationCode)"/>
 		</SingleEventViolationCode>
 	</xsl:template>
@@ -2519,7 +2519,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var660_create_SingleEventViolationCode">
 		<xsl:param name="var659_current"/>
-		<SingleEventViolationCode>
+		<SingleEventViolationCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var659_current/ns0:SingleEventViolationCode)"/>
 		</SingleEventViolationCode>
 	</xsl:template>
@@ -2541,7 +2541,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var666_create_SingleEventViolationDate">
 		<xsl:param name="var665_current"/>
-		<SingleEventViolationDate>
+		<SingleEventViolationDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var665_current/ns0:SingleEventViolationDate)"/>
 		</SingleEventViolationDate>
 	</xsl:template>
@@ -2555,7 +2555,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var670_create_SingleEventViolationDate">
 		<xsl:param name="var669_current"/>
-		<SingleEventViolationDate>
+		<SingleEventViolationDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var669_current/ns0:SingleEventViolationDate)"/>
 		</SingleEventViolationDate>
 	</xsl:template>
@@ -2577,7 +2577,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var676_create_SingleEventViolationDate">
 		<xsl:param name="var675_current"/>
-		<SingleEventViolationDate>
+		<SingleEventViolationDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var675_current/ns0:SingleEventViolationDate)"/>
 		</SingleEventViolationDate>
 	</xsl:template>
@@ -2599,7 +2599,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var682_create_SSOAnnualReportReceivedDate">
 		<xsl:param name="var681_current"/>
-		<SSOAnnualReportReceivedDate>
+		<SSOAnnualReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var681_current/ns0:SSOAnnualReportReceivedDate)"/>
 		</SSOAnnualReportReceivedDate>
 	</xsl:template>
@@ -2613,7 +2613,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var686_create_SSOAnnualReportReceivedDate">
 		<xsl:param name="var685_current"/>
-		<SSOAnnualReportReceivedDate>
+		<SSOAnnualReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var685_current/ns0:SSOAnnualReportReceivedDate)"/>
 		</SSOAnnualReportReceivedDate>
 	</xsl:template>
@@ -2635,7 +2635,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var692_create_SSOEventDate">
 		<xsl:param name="var691_current"/>
-		<SSOEventDate>
+		<SSOEventDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var691_current/ns0:SSOEventDate)"/>
 		</SSOEventDate>
 	</xsl:template>
@@ -2649,7 +2649,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var696_create_SSOEventDate">
 		<xsl:param name="var695_current"/>
-		<SSOEventDate>
+		<SSOEventDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var695_current/ns0:SSOEventDate)"/>
 		</SSOEventDate>
 	</xsl:template>
@@ -2671,7 +2671,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var702_create_SSOMonthlyReportReceivedDate">
 		<xsl:param name="var701_current"/>
-		<SSOMonthlyReportReceivedDate>
+		<SSOMonthlyReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var701_current/ns0:SSOMonthlyReportReceivedDate)"/>
 		</SSOMonthlyReportReceivedDate>
 	</xsl:template>
@@ -2685,7 +2685,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var706_create_SSOMonthlyReportReceivedDate">
 		<xsl:param name="var705_current"/>
-		<SSOMonthlyReportReceivedDate>
+		<SSOMonthlyReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var705_current/ns0:SSOMonthlyReportReceivedDate)"/>
 		</SSOMonthlyReportReceivedDate>
 	</xsl:template>
@@ -2743,7 +2743,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var722_create_IndustrialStormWaterAnnualRepo">
 		<xsl:param name="var721_current"/>
-		<IndustrialStormWaterAnnualReportReceivedDate>
+		<IndustrialStormWaterAnnualReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var721_current/ns0:IndustrialStormWaterAnnualReportReceivedDate)"/>
 		</IndustrialStormWaterAnnualReportReceivedDate>
 	</xsl:template>
@@ -2757,7 +2757,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var726_create_BiosolidsAnnualReportReceivedD">
 		<xsl:param name="var725_current"/>
-		<BiosolidsAnnualReportReceivedDate>
+		<BiosolidsAnnualReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var725_current/ns0:BiosolidsAnnualReportReceivedDate)"/>
 		</BiosolidsAnnualReportReceivedDate>
 	</xsl:template>
@@ -2907,7 +2907,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var768_create_FinalOrderIdentifier">
 		<xsl:param name="var767_current"/>
-		<FinalOrderIdentifier>
+		<FinalOrderIdentifier  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var767_current/ns0:FinalOrderIdentifier)"/>
 		</FinalOrderIdentifier>
 	</xsl:template>
@@ -2921,7 +2921,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var772_create_FinalOrderIdentifier">
 		<xsl:param name="var771_current"/>
-		<FinalOrderIdentifier>
+		<FinalOrderIdentifier  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var771_current/ns0:FinalOrderIdentifier)"/>
 		</FinalOrderIdentifier>
 	</xsl:template>
@@ -2943,7 +2943,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var778_create_FinalOrderIdentifier">
 		<xsl:param name="var777_current"/>
-		<FinalOrderIdentifier>
+		<FinalOrderIdentifier  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var777_current/ns0:FinalOrderIdentifier)"/>
 		</FinalOrderIdentifier>
 	</xsl:template>
@@ -2965,7 +2965,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var784_create_FinalOrderIdentifier">
 		<xsl:param name="var783_current"/>
-		<FinalOrderIdentifier>
+		<FinalOrderIdentifier  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var783_current/ns0:FinalOrderIdentifier)"/>
 		</FinalOrderIdentifier>
 	</xsl:template>
@@ -3003,7 +3003,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var794_create_ComplianceScheduleNumber">
 		<xsl:param name="var793_current"/>
-		<ComplianceScheduleNumber>
+		<ComplianceScheduleNumber  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var793_current/ns0:ComplianceScheduleNumber))))"/>
 		</ComplianceScheduleNumber>
 	</xsl:template>
@@ -3017,7 +3017,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var798_create_ComplianceScheduleNumber">
 		<xsl:param name="var797_current"/>
-		<ComplianceScheduleNumber>
+		<ComplianceScheduleNumber  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var797_current/ns0:ComplianceScheduleNumber))))"/>
 		</ComplianceScheduleNumber>
 	</xsl:template>
@@ -3039,7 +3039,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var804_create_ComplianceScheduleNumber">
 		<xsl:param name="var803_current"/>
-		<ComplianceScheduleNumber>
+		<ComplianceScheduleNumber  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var803_current/ns0:ComplianceScheduleNumber))))"/>
 		</ComplianceScheduleNumber>
 	</xsl:template>
@@ -3061,7 +3061,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var810_create_MilestoneTypeCode">
 		<xsl:param name="var809_current"/>
-		<MilestoneTypeCode>
+		<MilestoneTypeCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var809_current/ns0:MilestoneTypeCode)"/>
 		</MilestoneTypeCode>
 	</xsl:template>
@@ -3075,7 +3075,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var814_create_ScheduleViolationCode">
 		<xsl:param name="var813_current"/>
-		<ScheduleViolationCode>
+		<ScheduleViolationCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var813_current/ns0:ScheduleViolationCode)"/>
 		</ScheduleViolationCode>
 	</xsl:template>
@@ -3097,7 +3097,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var820_create_ScheduleViolationCode">
 		<xsl:param name="var819_current"/>
-		<ScheduleViolationCode>
+		<ScheduleViolationCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var819_current/ns0:ScheduleViolationCode)"/>
 		</ScheduleViolationCode>
 	</xsl:template>
@@ -3119,7 +3119,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var826_create_EventId">
 		<xsl:param name="var825_current"/>
-		<EventId>
+		<EventId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var825_current/ns0:SSOEventID))))"/>
 		</EventId>
 	</xsl:template>
@@ -3133,7 +3133,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var830_create_EventId">
 		<xsl:param name="var829_current"/>
-		<EventId>
+		<EventId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var829_current/ns0:CSOEventID))))"/>
 		</EventId>
 	</xsl:template>
@@ -3155,7 +3155,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var836_create_EventId">
 		<xsl:param name="var835_current"/>
-		<EventId>
+		<EventId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var835_current/ns0:StormWaterEventID))))"/>
 		</EventId>
 	</xsl:template>
@@ -3169,7 +3169,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var840_create_EventId">
 		<xsl:param name="var839_current"/>
-		<EventId>
+		<EventId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var839_current/ns0:CSOEventID))))"/>
 		</EventId>
 	</xsl:template>
@@ -3183,7 +3183,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var844_create_EventId">
 		<xsl:param name="var843_current"/>
-		<EventId>
+		<EventId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var843_current/ns0:SSOEventID))))"/>
 		</EventId>
 	</xsl:template>
@@ -3205,7 +3205,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var850_create_EventId">
 		<xsl:param name="var849_current"/>
-		<EventId>
+		<EventId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var849_current/ns0:StormWaterEventID))))"/>
 		</EventId>
 	</xsl:template>
@@ -3249,7 +3249,7 @@ http://www.altova.com/mapforce
 		</xsl:variable>
 		<xsl:variable name="var863_let" select="($var864_resultof_greater or boolean(string($var862_AcceptedReport)))"/>
 		<SubmissionResult xmlns="http://www.exchangenetwork.net/schema/icis/5">
-			<SubmissionTypeName>
+			<SubmissionTypeName  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 				<xsl:call-template name="vmf:vmf1_inputtoresult">
 					<xsl:with-param name="input" select="string($var866_current/ns0:SubmissionTypeName)"/>
 				</xsl:call-template>
@@ -4165,7 +4165,7 @@ http://www.altova.com/mapforce
 					<xsl:value-of select="'1'"/>
 				</xsl:if>
 			</xsl:variable>
-			<ResultTypeCode>
+			<ResultTypeCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 				<xsl:choose>
 					<xsl:when test="string($var864_resultof_greater) != 'false'">
 						<xsl:value-of select="'Warning'"/>
@@ -4183,7 +4183,7 @@ http://www.altova.com/mapforce
 				</xsl:choose>
 			</ResultTypeCode>
 			<xsl:if test="string($var863_let) != 'false'">
-				<ResultDescription>
+				<ResultDescription  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 					<xsl:choose>
 						<xsl:when test="string($var864_resultof_greater) != 'false'">
 							<xsl:value-of select="'Multiple warnings returned. See PDF.'"/>
@@ -4198,7 +4198,7 @@ http://www.altova.com/mapforce
 					</xsl:choose>
 				</ResultDescription>
 			</xsl:if>
-			<SubmissionTransactionId>
+			<SubmissionTransactionId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 				<xsl:value-of select="string($var867_current/ns0:TransactionIdentifier)"/>
 			</SubmissionTransactionId>
 		</SubmissionResult>
@@ -5388,7 +5388,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1202_create_MonitoringPeriodEndDate">
 		<xsl:param name="var1201_current"/>
-		<MonitoringPeriodEndDate>
+		<MonitoringPeriodEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1201_current/ns0:MonitoringPeriodEndDate)"/>
 		</MonitoringPeriodEndDate>
 	</xsl:template>
@@ -5402,7 +5402,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1206_create_MonitoringPeriodEndDate">
 		<xsl:param name="var1205_current"/>
-		<MonitoringPeriodEndDate>
+		<MonitoringPeriodEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1205_current/ns0:MonitoringPeriodEndDate)"/>
 		</MonitoringPeriodEndDate>
 	</xsl:template>
@@ -5416,7 +5416,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1210_create_MonitoringPeriodEndDate">
 		<xsl:param name="var1209_current"/>
-		<MonitoringPeriodEndDate>
+		<MonitoringPeriodEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1209_current/ns0:MonitoringPeriodEndDate)"/>
 		</MonitoringPeriodEndDate>
 	</xsl:template>
@@ -5430,7 +5430,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1214_create_MonitoringPeriodEndDate">
 		<xsl:param name="var1213_current"/>
-		<MonitoringPeriodEndDate>
+		<MonitoringPeriodEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1213_current/ns0:MonitoringPeriodEndDate)"/>
 		</MonitoringPeriodEndDate>
 	</xsl:template>
@@ -5444,7 +5444,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1218_create_MonitoringPeriodEndDate">
 		<xsl:param name="var1217_current"/>
-		<MonitoringPeriodEndDate>
+		<MonitoringPeriodEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1217_current/ns0:MonitoringPeriodEndDate)"/>
 		</MonitoringPeriodEndDate>
 	</xsl:template>
@@ -5466,7 +5466,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1224_create_MonitoringPeriodEndDate">
 		<xsl:param name="var1223_current"/>
-		<MonitoringPeriodEndDate>
+		<MonitoringPeriodEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1223_current/ns0:MonitoringPeriodEndDate)"/>
 		</MonitoringPeriodEndDate>
 	</xsl:template>
@@ -5764,7 +5764,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1308_create_LimitStartDate">
 		<xsl:param name="var1307_current"/>
-		<LimitStartDate>
+		<LimitStartDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1307_current/ns0:LimitStartDate)"/>
 		</LimitStartDate>
 	</xsl:template>
@@ -5778,7 +5778,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1312_create_LimitStartDate">
 		<xsl:param name="var1311_current"/>
-		<LimitStartDate>
+		<LimitStartDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1311_current/ns0:LimitStartDate)"/>
 		</LimitStartDate>
 	</xsl:template>
@@ -5792,7 +5792,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1316_create_LimitEndDate">
 		<xsl:param name="var1315_current"/>
-		<LimitEndDate>
+		<LimitEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1315_current/ns0:LimitEndDate)"/>
 		</LimitEndDate>
 	</xsl:template>
@@ -5806,7 +5806,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1320_create_LimitEndDate">
 		<xsl:param name="var1319_current"/>
-		<LimitEndDate>
+		<LimitEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1319_current/ns0:LimitEndDate)"/>
 		</LimitEndDate>
 	</xsl:template>
@@ -5820,7 +5820,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1324_create_LimitModificationEffectiveDate">
 		<xsl:param name="var1323_current"/>
-		<LimitModificationEffectiveDate>
+		<LimitModificationEffectiveDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1323_current)"/>
 		</LimitModificationEffectiveDate>
 	</xsl:template>
@@ -5842,7 +5842,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1330_create_TradeID">
 		<xsl:param name="var1329_current"/>
-		<TradeID>
+		<TradeID  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1329_current/ns0:TradeID)"/>
 		</TradeID>
 	</xsl:template>
@@ -5906,7 +5906,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1348_create_CSOEventDate">
 		<xsl:param name="var1347_current"/>
-		<CSOEventDate>
+		<CSOEventDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1347_current/ns0:CSOEventDate)"/>
 		</CSOEventDate>
 	</xsl:template>
@@ -5920,7 +5920,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1352_create_CSOEventDate">
 		<xsl:param name="var1351_current"/>
-		<CSOEventDate>
+		<CSOEventDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1351_current/ns0:CSOEventDate)"/>
 		</CSOEventDate>
 	</xsl:template>
@@ -5942,7 +5942,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1358_create_DateStormEventSampled">
 		<xsl:param name="var1357_current"/>
-		<DateStormEventSampled>
+		<DateStormEventSampled  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1357_current/ns0:DateStormEventSampled)"/>
 		</DateStormEventSampled>
 	</xsl:template>
@@ -5956,7 +5956,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1362_create_DateStormEventSampled">
 		<xsl:param name="var1361_current"/>
-		<DateStormEventSampled>
+		<DateStormEventSampled  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1361_current/ns0:DateStormEventSampled)"/>
 		</DateStormEventSampled>
 	</xsl:template>
@@ -5978,7 +5978,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1368_create_DateStormEventSampled">
 		<xsl:param name="var1367_current"/>
-		<DateStormEventSampled>
+		<DateStormEventSampled  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1367_current/ns0:DateStormEventSampled)"/>
 		</DateStormEventSampled>
 	</xsl:template>
@@ -6000,7 +6000,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1374_create_PermitEffectiveDate">
 		<xsl:param name="var1373_current"/>
-		<PermitEffectiveDate>
+		<PermitEffectiveDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1373_current/ns0:PermitEffectiveDate)"/>
 		</PermitEffectiveDate>
 	</xsl:template>
@@ -6014,7 +6014,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1378_create_PermitTrackingEventCode">
 		<xsl:param name="var1377_current"/>
-		<PermitTrackingEventCode>
+		<PermitTrackingEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1377_current/ns0:PermitTrackingEventCode)"/>
 		</PermitTrackingEventCode>
 	</xsl:template>
@@ -6028,7 +6028,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1382_create_PermitTrackingEventDate">
 		<xsl:param name="var1381_current"/>
-		<PermitTrackingEventDate>
+		<PermitTrackingEventDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1381_current/ns0:PermitTrackingEventDate)"/>
 		</PermitTrackingEventDate>
 	</xsl:template>
@@ -6114,7 +6114,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1406_create_ScheduleEventCode">
 		<xsl:param name="var1405_current"/>
-		<ScheduleEventCode>
+		<ScheduleEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1405_current/ns0:ScheduleEventCode)"/>
 		</ScheduleEventCode>
 	</xsl:template>
@@ -6128,7 +6128,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1410_create_ScheduleEventCode">
 		<xsl:param name="var1409_current"/>
-		<ScheduleEventCode>
+		<ScheduleEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1409_current/ns0:ScheduleEventCode)"/>
 		</ScheduleEventCode>
 	</xsl:template>
@@ -6142,7 +6142,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1414_create_ScheduleEventCode">
 		<xsl:param name="var1413_current"/>
-		<ScheduleEventCode>
+		<ScheduleEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1413_current/ns0:ScheduleEventCode)"/>
 		</ScheduleEventCode>
 	</xsl:template>
@@ -6164,7 +6164,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1420_create_ScheduleEventCode">
 		<xsl:param name="var1419_current"/>
-		<ScheduleEventCode>
+		<ScheduleEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1419_current/ns0:ScheduleEventCode)"/>
 		</ScheduleEventCode>
 	</xsl:template>
@@ -6186,7 +6186,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1426_create_ScheduleEventCode">
 		<xsl:param name="var1425_current"/>
-		<ScheduleEventCode>
+		<ScheduleEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1425_current/ns0:ScheduleEventCode)"/>
 		</ScheduleEventCode>
 	</xsl:template>
@@ -6208,7 +6208,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1432_create_ScheduleEventCode">
 		<xsl:param name="var1431_current"/>
-		<ScheduleEventCode>
+		<ScheduleEventCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1431_current/ns0:ScheduleEventCode)"/>
 		</ScheduleEventCode>
 	</xsl:template>
@@ -6230,7 +6230,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1438_create_ScheduleDate">
 		<xsl:param name="var1437_current"/>
-		<ScheduleDate>
+		<ScheduleDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1437_current/ns0:ScheduleDate)"/>
 		</ScheduleDate>
 	</xsl:template>
@@ -6244,7 +6244,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1442_create_ScheduleDate">
 		<xsl:param name="var1441_current"/>
-		<ScheduleDate>
+		<ScheduleDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1441_current/ns0:ScheduleDate)"/>
 		</ScheduleDate>
 	</xsl:template>
@@ -6258,7 +6258,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1446_create_ScheduleDate">
 		<xsl:param name="var1445_current"/>
-		<ScheduleDate>
+		<ScheduleDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1445_current/ns0:ScheduleDate)"/>
 		</ScheduleDate>
 	</xsl:template>
@@ -6280,7 +6280,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1452_create_ScheduleDate">
 		<xsl:param name="var1451_current"/>
-		<ScheduleDate>
+		<ScheduleDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1451_current/ns0:ScheduleDate)"/>
 		</ScheduleDate>
 	</xsl:template>
@@ -6302,7 +6302,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1458_create_ScheduleDate">
 		<xsl:param name="var1457_current"/>
-		<ScheduleDate>
+		<ScheduleDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1457_current/ns0:ScheduleDate)"/>
 		</ScheduleDate>
 	</xsl:template>
@@ -6324,7 +6324,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1464_create_ScheduleDate">
 		<xsl:param name="var1463_current"/>
-		<ScheduleDate>
+		<ScheduleDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1463_current/ns0:ScheduleDate)"/>
 		</ScheduleDate>
 	</xsl:template>
@@ -6346,7 +6346,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1470_create_NumericReportCode">
 		<xsl:param name="var1469_current"/>
-		<NumericReportCode>
+		<NumericReportCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1469_current/ns0:NumericReportCode)"/>
 		</NumericReportCode>
 	</xsl:template>
@@ -6360,7 +6360,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1474_create_NumericReportViolationCode">
 		<xsl:param name="var1473_current"/>
-		<NumericReportViolationCode>
+		<NumericReportViolationCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1473_current/ns0:NumericReportViolationCode)"/>
 		</NumericReportViolationCode>
 	</xsl:template>
@@ -6374,7 +6374,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1478_create_PermittingAuthorityReportRecei">
 		<xsl:param name="var1477_current"/>
-		<PermittingAuthorityReportReceivedDate>
+		<PermittingAuthorityReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1477_current/ns0:PermittingAuthorityReportReceivedDate)"/>
 		</PermittingAuthorityReportReceivedDate>
 	</xsl:template>
@@ -6388,7 +6388,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1482_create_PermittingAuthorityReportRecei">
 		<xsl:param name="var1481_current"/>
-		<PermittingAuthorityReportReceivedDate>
+		<PermittingAuthorityReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1481_current/ns0:LocalLimitsPermittingAuthorityReportReceivedDate)"/>
 		</PermittingAuthorityReportReceivedDate>
 	</xsl:template>
@@ -6402,7 +6402,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1486_create_PermittingAuthorityReportRecei">
 		<xsl:param name="var1485_current"/>
-		<PermittingAuthorityReportReceivedDate>
+		<PermittingAuthorityReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1485_current/ns0:PermittingAuthorityReportReceivedDate)"/>
 		</PermittingAuthorityReportReceivedDate>
 	</xsl:template>
@@ -6424,7 +6424,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1492_create_PermittingAuthorityReportRecei">
 		<xsl:param name="var1491_current"/>
-		<PermittingAuthorityReportReceivedDate>
+		<PermittingAuthorityReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1491_current/ns0:LocalLimitsPermittingAuthorityReportReceivedDate)"/>
 		</PermittingAuthorityReportReceivedDate>
 	</xsl:template>
@@ -6446,7 +6446,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1498_create_PretreatmentPerformanceSummary">
 		<xsl:param name="var1497_current"/>
-		<PretreatmentPerformanceSummaryEndDate>
+		<PretreatmentPerformanceSummaryEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1497_current/ns0:PretreatmentPerformanceSummaryEndDate)"/>
 		</PretreatmentPerformanceSummaryEndDate>
 	</xsl:template>
@@ -6460,7 +6460,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1502_create_PretreatmentPerformanceSummary">
 		<xsl:param name="var1501_current"/>
-		<PretreatmentPerformanceSummaryEndDate>
+		<PretreatmentPerformanceSummaryEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1501_current/ns0:PretreatmentPerformanceSummaryEndDate)"/>
 		</PretreatmentPerformanceSummaryEndDate>
 	</xsl:template>
@@ -6482,7 +6482,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1508_create_ReportCoverageEndDate">
 		<xsl:param name="var1507_current"/>
-		<ReportCoverageEndDate>
+		<ReportCoverageEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1507_current/ns0:ReportCoverageEndDate)"/>
 		</ReportCoverageEndDate>
 	</xsl:template>
@@ -6496,7 +6496,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1512_create_ReportCoverageEndDate">
 		<xsl:param name="var1511_current"/>
-		<ReportCoverageEndDate>
+		<ReportCoverageEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1511_current/ns0:ReportCoverageEndDate)"/>
 		</ReportCoverageEndDate>
 	</xsl:template>
@@ -6518,7 +6518,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1518_create_ReportCoverageEndDate">
 		<xsl:param name="var1517_current"/>
-		<ReportCoverageEndDate>
+		<ReportCoverageEndDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1517_current/ns0:ReportCoverageEndDate)"/>
 		</ReportCoverageEndDate>
 	</xsl:template>
@@ -6540,7 +6540,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1524_create_SingleEventViolationCode">
 		<xsl:param name="var1523_current"/>
-		<SingleEventViolationCode>
+		<SingleEventViolationCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1523_current/ns0:SingleEventViolationCode)"/>
 		</SingleEventViolationCode>
 	</xsl:template>
@@ -6554,7 +6554,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1528_create_SingleEventViolationCode">
 		<xsl:param name="var1527_current"/>
-		<SingleEventViolationCode>
+		<SingleEventViolationCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1527_current/ns0:SingleEventViolationCode)"/>
 		</SingleEventViolationCode>
 	</xsl:template>
@@ -6576,7 +6576,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1534_create_SingleEventViolationCode">
 		<xsl:param name="var1533_current"/>
-		<SingleEventViolationCode>
+		<SingleEventViolationCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1533_current/ns0:SingleEventViolationCode)"/>
 		</SingleEventViolationCode>
 	</xsl:template>
@@ -6598,7 +6598,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1540_create_SingleEventViolationDate">
 		<xsl:param name="var1539_current"/>
-		<SingleEventViolationDate>
+		<SingleEventViolationDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1539_current/ns0:SingleEventViolationDate)"/>
 		</SingleEventViolationDate>
 	</xsl:template>
@@ -6612,7 +6612,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1544_create_SingleEventViolationDate">
 		<xsl:param name="var1543_current"/>
-		<SingleEventViolationDate>
+		<SingleEventViolationDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1543_current/ns0:SingleEventViolationDate)"/>
 		</SingleEventViolationDate>
 	</xsl:template>
@@ -6634,7 +6634,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1550_create_SingleEventViolationDate">
 		<xsl:param name="var1549_current"/>
-		<SingleEventViolationDate>
+		<SingleEventViolationDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1549_current/ns0:SingleEventViolationDate)"/>
 		</SingleEventViolationDate>
 	</xsl:template>
@@ -6656,7 +6656,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1556_create_SSOAnnualReportReceivedDate">
 		<xsl:param name="var1555_current"/>
-		<SSOAnnualReportReceivedDate>
+		<SSOAnnualReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1555_current/ns0:SSOAnnualReportReceivedDate)"/>
 		</SSOAnnualReportReceivedDate>
 	</xsl:template>
@@ -6670,7 +6670,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1560_create_SSOAnnualReportReceivedDate">
 		<xsl:param name="var1559_current"/>
-		<SSOAnnualReportReceivedDate>
+		<SSOAnnualReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1559_current/ns0:SSOAnnualReportReceivedDate)"/>
 		</SSOAnnualReportReceivedDate>
 	</xsl:template>
@@ -6692,7 +6692,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1566_create_SSOEventDate">
 		<xsl:param name="var1565_current"/>
-		<SSOEventDate>
+		<SSOEventDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1565_current/ns0:SSOEventDate)"/>
 		</SSOEventDate>
 	</xsl:template>
@@ -6706,7 +6706,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1570_create_SSOEventDate">
 		<xsl:param name="var1569_current"/>
-		<SSOEventDate>
+		<SSOEventDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1569_current/ns0:SSOEventDate)"/>
 		</SSOEventDate>
 	</xsl:template>
@@ -6728,7 +6728,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1576_create_SSOMonthlyReportReceivedDate">
 		<xsl:param name="var1575_current"/>
-		<SSOMonthlyReportReceivedDate>
+		<SSOMonthlyReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1575_current/ns0:SSOMonthlyReportReceivedDate)"/>
 		</SSOMonthlyReportReceivedDate>
 	</xsl:template>
@@ -6742,7 +6742,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1580_create_SSOMonthlyReportReceivedDate">
 		<xsl:param name="var1579_current"/>
-		<SSOMonthlyReportReceivedDate>
+		<SSOMonthlyReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1579_current/ns0:SSOMonthlyReportReceivedDate)"/>
 		</SSOMonthlyReportReceivedDate>
 	</xsl:template>
@@ -6800,7 +6800,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1596_create_IndustrialStormWaterAnnualRepo">
 		<xsl:param name="var1595_current"/>
-		<IndustrialStormWaterAnnualReportReceivedDate>
+		<IndustrialStormWaterAnnualReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1595_current/ns0:IndustrialStormWaterAnnualReportReceivedDate)"/>
 		</IndustrialStormWaterAnnualReportReceivedDate>
 	</xsl:template>
@@ -6814,7 +6814,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1600_create_BiosolidsAnnualReportReceivedD">
 		<xsl:param name="var1599_current"/>
-		<BiosolidsAnnualReportReceivedDate>
+		<BiosolidsAnnualReportReceivedDate  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1599_current/ns0:BiosolidsAnnualReportReceivedDate)"/>
 		</BiosolidsAnnualReportReceivedDate>
 	</xsl:template>
@@ -6842,7 +6842,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1608_create_EnforcementActionIdentifier">
 		<xsl:param name="var1607_current"/>
-		<EnforcementActionIdentifier >
+		<EnforcementActionIdentifier xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1607_current/ns0:EnforcementActionIdentifier)"/>
 		</EnforcementActionIdentifier>
 	</xsl:template>
@@ -6964,7 +6964,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1642_create_FinalOrderIdentifier">
 		<xsl:param name="var1641_current"/>
-		<FinalOrderIdentifier>
+		<FinalOrderIdentifier  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1641_current/ns0:FinalOrderIdentifier)"/>
 		</FinalOrderIdentifier>
 	</xsl:template>
@@ -6978,7 +6978,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1646_create_FinalOrderIdentifier">
 		<xsl:param name="var1645_current"/>
-		<FinalOrderIdentifier>
+		<FinalOrderIdentifier  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1645_current/ns0:FinalOrderIdentifier)"/>
 		</FinalOrderIdentifier>
 	</xsl:template>
@@ -7000,7 +7000,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1652_create_ComplianceScheduleNumber">
 		<xsl:param name="var1651_current"/>
-		<ComplianceScheduleNumber>
+		<ComplianceScheduleNumber  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1651_current/ns0:ComplianceScheduleNumber))))"/>
 		</ComplianceScheduleNumber>
 	</xsl:template>
@@ -7014,7 +7014,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1656_create_ComplianceScheduleNumber">
 		<xsl:param name="var1655_current"/>
-		<ComplianceScheduleNumber>
+		<ComplianceScheduleNumber  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1655_current/ns0:ComplianceScheduleNumber))))"/>
 		</ComplianceScheduleNumber>
 	</xsl:template>
@@ -7036,7 +7036,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1662_create_ComplianceScheduleNumber">
 		<xsl:param name="var1661_current"/>
-		<ComplianceScheduleNumber>
+		<ComplianceScheduleNumber  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1661_current/ns0:ComplianceScheduleNumber))))"/>
 		</ComplianceScheduleNumber>
 	</xsl:template>
@@ -7058,7 +7058,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1668_create_MilestoneTypeCode">
 		<xsl:param name="var1667_current"/>
-		<MilestoneTypeCode>
+		<MilestoneTypeCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1667_current/ns0:MilestoneTypeCode)"/>
 		</MilestoneTypeCode>
 	</xsl:template>
@@ -7072,7 +7072,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1672_create_ScheduleViolationCode">
 		<xsl:param name="var1671_current"/>
-		<ScheduleViolationCode>
+		<ScheduleViolationCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1671_current/ns0:ScheduleViolationCode)"/>
 		</ScheduleViolationCode>
 	</xsl:template>
@@ -7094,7 +7094,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1678_create_ScheduleViolationCode">
 		<xsl:param name="var1677_current"/>
-		<ScheduleViolationCode>
+		<ScheduleViolationCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string($var1677_current/ns0:ScheduleViolationCode)"/>
 		</ScheduleViolationCode>
 	</xsl:template>
@@ -7116,7 +7116,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1684_create_EventId">
 		<xsl:param name="var1683_current"/>
-		<EventId>
+		<EventId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1683_current/ns0:CSOEventID))))"/>
 		</EventId>
 	</xsl:template>
@@ -7130,7 +7130,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1688_create_EventId">
 		<xsl:param name="var1687_current"/>
-		<EventId>
+		<EventId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1687_current/ns0:StormWaterEventID))))"/>
 		</EventId>
 	</xsl:template>
@@ -7152,7 +7152,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1694_create_EventId">
 		<xsl:param name="var1693_current"/>
-		<EventId>
+		<EventId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1693_current/ns0:SSOEventID))))"/>
 		</EventId>
 	</xsl:template>
@@ -7166,7 +7166,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1698_create_EventId">
 		<xsl:param name="var1697_current"/>
-		<EventId>
+		<EventId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1697_current/ns0:StormWaterEventID))))"/>
 		</EventId>
 	</xsl:template>
@@ -7180,7 +7180,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1702_create_EventId">
 		<xsl:param name="var1701_current"/>
-		<EventId>
+		<EventId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1701_current/ns0:CSOEventID))))"/>
 		</EventId>
 	</xsl:template>
@@ -7202,7 +7202,7 @@ http://www.altova.com/mapforce
 	</xsl:template>
 	<xsl:template name="agt:MapToICS_SubmissionResults_var1708_create_EventId">
 		<xsl:param name="var1707_current"/>
-		<EventId>
+		<EventId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 			<xsl:value-of select="string(floor(number(string($var1707_current/ns0:SSOEventID))))"/>
 		</EventId>
 	</xsl:template>
@@ -7234,7 +7234,7 @@ http://www.altova.com/mapforce
 		<xsl:param name="var1717_current"/>
 		<xsl:param name="var1718_current"/>
 		<SubmissionResult xmlns="http://www.exchangenetwork.net/schema/icis/5">
-			<SubmissionTypeName>
+			<SubmissionTypeName  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 				<xsl:call-template name="vmf:vmf1_inputtoresult">
 					<xsl:with-param name="input" select="string($var1715_current/ns0:SubmissionTypeName)"/>
 				</xsl:call-template>
@@ -8119,13 +8119,13 @@ http://www.altova.com/mapforce
 					<xsl:with-param name="var1713_current" select="."/>
 				</xsl:call-template>
 			</xsl:for-each>
-			<ResultTypeCode>
+			<ResultTypeCode  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 				<xsl:value-of select="string($var1717_current/ns0:ErrorTypeCode)"/>
 			</ResultTypeCode>
-			<ResultDescription>
+			<ResultDescription  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 				<xsl:value-of select="string($var1717_current/ns0:ErrorDescription)"/>
 			</ResultDescription>
-			<SubmissionTransactionId>
+			<SubmissionTransactionId  xmlns="http://www.exchangenetwork.net/schema/icis/5">
 				<xsl:value-of select="string($var1718_current/ns0:TransactionIdentifier)"/>
 			</SubmissionTransactionId>
 		</SubmissionResult>
