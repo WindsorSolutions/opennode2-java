@@ -66,7 +66,7 @@
 
     <jaxb:bindings node="//xsd:element[@type='RC:EpisodicHandlerWasteCodeDataType']">
         <hj:one-to-many>
-            <orm:join-column name="HD_EPISODIC_EVENT_ID" nullable="false" insertable="true" updatable="false"/>
+            <orm:join-column name="HD_EPISODIC_WASTE_ID" nullable="false" insertable="true" updatable="false"/>
         </hj:one-to-many>
     </jaxb:bindings>
 

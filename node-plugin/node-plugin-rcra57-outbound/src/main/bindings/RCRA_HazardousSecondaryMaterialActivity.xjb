@@ -12,6 +12,15 @@
             <orm:column name="HD_SEC_MATERIAL_ACTIVITY_ID"/>
         </hj:generated-id>
     </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='HazHandlerWasteCodeDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_HD_SEC_WASTE_CODE"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="HD_SEC_WASTE_CODE_ID"/>
+        </hj:generated-id>
+    </jaxb:bindings>
     
     <jaxb:bindings node="//xsd:element[@ref='RC:FacilityTypeText']">
         <hj:ignored/>
@@ -37,7 +46,7 @@
 
     <jaxb:bindings node="//xsd:element[@name='HandlerWasteCodeDetails']">
         <hj:one-to-many>
-            <orm:join-column name="HD_SEC_MATERIAL_ACTIVITY_ID"/>
+            <orm:join-column name="HD_SEC_MATERIAL_ACTIVITY_ID" nullable="false" updatable="false" insertable="true"/>
         </hj:one-to-many>
     </jaxb:bindings>
 
@@ -49,7 +58,7 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:WasteCode']">
         <hj:basic>
-            <orm:column name="WASTE_CODE"/>
+            <orm:column name="WASTE_CODE_TYPE"/>
         </hj:basic>
     </jaxb:bindings>
 
