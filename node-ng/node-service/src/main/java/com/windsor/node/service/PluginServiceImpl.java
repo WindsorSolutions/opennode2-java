@@ -1,6 +1,25 @@
 package com.windsor.node.service;
 
-import static com.windsor.node.util.IOUtil.getExistentFile;
+import com.windsor.node.common.domain.PluginMetaData;
+import com.windsor.node.common.domain.PluginServiceImplementorDescriptor;
+import com.windsor.node.domain.entity.Exchange;
+import com.windsor.node.domain.entity.Plugin;
+import com.windsor.node.domain.entity.ServiceType;
+import com.windsor.node.domain.search.PluginSearchCriteria;
+import com.windsor.node.plugin.BaseWnosPlugin;
+import com.windsor.node.plugin.CachingPluginClassLoader;
+import com.windsor.node.repo.ExchangeRepository;
+import com.windsor.node.repo.PluginRepository;
+import com.windsor.node.service.helper.id.UUIDGenerator;
+import com.windsor.node.service.props.NosProperties;
+import com.windsor.node.util.IOUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,27 +33,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import com.windsor.node.service.props.NosProperties;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Service;
-
-import com.windsor.node.common.domain.PluginMetaData;
-import com.windsor.node.common.domain.PluginServiceImplementorDescriptor;
-import com.windsor.node.domain.entity.Exchange;
-import com.windsor.node.domain.entity.Plugin;
-import com.windsor.node.domain.entity.ServiceType;
-import com.windsor.node.plugin.BaseWnosPlugin;
-import com.windsor.node.plugin.CachingPluginClassLoader;
-import com.windsor.node.repo.ExchangeRepository;
-import com.windsor.node.service.helper.id.UUIDGenerator;
-import com.windsor.node.util.IOUtil;
+import static com.windsor.node.domain.search.PluginSorts.UPDATED;
+import static com.windsor.node.util.IOUtil.getExistentFile;
 
 /**
  * Provides an implementation of the plugin service.
@@ -46,6 +46,9 @@ public class PluginServiceImpl implements PluginService {
 
     @Autowired
     private ExchangeRepository exchangeRepository;
+
+    @Autowired
+    private PluginRepository pluginRepository;
 
     @Autowired
     private NosProperties nosProperties;
@@ -116,7 +119,10 @@ public class PluginServiceImpl implements PluginService {
             fileExchange.mkdirs();
         }
 
-        Plugin plugin = exchange.getCurrentPlugin();
+        PluginSearchCriteria criteria = new PluginSearchCriteria();
+        criteria.setExchange(exchange);
+
+        Plugin plugin = pluginRepository.find(criteria, UPDATED, 0, 1).findFirst().get();
         if(plugin != null) {
 
             File filePlugin = new File(fileExchange.getAbsolutePath() + "/" + plugin.getId());

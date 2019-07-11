@@ -1,6 +1,8 @@
 package com.windsor.node.repo;
 
 import com.google.common.collect.ImmutableMap;
+import com.mysema.query.QueryMetadata;
+import com.mysema.query.jpa.impl.JPAQuery;
 import com.mysema.query.types.EntityPath;
 import com.mysema.query.types.Path;
 import com.mysema.query.types.expr.BooleanExpression;
@@ -8,9 +10,11 @@ import com.windsor.node.domain.entity.Plugin;
 import com.windsor.node.domain.search.EntityAlias;
 import com.windsor.node.domain.search.PluginSearchCriteria;
 import com.windsor.node.domain.search.PluginSort;
+import com.windsor.node.domain.search.PluginSorts;
 import com.windsor.stack.domain.repo.IFinderRepository;
 import com.windsor.stack.domain.search.CriteriaHandler;
 import com.windsor.stack.domain.search.IField;
+import com.windsor.stack.domain.search.ISortGroup;
 import com.windsor.stack.repo.search.querydsl.AbstractQuerydslFinderRepository;
 import com.windsor.stack.repo.search.querydsl.QuerydslFieldHandler;
 import com.windsor.stack.repo.search.querydsl.QuerydslJoinInfo;
@@ -19,6 +23,7 @@ import com.windsor.stack.repo.search.querydsl.QuerydslUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Provides an implementation of the Plugin repository.
@@ -35,6 +40,7 @@ public class PluginRepositoryImpl extends AbstractQuerydslFinderRepository<Plugi
                     .put(PluginSort.ID, QueryObjects.PLUGIN.id)
                     .put(PluginSort.EXCHANGE, QueryObjects.PLUGIN.exchange.name)
                     .put(PluginSort.VERSION, QueryObjects.PLUGIN.version)
+                    .put(PluginSort.UPDATED, QueryObjects.PLUGIN.modifiedOn)
                     .build();
 
     public final Map<Object, CriteriaHandler<BooleanExpression, ? extends IField<?>, ?>> CRITERIA_FIELD_HANDLER =
@@ -64,4 +70,20 @@ public class PluginRepositoryImpl extends AbstractQuerydslFinderRepository<Plugi
     protected EntityPath<Plugin> getFrom() {
         return QueryObjects.PLUGIN;
     }
+
+    @Override
+    public Stream<Plugin> find(PluginSearchCriteria criteria, ISortGroup<PluginSort> sortInfo, long offset, long limit) {
+        QueryMetadata metadata = getFindQueryMetadata(criteria, sortInfo);
+        return new JPAQuery(getEntityManager(), metadata).from(this.getFrom())
+                .offset(offset)
+                .limit(limit)
+                .list(this.getFrom())
+                .stream();
+    }
+
+//    @Override
+//    public Stream<Plugin> find(C criteria, ISortGroup<PluginSorts> sortInfo, long offset, long limit) {
+//        QueryMetadata metadata = this.getFindQueryMetadata(criteria, sortInfo.getSorts());
+//        return ((JPAQuery)((JPAQuery)((JPAQuery)((JPAQuery)(new JPAQuery(this.em, metadata)).from(this.getFrom())).offset(offset)).limit(limit)).distinct()).list(this.getFrom()).stream();
+//    }
 }

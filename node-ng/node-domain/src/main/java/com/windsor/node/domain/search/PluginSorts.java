@@ -14,7 +14,8 @@ public enum PluginSorts implements ISortGroup<PluginSort> {
 
     ID(Arrays.asList(new SortInfo<>(PluginSort.ID))),
     EXCHANGE(Arrays.asList(new SortInfo<>(PluginSort.EXCHANGE))),
-    VERSION(Arrays.asList(new SortInfo<>(PluginSort.VERSION)));
+    VERSION(Arrays.asList(new SortInfo<>(PluginSort.VERSION))),
+    UPDATED(Arrays.asList(new SortInfo<>(PluginSort.UPDATED, false)));
 
     private List<SortInfo<PluginSort>> sorts;
 

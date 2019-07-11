@@ -9,7 +9,8 @@ public enum PluginSort implements IEntityRelated {
 
     ID(EntityAlias.PLUGIN),
     EXCHANGE(EntityAlias.PLUGIN),
-    VERSION(EntityAlias.PLUGIN);
+    VERSION(EntityAlias.PLUGIN),
+    UPDATED(EntityAlias.PLUGIN);
 
     private Object entityAlias;
 

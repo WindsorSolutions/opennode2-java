@@ -177,17 +177,6 @@ public class Exchange extends AbstractBaseEntity {
 //        this.pluginUpload = pluginUpload;
 //    }
 
-    public Plugin getCurrentPlugin() {
-
-        Plugin plugin = null;
-
-        if(getPlugins() != null && !getPlugins().isEmpty()) {
-            plugin = plugins.get(0);
-        }
-
-        return plugin;
-    }
-
     public boolean hasTargetExchange() {
         return targetExchangeName != null;
     }
