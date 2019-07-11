@@ -13,6 +13,7 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.persistence.Converter;
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
@@ -169,7 +170,10 @@ public class HibernatePersistenceUnitInfo implements PersistenceUnitInfo {
             Class<?> k = Class.forName(clazz);
 
             for (Annotation a : k.getAnnotations()) {
-                if (a.annotationType().equals(Entity.class) || a.annotationType().equals(Embeddable.class) || a.annotationType().equals(MappedSuperclass.class)) {
+                if (a.annotationType().equals(Entity.class)
+                        || a.annotationType().equals(Embeddable.class)
+                        || a.annotationType().equals(MappedSuperclass.class)
+                        || a.annotationType().equals(Converter.class)) {
                     classList.add(k);
                     continue;
                 }
