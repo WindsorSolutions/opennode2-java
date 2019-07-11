@@ -13,6 +13,15 @@
         </hj:generated-id>
     </jaxb:bindings>
 
+    <jaxb:bindings node="//xsd:complexType[@name='EpisodicHandlerWasteCodeDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_HD_EPISODIC_WASTE_CODE"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="HD_EPISODIC_WASTE_CODE_ID"/>
+        </hj:generated-id>
+    </jaxb:bindings>
+
     <jaxb:bindings node="//xsd:complexType[@name='EpisodicWasteDataType']//xsd:element[@ref='RC:TransactionCode']">
         <hj:basic>
             <orm:column name="TRANSACTION_CODE"/>
