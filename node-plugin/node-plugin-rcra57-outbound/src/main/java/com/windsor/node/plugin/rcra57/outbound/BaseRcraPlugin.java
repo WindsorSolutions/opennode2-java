@@ -201,7 +201,7 @@ public abstract class BaseRcraPlugin extends BaseWnosJaxbPlugin implements Dispo
                         .additionalEntityPackages(
                                 "net.opengis.gml",
                                 "org.georss.georss._10",
-                                "com.windsor.node.plugin.rcra57.domain.converter")
+                                "com.windsor.node.plugin.rcra57.converter")
                         .setBatchFetchSize(1000)
                         .setBatchSize(50));
 
