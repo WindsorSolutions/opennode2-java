@@ -15,7 +15,6 @@ import com.windsor.node.common.util.NodeClientService;
 import com.windsor.node.data.dao.PluginServiceParameterDescriptor;
 import com.windsor.node.plugin.common.ValidUtf8XmlInputStream;
 import com.windsor.node.plugin.rcra57.domain.EmanifestDataType;
-import com.windsor.node.plugin.rcra57.domain.HazardousWasteEmanifestsDataType;
 import com.windsor.node.plugin.rcra57.domain.SolicitHistory;
 import com.windsor.node.plugin.rcra57.download.DownloadRequest;
 import com.windsor.node.plugin.rcra57.outbound.BaseRcraPlugin;
@@ -36,8 +35,8 @@ import org.hibernate.dialect.SQLServerDialect;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
-import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -196,6 +195,7 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
 
                     if (zipEntry != null) {
                         try (InputStream inputStream = zipFile.getInputStream(zipEntry);) {
+                            //processData(result, new ValidUtf8XmlInputStream(inputStream, ' '), type);
                             processData(result, inputStream, type);
                         } catch (Exception exception) {
                             logger.warn(partner.getName() + " sent us unreadable data, we could not parse XML and insert data: " + exception.getMessage(), exception);
@@ -290,77 +290,27 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
      * @param inputStream The input stream with the XML data
      * @throws JAXBException On any issue reading the XML data
      */
-    private void processData(final ProcessContentResult result, InputStream inputStream, SolicitRequestType type) throws JAXBException {
-        //JAXBContext jaxbContext = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",getClassLoader());
-//        if (type.getDbInfo() == DbInfo.EM) {
-//            jaxbContext = JAXBContext.newInstance(HazardousWasteEmanifestsDataType.class);
-//        } else {
-//            jaxbContext = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",getClassLoader());
-//        }
-//        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-//
-//        // handle any validation events
-//        unmarshaller.setEventHandler(new ValidationEventHandler() {
-//
-//            @Override
-//            public boolean handleEvent(ValidationEvent event) {
-//
-//                StringBuilder builderError = new StringBuilder();
-//                builderError.append("Could not parse the received XML data!\n");
-//                builderError.append("  SEVERITY:  " + event.getSeverity() + "\n");
-//                builderError.append("  MESSAGE:  " + event.getMessage() + "\n");
-//                builderError.append("  LINKED EXCEPTION:  " +
-//                        event.getLinkedException() + "\n");
-//                builderError.append("  LOCATOR" + "\n");
-//                builderError.append("      LINE NUMBER:  " +
-//                        event.getLocator().getLineNumber() + "\n");
-//                builderError.append("      COLUMN NUMBER:  " +
-//                        event.getLocator().getColumnNumber() + "\n");
-//                builderError.append("      OFFSET:  " +
-//                        event.getLocator().getOffset() + "\n");
-//                builderError.append("      OBJECT:  " +
-//                        event.getLocator().getObject() + "\n");
-//                builderError.append("      NODE:  " +
-//                        event.getLocator().getNode() + "\n");
-//                builderError.append("      URL:  " +
-//                        event.getLocator().getURL());
-//                logger.info(builderError.toString());
-//                return true;
-//            }
-//        });
-
+    private void processData(final ProcessContentResult result, InputStream inputStream, SolicitRequestType type) throws Exception {
         cleanupData(type, result);
-        for (int i = 0; i < 2; i++) {
-            try(InputStream is = i == 0 ? inputStream : new ValidUtf8XmlInputStream(inputStream, ' ')) {
-                handleEmanifest(inputStream, type);
-//                if (type.getDbInfo() == DbInfo.EM) {
-//                    handleEmanifest(inputStream, "Emanifest");
-//                } else {
-//                    JAXBElement submissionDataType = (JAXBElement) unmarshaller.unmarshal(inputStream);
-//                    Object value = submissionDataType.getValue();
-//                    persistData(value);
-//                }
-                break;
-            } catch (JAXBException|XMLStreamException e) {
-                logger.warn("Error parsing the file" + (i == 0 ? " -- retrying with bad xml chars stripped" : ""), e);
-                if (i == 1) {
-                    throw new JAXBException("Failed to parse file", e);
-                }
-            } catch (IOException e) {
-                logger.error("Error closing the input stream", e);
-            }
+        try {
+            handleEmanifest(inputStream, type);
+        } catch (JAXBException | XMLStreamException e) {
+                throw new JAXBException("Failed to parse file", e);
+        } catch (IOException e) {
+            logger.error("Error closing the input stream", e);
         }
     }
 
-
-    // 1. how to make a submission
-    // 2. post-processing for an element
-    private void handleEmanifest(InputStream in, SolicitRequestType type) throws JAXBException, XMLStreamException {
+    private void handleEmanifest(InputStream in, SolicitRequestType type) throws Exception {
         XMLEventReader xer = null;
         DbInfo dbInfo = type.getDbInfo();
+        EntityManager em = null;
         try {
-            EntityManager em = getTargetEntityManager();
-            em.getTransaction().begin();
+            em = getTargetEntityManager();
+            EntityTransaction tr = em.getTransaction();
+            if (!tr.isActive()) {
+                tr.begin();
+            }
             Object parent = dbInfo.getParentFactory().createParent(em);
             XMLInputFactory xif = XMLInputFactory.newFactory();
             xer = xif.createXMLEventReader(in);
@@ -412,6 +362,9 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
                 }
             }
             em.getTransaction().commit();
+        } catch (Exception e) {
+            em.getTransaction().rollback();
+            throw e;
         } finally {
             if (xer != null) {
                 try {
@@ -422,23 +375,6 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
             }
         }
     }
-
-//    private void cleanupData(SolicitRequestType type, ProcessContentResult result) {
-//        getTargetEntityManager().getTransaction().begin();
-//        String sql = null;
-//        for (String tableName : NODE_TABLE_NAMES) {
-//            try {
-//                sql = String.format("TRUNCATE TABLE %s", tableName);
-//                Query query = getTargetEntityManager().createNativeQuery(sql);
-//                query.executeUpdate();
-//            } catch (Exception e) {
-//                recordActivity(result, String.format("Error truncating table %s; sql=%s", tableName, sql));
-//                error(String.format("Error truncating table %s", tableName), e);
-//                throw e;
-//            }
-//        }
-//        getTargetEntityManager().getTransaction().commit();
-//    }
 
     private void cleanupData(SolicitRequestType type, ProcessContentResult result) {
         getTargetEntityManager().getTransaction().begin();
