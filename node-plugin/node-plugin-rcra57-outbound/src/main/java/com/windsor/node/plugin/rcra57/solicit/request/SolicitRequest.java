@@ -1,5 +1,6 @@
 package com.windsor.node.plugin.rcra57.solicit.request;
 
+import net.exchangenetwork.schema.node._2.NodeFaultDetailType;
 import net.exchangenetwork.schema.node._2.ObjectFactory;
 import net.exchangenetwork.schema.node._2.ParameterType;
 import net.exchangenetwork.schema.node._2.Solicit;
@@ -7,6 +8,8 @@ import net.exchangenetwork.schema.node._2.StatusResponseType;
 import net.exchangenetwork.wsdl.node._2.NetworkNode2;
 import net.exchangenetwork.wsdl.node._2.NetworkNodePortType2;
 import net.exchangenetwork.wsdl.node._2.NodeFaultMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.ws.BindingProvider;
 import java.util.List;
@@ -17,6 +20,7 @@ import java.util.List;
 public class SolicitRequest {
 
     private final static String DATA_FLOW = "RCRA";
+    private static final Logger LOGGER = LoggerFactory.getLogger(SolicitRequest.class);
 
     private String endpoint;
     private SolicitRequestType type;
@@ -75,11 +79,29 @@ public class SolicitRequest {
     }
 
     public StatusResponseType execute() throws NodeFaultMessage {
-        NetworkNode2 service = new NetworkNode2();
-        NetworkNodePortType2 port = service.getNetworkNodePort2();
-        BindingProvider bindingProvider = (BindingProvider) port;
-        bindingProvider.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint.toString());
-        return port.solicit(getRequest());
+
+        try {
+            NetworkNode2 service = new NetworkNode2();
+            NetworkNodePortType2 port = service.getNetworkNodePort2();
+            BindingProvider bindingProvider = (BindingProvider) port;
+            bindingProvider.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpoint.toString());
+            return port.solicit(getRequest());
+        } catch (NodeFaultMessage e) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Error executing solicit: " );
+                sb.append(e.getMessage());
+                sb.append(".");
+                NodeFaultDetailType faultInfo = e.getFaultInfo();
+                if (faultInfo != null) {
+                    sb.append(" Detail desc: ");
+                    sb.append(faultInfo.getDescription());
+                    sb.append(". Detail code: ");
+                    sb.append(faultInfo.getErrorCode());
+                    sb.append(".");
+                }
+                LOGGER.error(sb.toString(), e);
+            throw e;
+        }
     }
 
     private Solicit getRequest() {

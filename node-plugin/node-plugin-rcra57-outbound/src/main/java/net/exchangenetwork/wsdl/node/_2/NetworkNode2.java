@@ -41,7 +41,7 @@ public class NetworkNode2
     }
 
     public NetworkNode2() {
-        super(__getWsdlLocation(), NETWORKNODE2_QNAME);
+        super(null, NETWORKNODE2_QNAME);
     }
 
     public NetworkNode2(WebServiceFeature... features) {
@@ -71,7 +71,7 @@ public class NetworkNode2
      */
     @WebEndpoint(name = "NetworkNodePort2")
     public NetworkNodePortType2 getNetworkNodePort2() {
-        return super.getPort(new QName("http://www.exchangenetwork.net/wsdl/node/2", "NetworkNodePort2"), NetworkNodePortType2.class);
+        return super.getPort(NetworkNodePortType2.class);
     }
 
     /**

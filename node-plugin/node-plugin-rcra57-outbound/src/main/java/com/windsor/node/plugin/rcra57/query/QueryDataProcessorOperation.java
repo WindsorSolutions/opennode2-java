@@ -13,7 +13,7 @@ import com.windsor.node.common.domain.ServiceType;
 import com.windsor.node.common.domain.TransactionStatus;
 import com.windsor.node.common.util.NodeClientService;
 import com.windsor.node.data.dao.PluginServiceParameterDescriptor;
-import com.windsor.node.plugin.common.ValidUtf8XmlInputStream;
+import com.windsor.node.plugin.common.ValidXmlInputStream;
 import com.windsor.node.plugin.rcra57.domain.EmanifestDataType;
 import com.windsor.node.plugin.rcra57.domain.SolicitHistory;
 import com.windsor.node.plugin.rcra57.download.DownloadRequest;
@@ -195,8 +195,7 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
 
                     if (zipEntry != null) {
                         try (InputStream inputStream = zipFile.getInputStream(zipEntry);) {
-                            //processData(result, new ValidUtf8XmlInputStream(inputStream, ' '), type);
-                            processData(result, inputStream, type);
+                            processData(result, new ValidXmlInputStream(inputStream, ' '), type);
                         } catch (Exception exception) {
                             logger.warn(partner.getName() + " sent us unreadable data, we could not parse XML and insert data: " + exception.getMessage(), exception);
                             throw new ValidationException(exception.getMessage(), exception);
@@ -293,7 +292,7 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
     private void processData(final ProcessContentResult result, InputStream inputStream, SolicitRequestType type) throws Exception {
         cleanupData(type, result);
         try {
-            handleEmanifest(inputStream, type);
+            handleData(inputStream, type);
         } catch (JAXBException | XMLStreamException e) {
                 throw new JAXBException("Failed to parse file", e);
         } catch (IOException e) {
@@ -301,7 +300,7 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
         }
     }
 
-    private void handleEmanifest(InputStream in, SolicitRequestType type) throws Exception {
+    private void handleData(InputStream in, SolicitRequestType type) throws Exception {
         XMLEventReader xer = null;
         DbInfo dbInfo = type.getDbInfo();
         EntityManager em = null;

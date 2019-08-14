@@ -16,16 +16,16 @@ import java.util.Arrays;
  *
  * @see https://stackoverflow.com/questions/4237625/removing-invalid-xml-characters-from-a-string-in-java
  */
-public class ValidUtf8XmlInputStream extends FilterInputStream {
+public class ValidXmlInputStream extends FilterInputStream {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ValidUtf8XmlInputStream.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ValidXmlInputStream.class);
 
     /**
      * The character to substitute for the illegal character. May be null.
      */
     private Character replacement;
 
-    public ValidUtf8XmlInputStream(InputStream in, Character replacement) {
+    public ValidXmlInputStream(InputStream in, Character replacement) {
         super(in);
         this.replacement = replacement;
     }
@@ -58,6 +58,7 @@ public class ValidUtf8XmlInputStream extends FilterInputStream {
                     j++;
                 } else {
                     if (replacement != null) {
+                        LOGGER.warn("Replacing illegal XML code point " + codePoint + "with '" + replacement + "'");
                         sb.append(replacement);
                         j++;
                     }
@@ -65,10 +66,8 @@ public class ValidUtf8XmlInputStream extends FilterInputStream {
             }
         } while (bytesRead > 0 && j < bytesRead);
         if (j > 0) {
-            LOGGER.info("sb=" + sb.toString() + ", off=" + off + ", j=" + j);
             System.arraycopy(sb.toString().getBytes(), 0, cbuf, off, j);
         }
-        LOGGER.info("returning=" + j);
         return j == 0 ? -1 : j;
     }
 
