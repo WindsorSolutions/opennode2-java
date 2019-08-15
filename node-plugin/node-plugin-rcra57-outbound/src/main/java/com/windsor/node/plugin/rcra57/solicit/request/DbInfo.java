@@ -40,11 +40,18 @@ public enum DbInfo {
                 }
             },
             new CleanupHandler() {
-        @Override
-        public void cleanup(EntityManager em) {
-            em.createQuery("delete from " + HazardousWasteCorrectiveActionDataType.class.getName() + " where 1=1").executeUpdate();
-        }
-    }),
+                @Override
+                public void cleanup(EntityManager em) {
+                    em.createQuery("delete from " + HazardousWasteCorrectiveActionDataType.class.getName() + " where 1=1").executeUpdate();
+                }
+            },
+            new ReattachHandler() {
+                @Override
+                public Object reattach(EntityManager em, Object obj) {
+                    HazardousWasteCorrectiveActionDataType x = (HazardousWasteCorrectiveActionDataType) obj;
+                    return em.find(HazardousWasteCorrectiveActionDataType.class, x.getDbid());
+                }
+            }),
     CE("CE", "CMEFacilitySubmission",
             new ParentFactory() {
                 @Override
@@ -63,11 +70,18 @@ public enum DbInfo {
                 }
             },
             new CleanupHandler() {
-        @Override
-        public void cleanup(EntityManager em) {
-            em.createQuery("delete from " + HazardousWasteCMESubmissionDataType.class.getName() + " where 1=1").executeUpdate();
-        }
-    }
+                @Override
+                public void cleanup(EntityManager em) {
+                    em.createQuery("delete from " + HazardousWasteCMESubmissionDataType.class.getName() + " where 1=1").executeUpdate();
+                }
+            },
+            new ReattachHandler() {
+                @Override
+                public Object reattach(EntityManager em, Object obj) {
+                    HazardousWasteCMESubmissionDataType x = (HazardousWasteCMESubmissionDataType) obj;
+                    return em.find(HazardousWasteCMESubmissionDataType.class, x.getDbid());
+                }
+            }
     ),
     FA("FA", "FinancialAssuranceFacilitySubmission",
             new ParentFactory() {
@@ -87,11 +101,18 @@ public enum DbInfo {
                 }
             },
             new CleanupHandler() {
-        @Override
-        public void cleanup(EntityManager em) {
-            em.createQuery("delete from " + FinancialAssuranceSubmissionDataType.class.getName() + " where 1=1").executeUpdate();
-        }
-    }),
+                @Override
+                public void cleanup(EntityManager em) {
+                    em.createQuery("delete from " + FinancialAssuranceSubmissionDataType.class.getName() + " where 1=1").executeUpdate();
+                }
+            },
+            new ReattachHandler() {
+                @Override
+                public Object reattach(EntityManager em, Object obj) {
+                    FinancialAssuranceSubmissionDataType x = (FinancialAssuranceSubmissionDataType) obj;
+                    return em.find(FinancialAssuranceSubmissionDataType.class, x.getDbid());
+                }
+            }),
     GS("GS", "GISFacilitySubmission",
             new ParentFactory() {
                 @Override
@@ -110,11 +131,18 @@ public enum DbInfo {
                 }
             },
             new CleanupHandler() {
-        @Override
-        public void cleanup(EntityManager em) {
-            em.createQuery("delete from " + GeographicInformationSubmissionDataType.class.getName() + " where 1=1").executeUpdate();
-        }
-    }),
+                @Override
+                public void cleanup(EntityManager em) {
+                    em.createQuery("delete from " + GeographicInformationSubmissionDataType.class.getName() + " where 1=1").executeUpdate();
+                }
+            },
+            new ReattachHandler() {
+                @Override
+                public Object reattach(EntityManager em, Object obj) {
+                    GeographicInformationSubmissionDataType x = (GeographicInformationSubmissionDataType) obj;
+                    return em.find(GeographicInformationSubmissionDataType.class, x.getDbid());
+                }
+            }),
     HD("HD", "FacilitySubmission",
             new ParentFactory() {
                 @Override
@@ -136,6 +164,13 @@ public enum DbInfo {
                 @Override
                 public void cleanup(EntityManager em) {
                     em.createQuery("delete from " + HazardousWasteHandlerSubmissionDataType.class.getName() + " where 1=1").executeUpdate();
+                }
+            },
+            new ReattachHandler() {
+                @Override
+                public Object reattach(EntityManager em, Object obj) {
+                    HazardousWasteHandlerSubmissionDataType x = (HazardousWasteHandlerSubmissionDataType) obj;
+                    return em.find(HazardousWasteHandlerSubmissionDataType.class, x.getDbid());
                 }
             }),
     PM("PM", "PermitFacilitySubmission",
@@ -159,6 +194,13 @@ public enum DbInfo {
                 @Override
                 public void cleanup(EntityManager em) {
                     em.createQuery("delete from " + HazardousWastePermitDataType.class.getName() + " where 1=1").executeUpdate();
+                }
+            },
+            new ReattachHandler() {
+                @Override
+                public Object reattach(EntityManager em, Object obj) {
+                    HazardousWastePermitDataType x = (HazardousWastePermitDataType) obj;
+                    return em.find(HazardousWastePermitDataType.class, x.getDbid());
                 }
             }),
     CH("CH", "ReportUniv",
@@ -186,6 +228,13 @@ public enum DbInfo {
                 public void cleanup(EntityManager em) {
                     em.createQuery("delete from " + HazardousWasteReportUnivDataType.class.getName() + " where 1=1").executeUpdate();
                 }
+            },
+            new ReattachHandler() {
+                @Override
+                public Object reattach(EntityManager em, Object obj) {
+                    ReportUnivsDataType x = (ReportUnivsDataType) obj;
+                    return em.find(ReportUnivsDataType.class, x.getDbid());
+                }
             }),
     EM("EM", "Emanifest",
             new ParentFactory() {
@@ -209,6 +258,13 @@ public enum DbInfo {
                 public void cleanup(EntityManager em) {
                     em.createQuery("delete from " + HazardousWasteEmanifestsDataType.class.getName() + " where 1=1").executeUpdate();
                 }
+            },
+            new ReattachHandler() {
+                @Override
+                public Object reattach(EntityManager em, Object obj) {
+                    HazardousWasteEmanifestsDataType x = (HazardousWasteEmanifestsDataType) obj;
+                    return em.find(HazardousWasteEmanifestsDataType.class, x.getDbid());
+                }
             });
 
     private String type;
@@ -216,14 +272,16 @@ public enum DbInfo {
     private ParentFactory parentFactory;
     private ElementPrePersistHandler prePersistHandler;
     private CleanupHandler cleanupHandler;
+    private ReattachHandler reattachHandler;
 
     DbInfo(String type, String xmlElementName, ParentFactory parentFactory,
-           ElementPrePersistHandler prePersistHandler, CleanupHandler cleanupHandler) {
+           ElementPrePersistHandler prePersistHandler, CleanupHandler cleanupHandler, ReattachHandler reattachHandler) {
         this.type = type;
         this.xmlElementName = xmlElementName;
         this.parentFactory = parentFactory;
         this.prePersistHandler = prePersistHandler;
         this.cleanupHandler = cleanupHandler;
+        this.reattachHandler = reattachHandler;
     }
 
     public String getType() {
@@ -244,5 +302,9 @@ public enum DbInfo {
 
     public ElementPrePersistHandler getPrePersistHandler() {
         return prePersistHandler;
+    }
+
+    public ReattachHandler getReattachHandler() {
+        return reattachHandler;
     }
 }

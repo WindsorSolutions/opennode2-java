@@ -13,7 +13,7 @@ import com.windsor.node.common.domain.ServiceType;
 import com.windsor.node.common.domain.TransactionStatus;
 import com.windsor.node.common.util.NodeClientService;
 import com.windsor.node.data.dao.PluginServiceParameterDescriptor;
-import com.windsor.node.plugin.common.ValidXmlInputStream;
+import com.windsor.node.plugin.common.ValidXmlReader;
 import com.windsor.node.plugin.rcra57.domain.EmanifestDataType;
 import com.windsor.node.plugin.rcra57.domain.SolicitHistory;
 import com.windsor.node.plugin.rcra57.download.DownloadRequest;
@@ -53,6 +53,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
@@ -195,7 +198,7 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
 
                     if (zipEntry != null) {
                         try (InputStream inputStream = zipFile.getInputStream(zipEntry);) {
-                            processData(result, new ValidXmlInputStream(inputStream, ' '), type);
+                            processData(result, new ValidXmlReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8), ' '), type);
                         } catch (Exception exception) {
                             logger.warn(partner.getName() + " sent us unreadable data, we could not parse XML and insert data: " + exception.getMessage(), exception);
                             throw new ValidationException(exception.getMessage(), exception);
@@ -289,10 +292,10 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
      * @param inputStream The input stream with the XML data
      * @throws JAXBException On any issue reading the XML data
      */
-    private void processData(final ProcessContentResult result, InputStream inputStream, SolicitRequestType type) throws Exception {
+    private void processData(final ProcessContentResult result, Reader reader, SolicitRequestType type) throws Exception {
         cleanupData(type, result);
         try {
-            handleData(inputStream, type);
+            handleData(reader, type);
         } catch (JAXBException | XMLStreamException e) {
                 throw new JAXBException("Failed to parse file", e);
         } catch (IOException e) {
@@ -300,7 +303,7 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
         }
     }
 
-    private void handleData(InputStream in, SolicitRequestType type) throws Exception {
+    private void handleData(Reader reader, SolicitRequestType type) throws Exception {
         XMLEventReader xer = null;
         DbInfo dbInfo = type.getDbInfo();
         EntityManager em = null;
@@ -312,7 +315,7 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
             }
             Object parent = dbInfo.getParentFactory().createParent(em);
             XMLInputFactory xif = XMLInputFactory.newFactory();
-            xer = xif.createXMLEventReader(in);
+            xer = xif.createXMLEventReader(reader);
             JAXBContext jc = JAXBContext.newInstance("com.windsor.node.plugin.rcra57.domain",
                     EmanifestDataType.class.getClassLoader());
             Unmarshaller unmarshaller = jc.createUnmarshaller();
@@ -355,9 +358,10 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
                     xer.nextEvent();
                 }
                 if ((i + 1) % 100 == 0) {
+                    logger.debug("Flushing and clearing the Hibernate context");
                     em.flush();
                     em.clear();
-                    parent = em.merge(parent);
+                    parent = dbInfo.getReattachHandler().reattach(em, parent);
                 }
             }
             em.getTransaction().commit();
