@@ -106,7 +106,7 @@ public class ScheduleDataTable extends AbstractBasePanel<Exchange> {
                                 if (rowModel.getObject().getRunNow() ||
                                         rowModel.getObject().getScheduleExecuteStatus() == ScheduleExecuteStatus.Running) {
                                     item.setOutputMarkupId(true);
-                                    item.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(30)) {
+                                    item.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(10)) {
                                         @Override
                                         protected void onPostProcessTarget(AjaxRequestTarget target) {
                                             target.add(item);
