@@ -4,10 +4,13 @@ import com.windsor.node.domain.entity.Activity;
 import com.windsor.node.service.ActivityDetailService;
 import com.windsor.node.web.app.NodeResourceModelKeys;
 import com.windsor.node.web.model.lazy.ActivityModels;
+import com.windsor.stack.web.wicket.component.feedback.WindsorFeedbackPanel;
 import com.windsor.stack.web.wicket.component.panel.modal.ModalizablePanel;
 import com.windsor.stack.web.wicket.component.tabs.WindsorAjaxTabbedPanel;
+import com.windsor.stack.web.wicket.event.RenderFeedbackPanelEvent;
 import com.windsor.stack.web.wicket.model.IdentifiableResourceModel;
 import com.windsor.stack.web.wicket.model.LDModel;
+import org.apache.wicket.Component;
 import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.extensions.markup.html.tabs.ITab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -17,6 +20,7 @@ import org.apache.wicket.request.Url;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.wicketstuff.event.annotation.OnEvent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,8 +30,12 @@ public class ActivityDetailPanel extends ModalizablePanel<Activity> {
     @SpringBean
     private ActivityDetailService service;
 
+    private Component feedback;
+
     public ActivityDetailPanel(String id, IModel<Activity> model) {
         super(id, model);
+        feedback = new WindsorFeedbackPanel("feedback");
+        add(feedback);
         add(new WindsorAjaxTabbedPanel<>("tabs", newTabs(model)));
         PageParameters activityIdPageParameters = new PageParameters();
         activityIdPageParameters.set(ActivityPage.PARAM_ACTIVITY_ID, model.getObject().getId());
@@ -70,6 +78,11 @@ public class ActivityDetailPanel extends ModalizablePanel<Activity> {
     @Override
     public Boolean isFooterVisible() {
         return false;
+    }
+
+    @OnEvent(stop = true)
+    public void handleRenderFeedbackPanelEvent(RenderFeedbackPanelEvent event) {
+        event.getTarget().add(feedback);
     }
 
 }

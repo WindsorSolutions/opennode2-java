@@ -1,11 +1,28 @@
 package com.windsor.node.web.content.activity;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.windsor.node.domain.entity.Document;
+import com.windsor.node.domain.entity.Transaction;
+import com.windsor.node.domain.search.DocumentSearchCriteria;
+import com.windsor.node.domain.search.DocumentSorts;
+import com.windsor.node.service.DocumentService;
+import com.windsor.node.service.TransactionService;
+import com.windsor.node.web.app.Icons;
+import com.windsor.node.web.app.NodeResourceModelKeys;
+import com.windsor.node.web.behavior.DownloadDocumentBehavior;
+import com.windsor.node.web.behavior.DownloadTempFileBehavior;
+import com.windsor.node.web.model.lazy.DocumentModels;
+import com.windsor.node.web.model.lazy.TransactionModels;
+import com.windsor.stack.web.wicket.behavior.VisibleModelBehavior;
+import com.windsor.stack.web.wicket.event.DownloadEvent;
+import com.windsor.stack.web.wicket.event.EditEvent;
+import com.windsor.stack.web.wicket.event.RenderFeedbackPanelEvent;
+import com.windsor.stack.web.wicket.markup.html.form.button.DownloadButton;
+import com.windsor.stack.web.wicket.markup.html.form.button.EditButton;
+import com.windsor.stack.web.wicket.model.EntityModel;
+import com.windsor.stack.web.wicket.model.IdentifiableResourceModel;
+import com.windsor.stack.web.wicket.model.LDModel;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.GlyphIconType;
+import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -22,29 +39,11 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.wicketstuff.event.annotation.OnEvent;
 
-import com.windsor.node.domain.entity.Document;
-import com.windsor.node.domain.entity.Transaction;
-import com.windsor.node.domain.search.DocumentSearchCriteria;
-import com.windsor.node.domain.search.DocumentSorts;
-import com.windsor.node.service.DocumentService;
-import com.windsor.node.service.TransactionService;
-import com.windsor.node.web.app.Icons;
-import com.windsor.node.web.app.NodeResourceModelKeys;
-import com.windsor.node.web.behavior.DownloadDocumentBehavior;
-import com.windsor.node.web.behavior.DownloadTempFileBehavior;
-import com.windsor.node.web.model.lazy.DocumentModels;
-import com.windsor.node.web.model.lazy.TransactionModels;
-import com.windsor.stack.web.wicket.behavior.VisibleModelBehavior;
-import com.windsor.stack.web.wicket.event.DownloadEvent;
-import com.windsor.stack.web.wicket.event.EditEvent;
-import com.windsor.stack.web.wicket.markup.html.form.button.DownloadButton;
-import com.windsor.stack.web.wicket.markup.html.form.button.EditButton;
-import com.windsor.stack.web.wicket.model.EntityModel;
-import com.windsor.stack.web.wicket.model.IdentifiableResourceModel;
-import com.windsor.stack.web.wicket.model.LDModel;
-
-import de.agilecoders.wicket.core.markup.html.bootstrap.image.GlyphIconType;
-import de.agilecoders.wicket.core.markup.html.bootstrap.image.Icon;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TransactionDetailPanel extends Panel {
 
@@ -151,14 +150,27 @@ public class TransactionDetailPanel extends Panel {
 
     @OnEvent(types = Transaction.class)
     public void handleRefreshStatus(EditEvent<Transaction> event) throws MalformedURLException {
-        transactionService.updateStatus(event.getPayload());
-        event.getTarget().add(statusComponent);
+        AjaxRequestTarget target = event.getTarget();
+        try {
+            transactionService.updateStatus(event.getPayload());
+        } catch (Exception e) {
+            error(e.getMessage());
+        }
+        target.add(statusComponent);
+        send(this, Broadcast.BUBBLE, new RenderFeedbackPanelEvent(target));
     }
 
     @OnEvent(types = Transaction.class)
     public void handleDownloadRemoteDocuments(DownloadEvent<Transaction> event) throws IOException {
-        File zipFile = transactionService.downloadFiles(event.getPayload());
-        zipDownload.initiate(event.getTarget(), Model.of(zipFile));
+        AjaxRequestTarget target = event.getTarget();
+        try {
+            File zipFile = transactionService.downloadFiles(event.getPayload());
+            zipDownload.initiate(target, Model.of(zipFile));
+        } catch (Exception e) {
+            error(e.getMessage());
+        }
+        send(this, Broadcast.BUBBLE, new RenderFeedbackPanelEvent(target));
+
     }
 
 }
