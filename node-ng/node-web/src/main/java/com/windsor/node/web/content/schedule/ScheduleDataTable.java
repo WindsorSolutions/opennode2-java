@@ -34,12 +34,11 @@ import com.windsor.stack.web.wicket.markup.html.repeater.util.FinderDataProvider
 import com.windsor.stack.web.wicket.model.GenericModels;
 import com.windsor.stack.web.wicket.model.IdentifiableResourceModel;
 import com.windsor.stack.web.wicket.model.LDModel;
-import de.agilecoders.wicket.core.markup.html.bootstrap.button.Buttons;
 import de.agilecoders.wicket.core.markup.html.bootstrap.image.GlyphIconType;
-import de.agilecoders.wicket.core.markup.html.bootstrap.image.IconType;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.AjaxSelfUpdatingTimerBehavior;
+import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.extensions.markup.html.repeater.data.grid.ICellPopulator;
@@ -106,7 +105,7 @@ public class ScheduleDataTable extends AbstractBasePanel<Exchange> {
                                 if (rowModel.getObject().getRunNow() ||
                                         rowModel.getObject().getScheduleExecuteStatus() == ScheduleExecuteStatus.Running) {
                                     item.setOutputMarkupId(true);
-                                    item.add(new AjaxSelfUpdatingTimerBehavior(Duration.seconds(10)) {
+                                    item.add(new AjaxSelfUpdatingTimerBehaviorNoIndicator(Duration.seconds(10)) {
                                         @Override
                                         protected void onPostProcessTarget(AjaxRequestTarget target) {
                                             target.add(item);
@@ -248,6 +247,18 @@ public class ScheduleDataTable extends AbstractBasePanel<Exchange> {
                     break;
             }
             return cssClass;
+        }
+    }
+
+    private static class AjaxSelfUpdatingTimerBehaviorNoIndicator extends AjaxSelfUpdatingTimerBehavior implements IAjaxIndicatorAware  {
+
+        AjaxSelfUpdatingTimerBehaviorNoIndicator(Duration updateInterval) {
+            super(updateInterval);
+        }
+
+        @Override
+        public String getAjaxIndicatorMarkupId() {
+            return null;
         }
     }
 
