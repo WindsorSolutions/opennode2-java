@@ -463,12 +463,10 @@ public class JdbcScheduleDao extends BaseJdbcDao implements ScheduleDao {
                 new int[] { Types.VARCHAR, Types.TIMESTAMP, Types.TIMESTAMP },
                 new ScheduleMapper());
 
-        logger.debug("Found: " + schedules.size());
+        logger.debug("Found: " + schedules.size() + "; marking the first item to run");
 
-        for (int i = 0; i < schedules.size(); i++) {
-
-            item = (ScheduledItem) schedules.get(i);
-
+        if (schedules.size() > 0) {
+            item = (ScheduledItem) schedules.get(0);
             Object[] args = new Object[3];
 
             args[0] = ScheduleExecuteStatus.Running.name();
@@ -476,7 +474,6 @@ public class JdbcScheduleDao extends BaseJdbcDao implements ScheduleDao {
             args[2] = ScheduleExecuteStatus.Running.name();
 
             getJdbcTemplate().update(SQL_UPDATE_FOR_EXEC, args);
-
         }
 
         // returning null is ok
