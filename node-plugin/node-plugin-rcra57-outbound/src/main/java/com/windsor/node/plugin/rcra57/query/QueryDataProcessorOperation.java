@@ -234,6 +234,8 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
         result.setStatus(CommonTransactionStatusCode.Completed);
         result.getAuditEntries().add(new ActivityEntry("Solicit and Download completed successfully!"));
 
+        logTableCounts(result, type.getDbInfo());
+
         String storedProcedure = getConfigValueAsStringNoFail(ARG_STORED_PROCEDURE);
         if (StringUtils.isNotBlank(storedProcedure)) {
             result.getAuditEntries().add(new ActivityEntry("Calling stored procedure \""
@@ -243,6 +245,26 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
 
         // cleanup the temp directory
         Files.deleteIfExists(tempDir);
+    }
+
+    private void logTableCounts(ProcessContentResult result, DbInfo dbInfo) {
+        logger.info("Starting to get table counts");
+        List<String> counts = new ArrayList<>();
+        getTargetEntityManager().getTransaction().begin();
+        for(String s : dbInfo.getTableNames()) {
+            String query = "select count(*) from " + s;
+            try {
+                List<?> list = getTargetEntityManager().createNativeQuery(query).getResultList();
+                if (!list.isEmpty()) {
+                    counts.add(s + ": " + list.get(0));
+                }
+            } catch (Exception e) {
+                logger.warn("Error executing query: " + query);
+            }
+        }
+        getTargetEntityManager().getTransaction().commit();
+        result.getAuditEntries().add(new ActivityEntry("Staging table counts - " + StringUtils.join(counts, ", ")));
+        logger.info("Finished getting table counts");
     }
 
     /**

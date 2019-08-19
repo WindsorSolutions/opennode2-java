@@ -329,8 +329,9 @@ public abstract class SolicitOperation extends BaseRcraPlugin {
                     }
                 } else {
                     String changeDate = (String) namedParams.get(SolicitOperation.PARAM_CHANGE_DATE.getName().toString());
-                    result.getAuditEntries().add(new ActivityEntry("Using change date: "
-                            + changeDate));
+                    String endDate = (String) namedParams.get(SolicitOperation.PARAM_END_DATE.getName().toString());
+                        result.getAuditEntries().add(new ActivityEntry("Using change date: "
+                                + changeDate + (endDate == null ? "" : (", end date: " + endDate))));
                 }
             } catch (PendingSubmissionInProgressException e) {
                 result.getAuditEntries().add(new ActivityEntry(e.getMessage()));

@@ -19,6 +19,9 @@ import com.windsor.node.plugin.rcra57.domain.ReportUnivDataType;
 import com.windsor.node.plugin.rcra57.domain.ReportUnivsDataType;
 
 import javax.persistence.EntityManager;
+import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public enum DbInfo {
 
@@ -51,7 +54,11 @@ public enum DbInfo {
                     HazardousWasteCorrectiveActionDataType x = (HazardousWasteCorrectiveActionDataType) obj;
                     return em.find(HazardousWasteCorrectiveActionDataType.class, x.getDbid());
                 }
-            }),
+            },
+            asList("RCRA_CA_AREA", "RCRA_CA_AREA_REL_EVENT", "RCRA_CA_AUTH_REL_EVENT", "RCRA_CA_AUTHORITY",
+                    "RCRA_CA_EVENT", "RCRA_CA_EVENT_COMMITMENT", "RCRA_CA_FAC_SUBM", "RCRA_CA_REL_PERMIT_UNIT",
+                    "RCRA_CA_STATUTORY_CITATION", "RCRA_CA_SUBM")
+    ),
     CE("CE", "CMEFacilitySubmission",
             new ParentFactory() {
                 @Override
@@ -81,7 +88,11 @@ public enum DbInfo {
                     HazardousWasteCMESubmissionDataType x = (HazardousWasteCMESubmissionDataType) obj;
                     return em.find(HazardousWasteCMESubmissionDataType.class, x.getDbid());
                 }
-            }
+            },
+            asList("RCRA_CME_CITATION", "RCRA_CME_CSNY_DATE", "RCRA_CME_ENFRC_ACT", "RCRA_CME_EVAL",
+                    "RCRA_CME_EVAL_COMMIT", "RCRA_CME_EVAL_VIOL", "RCRA_CME_FAC_SUBM", "RCRA_CME_MEDIA",
+                    "RCRA_CME_MILESTONE", "RCRA_CME_PNLTY", "RCRA_CME_PYMT", "RCRA_CME_RQST", "RCRA_CME_SUBM",
+                    "RCRA_CME_SUPP_ENVR_PRJT", "RCRA_CME_VIOL", "RCRA_CME_VIOL_ENFRC")
     ),
     FA("FA", "FinancialAssuranceFacilitySubmission",
             new ParentFactory() {
@@ -112,7 +123,10 @@ public enum DbInfo {
                     FinancialAssuranceSubmissionDataType x = (FinancialAssuranceSubmissionDataType) obj;
                     return em.find(FinancialAssuranceSubmissionDataType.class, x.getDbid());
                 }
-            }),
+            },
+            asList("RCRA_FA_COST_EST", "RCRA_FA_COST_EST_REL_MECHANISM", "RCRA_FA_FAC_SUBM", "RCRA_FA_MECHANISM",
+                    "RCRA_FA_MECHANISM_DETAIL", "RCRA_FA_SUBM")
+    ),
     GS("GS", "GISFacilitySubmission",
             new ParentFactory() {
                 @Override
@@ -142,7 +156,9 @@ public enum DbInfo {
                     GeographicInformationSubmissionDataType x = (GeographicInformationSubmissionDataType) obj;
                     return em.find(GeographicInformationSubmissionDataType.class, x.getDbid());
                 }
-            }),
+            },
+            asList("RCRA_GIS_FAC_SUBM", "RCRA_GIS_GEO_INFORMATION", "RCRA_GIS_SUBM")
+    ),
     HD("HD", "FacilitySubmission",
             new ParentFactory() {
                 @Override
@@ -172,7 +188,12 @@ public enum DbInfo {
                     HazardousWasteHandlerSubmissionDataType x = (HazardousWasteHandlerSubmissionDataType) obj;
                     return em.find(HazardousWasteHandlerSubmissionDataType.class, x.getDbid());
                 }
-            }),
+            },
+            asList("RCRA_HD_CERTIFICATION", "RCRA_HD_ENV_PERMIT", "RCRA_HD_EPISODIC_EVENT", "RCRA_HD_EPISODIC_WASTE",
+                    "RCRA_HD_EPISODIC_WASTE_CODE", "RCRA_HD_HANDLER", "RCRA_HD_HBASIC", "RCRA_HD_LQG_CLOSURE",
+                    "RCRA_HD_LQG_CONSOLIDATION", "RCRA_HD_NAICS", "RCRA_HD_OTHER_ID", "RCRA_HD_OWNEROP",
+                    "RCRA_HD_SEC_MATERIAL_ACTIVITY", "RCRA_HD_SEC_WASTE_CODE", "RCRA_HD_STATE_ACTIVITY",
+                    "RCRA_HD_SUBM", "RCRA_HD_UNIVERSAL_WASTE", "RCRA_HD_WASTE_CODE")),
     PM("PM", "PermitFacilitySubmission",
             new ParentFactory() {
                 @Override
@@ -202,7 +223,10 @@ public enum DbInfo {
                     HazardousWastePermitDataType x = (HazardousWastePermitDataType) obj;
                     return em.find(HazardousWastePermitDataType.class, x.getDbid());
                 }
-            }),
+            },
+            asList("RCRA_PRM_EVENT", "RCRA_PRM_EVENT_COMMITMENT", "RCRA_PRM_FAC_SUBM", "RCRA_PRM_RELATED_EVENT",
+                    "RCRA_PRM_SERIES", "RCRA_PRM_SUBM", "RCRA_PRM_UNIT", "RCRA_PRM_UNIT_DETAIL",
+                    "RCRA_PRM_WASTE_CODE")),
     CH("CH", "ReportUniv",
             new ParentFactory() {
                 @Override
@@ -235,7 +259,8 @@ public enum DbInfo {
                     ReportUnivsDataType x = (ReportUnivsDataType) obj;
                     return em.find(ReportUnivsDataType.class, x.getDbid());
                 }
-            }),
+            },
+            asList("RCRA_RU_REPORT_UNIV", "RCRA_RU_REPORT_UNIV_SUBM", "RCRA_RU_SUBM")),
     EM("EM", "Emanifest",
             new ParentFactory() {
                 @Override
@@ -265,7 +290,12 @@ public enum DbInfo {
                     HazardousWasteEmanifestsDataType x = (HazardousWasteEmanifestsDataType) obj;
                     return em.find(HazardousWasteEmanifestsDataType.class, x.getDbid());
                 }
-            });
+            },
+            asList("RCRA_EM_EMANIFEST", "RCRA_EM_EMANIFEST_COMMENT", "RCRA_EM_HANDLER", "RCRA_EM_SUBM",
+                    "RCRA_EM_TR_NUM_ORIG", "RCRA_EM_TR_NUM_REJ", "RCRA_EM_TR_NUM_RESIDUE_NEW", "RCRA_EM_TR_NUM_WASTE",
+                    "RCRA_EM_WASTE", "RCRA_EM_WASTE_CD_FED", "RCRA_EM_WASTE_CD_GEN", "RCRA_EM_WASTE_CD_TRANS",
+                    "RCRA_EM_WASTE_CD_TSDF", "RCRA_EM_WASTE_COMMENT", "RCRA_EM_WASTE_PCB")
+    );
 
     private String type;
     private String xmlElementName;
@@ -273,15 +303,18 @@ public enum DbInfo {
     private ElementPrePersistHandler prePersistHandler;
     private CleanupHandler cleanupHandler;
     private ReattachHandler reattachHandler;
+    private List<String> tableNames;
 
     DbInfo(String type, String xmlElementName, ParentFactory parentFactory,
-           ElementPrePersistHandler prePersistHandler, CleanupHandler cleanupHandler, ReattachHandler reattachHandler) {
+           ElementPrePersistHandler prePersistHandler, CleanupHandler cleanupHandler, ReattachHandler reattachHandler,
+           List<String> tableNames) {
         this.type = type;
         this.xmlElementName = xmlElementName;
         this.parentFactory = parentFactory;
         this.prePersistHandler = prePersistHandler;
         this.cleanupHandler = cleanupHandler;
         this.reattachHandler = reattachHandler;
+        this.tableNames = tableNames;
     }
 
     public String getType() {
@@ -306,5 +339,9 @@ public enum DbInfo {
 
     public ReattachHandler getReattachHandler() {
         return reattachHandler;
+    }
+
+    public List<String> getTableNames() {
+        return tableNames;
     }
 }
