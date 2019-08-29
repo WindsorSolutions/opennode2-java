@@ -16,7 +16,7 @@
         <node.plugin.build.number>01</node.plugin.build.number>
         <node.plugin.description>Submits data to the ATTAINS system.</node.plugin.description>
         <node.plugin.help.text>The Assessment, Total Maximum Daily Load (TMDL) Tracking and Implementation System (ATTAINS) Data Exchange</node.plugin.help.text>
-        <hyperjaxb3.schemaDirectory>${basedir}/src/main/xsd/5</hyperjaxb3.schemaDirectory>
+        <hyperjaxb3.schemaDirectory>${basedir}/src/main/xsd/1.0</hyperjaxb3.schemaDirectory>
     </properties>
     <build>
         <plugins>
@@ -67,7 +67,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>com.windsor.node.util.hyperjaxb3</groupId>
-                        <artifactId>node-util-hyperjaxb3-rcra57</artifactId>
+                        <artifactId>node-util-hyperjaxb3-attains</artifactId>
                         <version>${project.version}</version>
                     </dependency>
                 </dependencies>
