@@ -183,6 +183,19 @@ public class NodeNaming extends DefaultNaming {
 	 * @return name to use to derive the DB table name
 	 */
 	protected String mapTableSuffix(final String shortClassName) {
+		// we call the methods twice to handle names like
+		//     TableMappingDataType -> TableMapping
+		return handleMapTableSuffix(handleMapTableSuffix(shortClassName));
+	}
+
+	/**
+	 * For a given "shortClassName", swaps the suffix with text from the
+	 * matching mapping file.
+	 *
+	 * @param shortClassName
+	 * @return new class name
+	 */
+	private String handleMapTableSuffix(final String shortClassName) {
 		String newName = shortClassName;
 		final String[] parts = StringUtils.splitByCharacterTypeCamelCase(shortClassName);
 		if (parts.length > 0) {
