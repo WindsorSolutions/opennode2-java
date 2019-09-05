@@ -5,6 +5,8 @@
                jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/1.0/IR_LegacyNPDESDetail_v1.0.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='LegacyNPDESDetailDataType']">
-        <hj:embeddable />
+        <hj:entity>
+            <orm:table name="ATT_NPDES_DETAIL"/>
+        </hj:entity>
     </jaxb:bindings>
 </jaxb:bindings>
