@@ -33,8 +33,6 @@
 
         <hj:persistence>
 
-            <hj:default-generated-id name="dbid" transient="true" javaType="java.lang.String" />
-
             <hj:default-single-property type="xsd:boolean">
                 <hj:basic>
                     <orm:column column-definition="char(1)" length="1" />
