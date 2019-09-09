@@ -5,6 +5,10 @@
                jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/1.0/IR_AssessmentTypes_v1.0.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='AssessmentTypesDataType']">
+        <inheritance:extends>com.windsor.node.plugin.attains.domain.AbstractAssessmentTypesDataType</inheritance:extends>
         <hj:embeddable />
+        <jaxb:bindings node="//xsd:element[@ref='IR:AssessmentType']">
+            <hj:ignored/>
+        </jaxb:bindings>
     </jaxb:bindings>
 </jaxb:bindings>

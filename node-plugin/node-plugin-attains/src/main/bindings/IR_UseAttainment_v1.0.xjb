@@ -6,8 +6,5 @@
 
         <jaxb:bindings
                 node="//xsd:complexType[@name='UseAttainmentDataType']//xsd:element[@ref='IR:AssessmentMetadata']">
-            <hj:one-to-one>
-                <orm:join-column name="ATT_USE_ATTAINMENT_ID" insertable="false" updatable="false"/>
-            </hj:one-to-one>
         </jaxb:bindings>
 </jaxb:bindings>

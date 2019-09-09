@@ -5,13 +5,13 @@
                jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/1.0/IR_AssessmentMetadata_v1.0.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='AssessmentMetadataDataType']">
+        <inheritance:extends>com.windsor.node.plugin.attains.domain.AbstractAssessmentMetadataType</inheritance:extends>
         <hj:embeddable />
+        <jaxb:bindings node="//xsd:element[@ref='IR:AssessmentTypes']">
+            <hj:ignored/>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xsd:element[@ref='IR:AssessmentMethodTypes']">
+            <hj:ignored/>
+        </jaxb:bindings>
     </jaxb:bindings>
-
-<!--    <jaxb:bindings-->
-<!--            node="//xsd:complexType[@name='AssessmentMetadataDataType']//xsd:element[@ref='IR:AssessmentTypes']">-->
-<!--        <hj:one-to-one>-->
-<!--            <orm:join-column name="ATT_USE_ATTAINMENT_ID" insertable="false" updatable="false"/>-->
-<!--        </hj:one-to-one>-->
-<!--    </jaxb:bindings>-->
 </jaxb:bindings>

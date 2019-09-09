@@ -6,5 +6,10 @@
 
     <jaxb:bindings node="//xsd:complexType[@name='ListingInformationDataType']">
         <hj:embeddable />
+        <jaxb:bindings node="//xsd:element[@ref='IR:CWA303dPriorityRankingText']">
+            <hj:basic>
+                <orm:column name="CWA_303D_PRIO_RANKING_TXT"/>
+            </hj:basic>
+        </jaxb:bindings>
     </jaxb:bindings>
 </jaxb:bindings>
