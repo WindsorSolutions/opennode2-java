@@ -7,4 +7,11 @@
     <jaxb:bindings node="//xsd:complexType[@name='AssessmentMetadataDataType']">
         <hj:embeddable />
     </jaxb:bindings>
+
+<!--    <jaxb:bindings-->
+<!--            node="//xsd:complexType[@name='AssessmentMetadataDataType']//xsd:element[@ref='IR:AssessmentTypes']">-->
+<!--        <hj:one-to-one>-->
+<!--            <orm:join-column name="ATT_USE_ATTAINMENT_ID" insertable="false" updatable="false"/>-->
+<!--        </hj:one-to-one>-->
+<!--    </jaxb:bindings>-->
 </jaxb:bindings>
