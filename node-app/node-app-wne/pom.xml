@@ -39,6 +39,17 @@
                             <directory>${project.basedir}/src/main/webapp/WEB-INF</directory>
                             <filtering>true</filtering>
                             <targetPath>WEB-INF</targetPath>
+                            <excludes>
+                                <exclude>**/*.class</exclude>
+                            </excludes>
+                        </resource>
+                        <resource>
+                            <directory>${project.basedir}/src/main/webapp/WEB-INF</directory>
+                            <filtering>false</filtering>
+                            <targetPath>WEB-INF</targetPath>
+                            <includes>
+                                <include>**/*.class</include>
+                            </includes>
                         </resource>
                     </webResources>
                 </configuration>
