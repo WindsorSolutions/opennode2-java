@@ -3,7 +3,6 @@ package com.windsor.node.plugin.attains.domain;
 import com.windsor.node.common.domain.PluginServiceImplementorDescriptor;
 import com.windsor.node.common.domain.RequestType;
 import com.windsor.node.common.domain.ServiceType;
-import com.windsor.node.plugin.attains.service.AttainsGetStatusService;
 import com.windsor.node.plugin.attains.service.AttainsSubmitService;
 
 /**
@@ -26,14 +25,6 @@ public enum OperationType {
             AttainsSubmitService.class.getCanonicalName()),
             "Delete",
             RequestType.Execute,
-            ServiceType.TASK),
-    GET_STATUS(new PluginServiceImplementorDescriptor(
-            "Get Status",
-            "Get Status for pending ATTAINS Documents submissions",
-            "1.0",
-            AttainsGetStatusService.class.getCanonicalName()),
-            null,
-            RequestType.Query,
             ServiceType.TASK);
 
     private PluginServiceImplementorDescriptor pluginDescriptor;

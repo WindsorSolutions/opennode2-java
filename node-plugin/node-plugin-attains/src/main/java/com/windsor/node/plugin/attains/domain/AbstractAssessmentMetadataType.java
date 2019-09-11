@@ -13,14 +13,9 @@ import javax.xml.bind.annotation.XmlTransient;
  * Ensures the ID field is mapped to the ID of the parent.
  */
 @MappedSuperclass
-@XmlAccessorType(XmlAccessType.FIELD)
 public abstract class AbstractAssessmentMetadataType {
 
     private String Id;
-    @XmlElement(name = "AssessmentTypes", namespace = "http://www.exchangenetwork.net/schema/IR/1")
-    protected AssessmentTypesDataType assessmentTypes;
-    @XmlElement(name = "AssessmentMethodTypes", namespace = "http://www.exchangenetwork.net/schema/IR/1")
-    protected AssessmentMethodTypesDataType assessmentMethodTypes;
 
     @Id
     @Basic
@@ -41,28 +36,49 @@ public abstract class AbstractAssessmentMetadataType {
      *     {@link AssessmentTypesDataType }
      *
      */
+    @Transient
     @Embedded
     @AssociationOverride(name = "assessmentType", joinColumns = {
             @JoinColumn(name = "ATT_USE_ATTAINMENT_ID")
     })
-    public AssessmentTypesDataType getAssessmentTypes() {
-        return assessmentTypes;
+    public abstract AssessmentTypesDataType getAssessmentTypes();
+
+    public abstract void setAssessmentTypes(AssessmentTypesDataType assessmentTypes);
+
+    public void nullAssessmentTypes() {
+        AssessmentTypesDataType assessments = getAssessmentTypes();
+        if (assessments == null || assessments.getAssessmentType() == null || assessments.getAssessmentType().size() == 0) {
+            setAssessmentTypes(null);
+        }
     }
 
     /**
      * Gets the value of the assessmentMethodTypes property.
-     *
+     *g
      * @return
      *     possible object is
      *     {@link AssessmentMethodTypesDataType }
      *
      */
+    @Transient
     @Embedded
     @AssociationOverride(name = "assessmentMethodType", joinColumns = {
             @JoinColumn(name = "ATT_USE_ATTAINMENT_ID")
     })
-    public AssessmentMethodTypesDataType getAssessmentMethodTypes() {
-        return assessmentMethodTypes;
+    public abstract AssessmentMethodTypesDataType getAssessmentMethodTypes();
+
+    public abstract void setAssessmentMethodTypes(AssessmentMethodTypesDataType assessmentMethodTypes);
+
+    public void nullAssessmentMethodTypes() {
+        AssessmentMethodTypesDataType assessmentMethods = getAssessmentMethodTypes();
+        if (assessmentMethods == null || assessmentMethods.getAssessmentMethodType() == null || assessmentMethods.getAssessmentMethodType().size() == 0) {
+            setAssessmentMethodTypes(null);
+        }
     }
 
+    @PostLoad
+    public void handlePostLoad() {
+        nullAssessmentTypes();
+        nullAssessmentMethodTypes();
+    }
 }

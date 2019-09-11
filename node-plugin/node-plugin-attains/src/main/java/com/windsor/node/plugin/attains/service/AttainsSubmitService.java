@@ -27,9 +27,18 @@ import java.util.List;
 public class AttainsSubmitService extends AbstractAttainsService {
 
     private static final String ARG_HEADER_STORED_PROCEDURE = "Stored Procedure";
+    private static final String ARG_HEADER_SENDER_ADDRESS = "Sender Address";
+    private static final String ARG_HEADER_SENDER_CONTACT = "Sender Contact";
+    private static final String ARG_VALIDATE_XML = "Validate XML (true or false)";
 
     private static final List<String> HEADERS = Arrays.asList(
-            ARG_HEADER_STORED_PROCEDURE
+            ARG_HEADER_STORED_PROCEDURE,
+            ARG_HEADER_AUTHOR,
+            ARG_HEADER_TITLE,
+            ARG_HEADER_ORG_NAME,
+            ARG_HEADER_SENDER_ADDRESS,
+            ARG_HEADER_SENDER_CONTACT,
+            ARG_VALIDATE_XML
     );
 
     private ScheduleParameters scheduleParameters;
@@ -78,8 +87,10 @@ public class AttainsSubmitService extends AbstractAttainsService {
             Document doc = generateNodeDocument(transaction, documentId, docPath);
             result.getDocuments().add(doc);
             transaction.getDocuments().add(doc);
+            transaction.setOperation(getOperationType().getPayloadOperation());
 
-            if (scheduleParameters.isValidateXml()) {
+            if (getConfigValueAsStringNoFail(ARG_VALIDATE_XML) != null
+                    && getConfigValueAsStringNoFail(ARG_VALIDATE_XML).toLowerCase().trim().equals("true")) { //scheduleParameters.isValidateXml()
                 recordActivity(result, "Starting XML validation.");
                 if (isXmlPayloadDocumentNotValid(result, transaction, docPath)) {
                     recordActivity(result, "XML validation failed -- check the attached documents for more info.");
@@ -168,5 +179,14 @@ public class AttainsSubmitService extends AbstractAttainsService {
         doc.setContent(FileUtils.readFileToByteArray(new File(zippedFilePath)));
 
         return doc;
+    }
+
+    @Override
+    protected List<String> getAdditionalPropertyNames() {
+        return Arrays.asList(ARG_HEADER_AUTHOR,
+                ARG_HEADER_TITLE,
+                ARG_HEADER_ORG_NAME,
+                ARG_HEADER_SENDER_ADDRESS,
+                ARG_HEADER_SENDER_CONTACT);
     }
 }
