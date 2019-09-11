@@ -88,8 +88,6 @@ public class AttainsSubmitService extends AbstractAttainsService {
             List<Document> documents = new ArrayList<>();
             documents.add(doc);
             result.setDocuments(documents);
-            //transaction.getDocuments().add(doc);
-            //transaction.setOperation(getOperationType().getPayloadOperation());
 
             if (getConfigValueAsStringNoFail(ARG_VALIDATE_XML) != null
                     && getConfigValueAsStringNoFail(ARG_VALIDATE_XML).toLowerCase().trim().equals("true")) { //scheduleParameters.isValidateXml()
