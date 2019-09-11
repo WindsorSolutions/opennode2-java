@@ -1,0 +1,6 @@
+<bindings
+        wsdlLocation="https://devngn.epacdxnode.net/ngn-enws20/services/NetworkNode2ServiceConditionalMTOM?wsdl"
+        xmlns="http://java.sun.com/xml/ns/jaxws">
+    <!-- Disable default wrapper style -->
+    <enableWrapperStyle>false</enableWrapperStyle>
+</bindings>

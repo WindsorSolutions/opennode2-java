@@ -3,7 +3,6 @@ package com.windsor.node.plugin.attains.service;
 import com.windsor.node.common.domain.*;
 import com.windsor.node.plugin.attains.domain.ObjectFactory;
 import com.windsor.node.plugin.attains.domain.OperationType;
-
 import com.windsor.node.plugin.attains.domain.OrganizationDataType;
 import com.windsor.node.plugin.attains.domain.ScheduleParameters;
 import com.windsor.node.plugin.common.xml.validation.ValidationResult;
@@ -18,6 +17,7 @@ import javax.xml.bind.JAXBElement;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -85,9 +85,11 @@ public class AttainsSubmitService extends AbstractAttainsService {
             recordActivity(result, "Preparing XML file creator with file name %s", documentName);
             String docPath = directory + "/" + documentName;
             Document doc = generateNodeDocument(transaction, documentId, docPath);
-            result.getDocuments().add(doc);
-            transaction.getDocuments().add(doc);
-            transaction.setOperation(getOperationType().getPayloadOperation());
+            List<Document> documents = new ArrayList<>();
+            documents.add(doc);
+            result.setDocuments(documents);
+            //transaction.getDocuments().add(doc);
+            //transaction.setOperation(getOperationType().getPayloadOperation());
 
             if (getConfigValueAsStringNoFail(ARG_VALIDATE_XML) != null
                     && getConfigValueAsStringNoFail(ARG_VALIDATE_XML).toLowerCase().trim().equals("true")) { //scheduleParameters.isValidateXml()
@@ -157,7 +159,7 @@ public class AttainsSubmitService extends AbstractAttainsService {
         try {
             OrganizationDataType rootEntity = getAttainsDao().getRoot();
             JAXBElement<OrganizationDataType> payload = objectFactory.createOrganization(rootEntity);
-            JAXBElement<?> header = processV1HeaderDirectives(payload, docId, nodeTransaction.getOperation(), nodeTransaction, true);
+            JAXBElement<?> header = processHeaderDirectives(payload, docId, nodeTransaction.getOperation(), nodeTransaction, true);
             writeDocument(header, tempFilePath);
             Document doc = makeDocument(docId, tempFilePath);
             nodeTransaction.getDocuments().add(doc);
