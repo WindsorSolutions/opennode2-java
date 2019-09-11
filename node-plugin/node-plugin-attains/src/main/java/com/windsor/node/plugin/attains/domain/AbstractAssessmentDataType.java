@@ -20,8 +20,36 @@ public abstract class AbstractAssessmentDataType {
         }
     }
 
+    @Transient
+    public abstract ProbableSourcesDataType getProbableSources();
+
+    @Transient
+    public abstract void setProbableSources(ProbableSourcesDataType value);
+
+    public void nullProbableSources() {
+        ProbableSourcesDataType sources = getProbableSources();
+        if (sources != null && (sources.getProbableSource() == null || sources.getProbableSource().size() == 0)) {
+            setProbableSources(null);
+        }
+    }
+
+    @Transient
+    public abstract ReviewCommentsDataType getReviewComments();
+
+    @Transient
+    public abstract void setReviewComments(ReviewCommentsDataType value);
+
+    public void nullReviewComments() {
+        ReviewCommentsDataType comments = getReviewComments();
+        if (comments != null && (comments.getReviewComment() == null || comments.getReviewComment().size() == 0)) {
+            setReviewComments(null);
+        }
+    }
+
     @PostLoad
     public void handlePostLoad() {
         nullDocuments();
+        nullProbableSources();
+        nullReviewComments();
     }
 }

@@ -33,9 +33,37 @@ public abstract class AbstractReportingCycleDataType {
         }
     }
 
+    @Transient
+    public abstract StateWideAssessmentsDataType getStateWideAssessments();
+
+    @Transient
+    public abstract void setStateWideAssessments(StateWideAssessmentsDataType value);
+
+    public void nullStateWideAssessmentsDataType() {
+        StateWideAssessmentsDataType assessments = getStateWideAssessments();
+        if (assessments != null && (assessments.getStateWideAssessment() == null || assessments.getStateWideAssessment().size() == 0)) {
+            setStateWideAssessments(null);
+        }
+    }
+
+    @Transient
+    public abstract DelistedWatersDataType getDelistedWaters();
+
+    @Transient
+    public abstract void setDelistedWaters(DelistedWatersDataType value);
+
+    public void nullDelistedWaters() {
+        DelistedWatersDataType waters = getDelistedWaters();
+        if (waters != null && (waters.getDelistedWater() == null || waters.getDelistedWater().size() == 0)) {
+            setDelistedWaters(null);
+        }
+    }
+
     @PostLoad
     public void handlePostLoad() {
         nullDocuments();
         nullReportingCycles();
+        nullStateWideAssessmentsDataType();
+        nullDelistedWaters();
     }
 }

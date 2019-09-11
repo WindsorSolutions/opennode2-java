@@ -11,7 +11,7 @@ import java.util.List;
 
 @MappedSuperclass
 @XmlAccessorType(XmlAccessType.FIELD)
-public class AbstractAssessmentMethodTypesDataType {
+public abstract class AbstractAssessmentMethodTypesDataType {
 
     private String Id;
     @XmlElement(name = "AssessmentMethodType", namespace = "http://www.exchangenetwork.net/schema/IR/1", required = true)
@@ -28,36 +28,23 @@ public class AbstractAssessmentMethodTypesDataType {
         Id = id;
     }
 
-    /**
-     * Gets the value of the assessmentMethodType property.
-     *
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the assessmentMethodType property.
-     *
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getAssessmentMethodType().add(newItem);
-     * </pre>
-     *
-     *
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link AssessmentMethodTypeDataType }
-     *
-     *
-     */
     @OneToMany(targetEntity = AssessmentMethodTypeDataType.class, cascade = {
             CascadeType.ALL
     })
     @JoinColumn(name = "ATT_ASSESSMNT_METHOD_TYPE_ID")
-    public List<AssessmentMethodTypeDataType> getAssessmentMethodType() {
-        if (assessmentMethodType == null) {
-            assessmentMethodType = new ArrayList<AssessmentMethodTypeDataType>();
+    public abstract List<AssessmentMethodTypeDataType> getAssessmentMethodType();
+
+    public abstract void setAssessmentMethodType(List<AssessmentMethodTypeDataType> assessmentMethodType);
+
+    public void nullAssessmentMethodType() {
+        List<AssessmentMethodTypeDataType> asessments = getAssessmentMethodType();
+        if (asessments == null || asessments.size() == 0) {
+            setAssessmentMethodType(null);
         }
-        return this.assessmentMethodType;
+    }
+
+    @PostLoad
+    public void handlePostLoad() {
+        nullAssessmentMethodType();
     }
 }
