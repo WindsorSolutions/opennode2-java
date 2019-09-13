@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +77,13 @@ public class TransactionServiceImpl implements TransactionService {
             for(int i = 0; i < downloadTrans.getDocuments().size(); i++)
             {
                 Document currentDoc = downloadTrans.getDocuments().get(i);
-                writeFileToZip(zipOut, currentDoc.getContent(), currentDoc.getDocumentName());
+
+                try {
+                    writeFileToZip(zipOut, currentDoc.getContent(), currentDoc.getDocumentName());
+                } catch (ZipException exception) {
+                    Date date = new Date();
+                    writeFileToZip(zipOut, currentDoc.getContent(), date.getTime() + currentDoc.getDocumentName());
+                }
             }
             zipOut.flush();
             zipOut.close();
