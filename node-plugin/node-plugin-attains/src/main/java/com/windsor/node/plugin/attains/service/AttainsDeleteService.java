@@ -13,7 +13,10 @@ import java.util.List;
 
 public class AttainsDeleteService extends AbstractAttainsService {
 
-    private static final List<String> HEADERS = Arrays.asList();
+    private static final List<String> HEADERS = Arrays.asList(
+            ARG_HEADER_SENDER_ADDRESS,
+            ARG_HEADER_CONTACT_INFO
+    );
 
     public AttainsDeleteService() {
         super(OperationType.DELETE);

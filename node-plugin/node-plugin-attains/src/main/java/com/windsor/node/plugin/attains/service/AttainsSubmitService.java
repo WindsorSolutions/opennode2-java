@@ -27,8 +27,6 @@ import java.util.List;
 public class AttainsSubmitService extends AbstractAttainsService {
 
     private static final String ARG_HEADER_STORED_PROCEDURE = "Stored Procedure";
-    private static final String ARG_HEADER_SENDER_ADDRESS = "SenderAddress";
-    private static final String ARG_HEADER_SENDER_CONTACT = "SenderContact";
     private static final String ARG_VALIDATE_XML = "Validate XML (true or false)";
 
     private static final List<String> HEADERS = Arrays.asList(
@@ -37,7 +35,7 @@ public class AttainsSubmitService extends AbstractAttainsService {
             ARG_HEADER_TITLE,
             ARG_HEADER_ORG_NAME,
             ARG_HEADER_SENDER_ADDRESS,
-            ARG_HEADER_SENDER_CONTACT,
+            ARG_HEADER_CONTACT_INFO,
             ARG_VALIDATE_XML
     );
 
@@ -179,14 +177,5 @@ public class AttainsSubmitService extends AbstractAttainsService {
         doc.setContent(FileUtils.readFileToByteArray(new File(zippedFilePath)));
 
         return doc;
-    }
-
-    @Override
-    protected List<String> getAdditionalPropertyNames() {
-        return Arrays.asList(ARG_HEADER_AUTHOR,
-                ARG_HEADER_TITLE,
-                ARG_HEADER_ORG_NAME,
-                ARG_HEADER_SENDER_ADDRESS,
-                ARG_HEADER_SENDER_CONTACT);
     }
 }

@@ -66,27 +66,53 @@ public abstract class BaseWnosJaxbPlugin extends BaseWnosPlugin
 
         DocumentHeaderType documentHeader = fact.createDocumentHeaderType();
         exchangeNetworkDocumentType.setHeader(documentHeader);
+
+        String payloadName = getConfigValueAsStringNoFail(ARG_HEADER_PAYLOAD_OP);
+
         String authorName = getConfigValueAsStringNoFail(ARG_HEADER_AUTHOR);
         documentHeader.setAuthorName((StringUtils.isNotBlank(authorName) ? authorName: ""));
+
         String contactInfo = getConfigValueAsStringNoFail(ARG_HEADER_CONTACT_INFO);
-        documentHeader.setSenderContact((StringUtils.isNotBlank(contactInfo) ? contactInfo: ""));
+        documentHeader.setSenderContact((StringUtils.isNotBlank(contactInfo) ? contactInfo: ""));;
+
         String orgName = getConfigValueAsStringNoFail(ARG_HEADER_ORG_NAME);
-        String payloadName = getConfigValueAsStringNoFail(ARG_HEADER_PAYLOAD_OP);
-        String documentTitle = getConfigValueAsStringNoFail(ARG_HEADER_DOCUMENT_TITLE);
-        String keywords = getConfigValueAsStringNoFail(ARG_HEADER_KEYWORDS);
         documentHeader.setOrganizationName((StringUtils.isNotBlank(orgName) ? orgName: ""));
+
+        String comment = getConfigValueAsStringNoFail(ARG_HEADER_COMMENT);
+        if (StringUtils.isNotBlank(comment)) {
+            documentHeader.setComment(comment);
+        }
+
+        String appUserId = getConfigValueAsStringNoFail(ARG_HEADER_APPLICATION_USER_IDENTIFIER);
+        if (StringUtils.isNotBlank(appUserId)) {
+            documentHeader.setApplicationUserIdentifier(appUserId);
+        }
+
+        String senderAddress = getConfigValueAsStringNoFail(ARG_HEADER_SENDER_ADDRESS);
+        if (StringUtils.isNotBlank(senderAddress)) {
+            documentHeader.getSenderAddress().add(senderAddress);
+        }
+
+        String documentTitle = getConfigValueAsStringNoFail(ARG_HEADER_DOCUMENT_TITLE);
         if(StringUtils.isNotBlank(documentTitle))
         {
             documentHeader.setDocumentTitle(documentTitle);
         }
         else
         {
-            documentHeader.setDocumentTitle(operation + docId);
+            if (StringUtils.isNoneBlank(operation)) {
+                documentHeader.setDocumentTitle(operation + docId);
+            } else {
+                documentHeader.setDocumentTitle(docId);
+            }
         }
+
+        String keywords = getConfigValueAsStringNoFail(ARG_HEADER_KEYWORDS);
         if(StringUtils.isNotBlank(keywords))
         {
             documentHeader.setKeywords(keywords);
         }
+
         documentHeader.setCreationDateTime(getDocumentCreationDateTime());
         documentHeader.setDataFlowName(transaction.getRequest().getFlowName());
         documentHeader.setDataServiceName(transaction.getRequest().getService().getName());
