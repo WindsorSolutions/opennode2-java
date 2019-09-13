@@ -27,8 +27,8 @@ import java.util.List;
 public class AttainsSubmitService extends AbstractAttainsService {
 
     private static final String ARG_HEADER_STORED_PROCEDURE = "Stored Procedure";
-    private static final String ARG_HEADER_SENDER_ADDRESS = "Sender Address";
-    private static final String ARG_HEADER_SENDER_CONTACT = "Sender Contact";
+    private static final String ARG_HEADER_SENDER_ADDRESS = "SenderAddress";
+    private static final String ARG_HEADER_SENDER_CONTACT = "SenderContact";
     private static final String ARG_VALIDATE_XML = "Validate XML (true or false)";
 
     private static final List<String> HEADERS = Arrays.asList(
