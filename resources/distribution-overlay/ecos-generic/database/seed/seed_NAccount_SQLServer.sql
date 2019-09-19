@@ -1,6 +1,6 @@
--- prime the db with accounts so unit tests can run
--- the first id is hard-wired into the tests
--- the first name is the name set in WNOS_Service...naas.properties 
+-- prime the db with admin and runtime accounts-- prime the db with admin and runtime accounts
+-- update the email addresses to match your admin and runtime email addresses
+-- Update the ORGANIZATION_CODE to your agency's code, such as MA or MADEP.
 
 insert into NAccount
 (
@@ -13,10 +13,10 @@ insert into NAccount
     ModifiedOn
 )
 values('0000-0000-0000-0000-0000', 
-    'node@myagency.gov',
+    'node_admin@myagency.gov',
     'Y',
     'Admin',
-    'MY_AGENCY',
+    'ORGANIZATION_CODE',
     '0000-0000-0000-0000-0000',
     getdate());
 
@@ -31,9 +31,9 @@ insert into NAccount
     ModifiedOn
 )
 values('0000-0000-0000-0000-0001', 
-    'Anonymous',
+    'node_runtime@myagency.gov',
     'Y',
-    'Anonymous',
-    'MY_AGENCY',
+    'Authed',
+    'ORGANIZATION_CODE',
     '0000-0000-0000-0000-0000',
     getdate());
