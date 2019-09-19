@@ -1,3 +1,7 @@
+-- prime the db with admin and runtime accounts
+-- update the email addresses to match your admin and runtime email addresses
+-- Update the ORGANIZATION_CODE to your agency's code, such as MA or MADEP.
+
 INSERT
 INTO
 	NAccount 
@@ -13,10 +17,10 @@ INTO
 VALUES
 	(
 		'00000000-0000-0000-0000-000000000000',
-        'node@myagency.gov',
+		'node_admin@myagency.gov',
         'Y',
         'Admin',
-        'MY_AGENCY',
+        'ORGANIZATION_CODE',
 		'00000000-0000-0000-0000-000000000000',
 		sysdate
 	)
@@ -36,10 +40,10 @@ INTO
 VALUES
     (
         '00000000-0000-0000-0000-000000000001',
-        'Anonymous',
+		'node_runtime@myagency.gov',
         'Y',
-        'Anonymous',
-        'MY_AGENCY',
+        'Authed',
+        'ORGANIZATION_CODE',
         '00000000-0000-0000-0000-000000000000',
         sysdate
     )
