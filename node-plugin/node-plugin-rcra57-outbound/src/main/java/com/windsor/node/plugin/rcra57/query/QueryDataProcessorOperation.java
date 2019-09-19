@@ -251,7 +251,7 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
         logger.info("Starting to get table counts");
         List<String> counts = new ArrayList<>();
         getTargetEntityManager().getTransaction().begin();
-        for(String s : dbInfo.getTableNames()) {
+        for (String s : dbInfo.getTableNames()) {
             String query = "select count(*) from " + s;
             try {
                 List<?> list = getTargetEntityManager().createNativeQuery(query).getResultList();
@@ -319,7 +319,7 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
         try {
             handleData(reader, type);
         } catch (JAXBException | XMLStreamException e) {
-                throw new JAXBException("Failed to parse file", e);
+            throw new JAXBException("Failed to parse file", e);
         } catch (IOException e) {
             logger.error("Error closing the input stream", e);
         }
@@ -497,59 +497,37 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
             result.setSuccess(true);
             result.setStatus(CommonTransactionStatusCode.Completed);
         } catch (IOException exception) {
-            error(exception.getMessage(), exception);
-            result.getAuditEntries().add(new ActivityEntry("There was a problem " +
-                    "writing data to the local filesystem. This is usually a " +
-                    "configuration issue with the server running your OpenNode 2 " +
-                    "instance. The exception was: " + exception.getMessage()));
-            setTransactionFailed(result, transaction, solicitHistory);
+            handleError("There was a problem writing data to the local filesystem. This is usually a " +
+                            "configuration issue with the server running your OpenNode 2 instance.",
+                    exception, result, transaction, solicitHistory);
         } catch (SQLException exception) {
-            error(exception.getMessage(), exception);
-            result.getAuditEntries().add(new ActivityEntry("There was a problem " +
-                    "running the stored procedure and the transaction has been " +
-                    "rolled back. This is a problem with the way " +
-                    "the stored procedure handled the staged data. The execption was: "
-                    + exception.getMessage()));
-            setTransactionFailed(result, transaction, solicitHistory);
+            handleError("There was a problem running the stored procedure and the transaction has been rolled " +
+                            "back. This is a problem with the way the stored procedure handled the staged data.",
+                    exception, result, transaction, solicitHistory);
         } catch (ValidationException exception) {
-            error(exception.getMessage(), exception);
-            result.getAuditEntries().add(new ActivityEntry(partner.getName() +
-                    " sent us unreadable data, we could not parse XML and insert " +
-                    "data, If you were querying the EPA, " +
-                    "please contact nodehelpdesk@epacdx.net for more detailed " +
-                    "information. The validation exception was : " +
-                    exception.getMessage()));
-            setTransactionFailed(result, transaction, solicitHistory);
+            handleError("The partner at URL '" + partner.getUrl() + "' sent us unreadable data.",
+                    exception, result, transaction, solicitHistory);
         } catch (NodeFaultMessage exception) {
-            error(exception.getFaultInfo().getDescription(), exception);
-            result.getAuditEntries().add(new ActivityEntry(partner.getName() +
-                    " had a problem preparing the data for us. If you were " +
-                    "querying the EPA, please contact " +
-                    "nodehelpdesk@epacdx.net for more detailed information. " +
-                    "The " + partner.getName() + " Node Fault Response was: " +
-                    exception.getMessage()));
-            setTransactionFailed(result, transaction, solicitHistory);
+            handleError("The partner at URL '"  + partner.getUrl() + "' had a problem preparing the data.",
+                    exception, result, transaction, solicitHistory);
         } catch (StoredProcedureException exception) {
-            error("Exception while executing the stored procedure: " + exception.getMessage(), exception);
-            result.getAuditEntries().add(new ActivityEntry("The data from " + partner.getName() +
-                    " was successfully downloaded and unpacked into the appropriate " +
-                    "staging tables, but there was an error when the data in those " +
-                    "staging tables was processed by the stored procedure. This " +
-                    "is an issue that you should investigate with your Database " +
-                    "administrator and the author of this stored procedure. The " +
-                    "exception was: " + exception.getMessage()));
-            setTransactionFailed(result, transaction, solicitHistory);
+            handleError("The data from the partner at URL '"  + partner.getUrl() + "' was successfully " +
+                            "downloaded and unpacked into the appropriate staging tables, but there was an error " +
+                            "when the data in the staging tables was processed by the stored procedure.",
+                    exception, result, transaction, solicitHistory);
         } catch (Exception exception) {
-            error("Exception while communicating with " + (partner == null ? "???" : partner.getName()) + ": " + exception.getMessage(), exception);
-            result.getAuditEntries().add(new ActivityEntry("There was a problem " +
-                    "communicating with " + partner.getName() + " , this could " +
-                    "be due to a network issue or downtime at " + partner.getName() +
-                    "If you were querying the EPA, please contact " +
-                    "nodehelpdesk@epacdx.net for more detailed information. The " +
-                    "exception was: " + exception.getMessage()));
-            setTransactionFailed(result, transaction, solicitHistory);
+            handleError("An error occurred while communicating with the partner at URL '"  + partner.getUrl(),
+                    exception, result, transaction, solicitHistory);
         }
         return result;
+    }
+
+    private void handleError(String msg, Exception exception, ProcessContentResult result, NodeTransaction transaction,
+                             SolicitHistory solicitHistory) {
+        error(exception.getMessage(), exception);
+        result.getAuditEntries().add(new ActivityEntry(msg + " The exception was: " + exception.getMessage() +
+                ". The root cause was: " + ExceptionUtils.getRootCauseMessage(exception)));
+        setTransactionFailed(result, transaction, solicitHistory);
     }
 
     @Override
