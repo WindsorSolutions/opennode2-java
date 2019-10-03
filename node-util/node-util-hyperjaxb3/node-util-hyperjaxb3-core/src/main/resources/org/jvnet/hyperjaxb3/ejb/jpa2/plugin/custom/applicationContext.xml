@@ -40,7 +40,7 @@
 	<bean name="createXAnnotations"
 		class="com.windsor.node.hyperjaxb3.NodeCreateXAnnotations">
 		<property name="createOrderColumn" value="${createOrderColumn:false}"/>
-		<property name="createEnumerated" value="${createOrderColumn:false}"/>
+		<property name="createEnumerated" value="${createEnumerated:true}"/>
 	</bean>
 
 	<bean name="naming" class="com.windsor.node.hyperjaxb3.NodeNaming">
