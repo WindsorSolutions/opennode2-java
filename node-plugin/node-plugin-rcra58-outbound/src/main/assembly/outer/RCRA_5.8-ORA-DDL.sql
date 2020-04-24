@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016, The Environmental Council of the States (ECOS)
+Copyright (c) 2020, The Environmental Council of the States (ECOS)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -42,6 +42,7 @@ POSSIBILITY OF SUCH DAMAGE.
  *    Analyst         Date            Comment
  *    ----------      ----------      ------------------------------------------------------------------------------
  *    Windsor         06/18/2019      Created
+ *    Windsor         08/16/2019      Added useful RU and EM indexes
  *
  ****************************************************************************************************************************
  */
@@ -750,11 +751,11 @@ POSSIBILITY OF SUCH DAMAGE.
 	"IMP_GEN_NAME" VARCHAR2(80 BYTE), 
 	"IMP_GEN_ADDRESS" VARCHAR2(50 BYTE), 
 	"IMP_GEN_CITY" VARCHAR2(25 BYTE), 
-	"IMP_GEN_POSTAL_CODE" VARCHAR2(25 BYTE), 
+	"IMP_GEN_POSTAL_CODE" VARCHAR2(50 BYTE),
 	"IMP_GEN_PROVINCE" VARCHAR2(50 BYTE), 
 	"IMP_GEN_CNTRY_CODE" CHAR(2 BYTE), 
 	"IMP_GEN_CNTRY_NAME" VARCHAR2(100 BYTE), 
-	"IMP_PORT_CITY" VARCHAR2(25 BYTE), 
+	"IMP_PORT_CITY" VARCHAR2(100 BYTE),
 	"IMP_PORT_STATE_CODE" CHAR(2 BYTE), 
 	"IMP_PORT_STATE_NAME" VARCHAR2(100 BYTE), 
 	"PRINTED_DOC_NAME" VARCHAR2(255 BYTE), 
@@ -2136,7 +2137,9 @@ POSSIBILITY OF SUCH DAMAGE.
 	"RESP_PERSON_ID" VARCHAR2(5 BYTE), 
 	"EVENT_SUBORG_DATA_OWNER_CODE" CHAR(2 BYTE), 
 	"EVENT_SUBORG_CODE" VARCHAR2(10 BYTE), 
-	"SUPP_INFO_TXT" VARCHAR2(2000 BYTE)
+	"SUPP_INFO_TXT" VARCHAR2(2000 BYTE),
+	"CREATED_BY_USER_ID" VARCHAR2(255 BYTE),
+	"P_CREATED_DATE" TIMESTAMP (6)
    ) ;
 
    COMMENT ON COLUMN "RCRA_PRM_EVENT"."PRM_EVENT_ID" IS 'Parent: Permit event Data (_PK)';
@@ -2155,6 +2158,8 @@ POSSIBILITY OF SUCH DAMAGE.
    COMMENT ON COLUMN "RCRA_PRM_EVENT"."EVENT_SUBORG_DATA_OWNER_CODE" IS 'Event responsible suborganization owner. (EventSuborganizationDataOwnerCode)';
    COMMENT ON COLUMN "RCRA_PRM_EVENT"."EVENT_SUBORG_CODE" IS 'Event responsible suborganization. (EventSuborganizationCode)';
    COMMENT ON COLUMN "RCRA_PRM_EVENT"."SUPP_INFO_TXT" IS 'Notes providing more information. (SupplementalInformationText)';
+   COMMENT ON COLUMN "RCRA_PRM_EVENT"."CREATED_BY_USER_ID" IS 'User id of record creation (CreatedByUserid)';
+   COMMENT ON COLUMN "RCRA_PRM_EVENT"."P_CREATED_DATE" IS 'Creation date (PCreatedDate)';
    COMMENT ON TABLE "RCRA_PRM_EVENT"  IS 'Schema element: PermitEventDataType';
 --------------------------------------------------------
 --  DDL for Table RCRA_PRM_EVENT_COMMITMENT
@@ -2188,6 +2193,35 @@ POSSIBILITY OF SUCH DAMAGE.
    COMMENT ON COLUMN "RCRA_PRM_FAC_SUBM"."PRM_SUBM_ID" IS 'Parent: This is the root element for this flow XML Schema. (_FK)';
    COMMENT ON COLUMN "RCRA_PRM_FAC_SUBM"."HANDLER_ID" IS 'Code that uniquely identifies the handler. (HandlerID)';
    COMMENT ON TABLE "RCRA_PRM_FAC_SUBM"  IS 'Schema element: PermitFacilitySubmissionDataType';
+--------------------------------------------------------
+--  DDL for Table RCRA_PRM_MOD_EVENT
+--------------------------------------------------------
+
+CREATE TABLE RCRA_PRM_MOD_EVENT
+(
+    PRM_MOD_EVENT_ID VARCHAR2(40 BYTE),
+    PRM_EVENT_ID VARCHAR2(40 BYTE),
+    TRANS_CODE CHAR(1 BYTE),
+    MOD_HANDLER_ID VARCHAR2(12 BYTE),
+    MOD_ACT_LOC_CODE CHAR(2 BYTE),
+    MOD_SERIES_SEQ_NUM INT,
+    MOD_EVENT_SEQ_NUM INT,
+    MOD_EVENT_AGN_CODE CHAR(1 BYTE),
+    MOD_EVENT_DATA_OWNER_CDE CHAR(2 BYTE),
+    MOD_EVENT_CODE VARCHAR2(7 BYTE)
+);
+
+COMMENT ON TABLE "RCRA_PRM_MOD_EVENT" IS 'Linking mod event for Permitting Events (PermitModEventDataType)';
+COMMENT ON COLUMN "RCRA_PRM_MOD_EVENT"."PRM_MOD_EVENT_ID" IS 'Id of the mod event record (PK)';
+COMMENT ON COLUMN "RCRA_PRM_MOD_EVENT"."PRM_EVENT_ID" IS 'Id of the parent PRM_EVENT record (FK)';
+COMMENT ON COLUMN "RCRA_PRM_MOD_EVENT"."TRANS_CODE" IS 'Transaction code used to define the add, update, or delete. (TransactionCode)';
+COMMENT ON COLUMN "RCRA_PRM_MOD_EVENT"."MOD_HANDLER_ID" IS 'Handler id (ModHandlerId)';
+COMMENT ON COLUMN "RCRA_PRM_MOD_EVENT"."MOD_ACT_LOC_CODE" IS 'Permit event activity location (ModActivityLocationCode)';
+COMMENT ON COLUMN "RCRA_PRM_MOD_EVENT"."MOD_SERIES_SEQ_NUM" IS 'Permit series sequence number (ModSeriesSequenceNumber)';
+COMMENT ON COLUMN "RCRA_PRM_MOD_EVENT"."MOD_EVENT_SEQ_NUM" IS 'Permit event sequence number (ModEventSequenceNumber)';
+COMMENT ON COLUMN "RCRA_PRM_MOD_EVENT"."MOD_EVENT_AGN_CODE" IS 'Permit event owner (ModEventAgencyCode)';
+COMMENT ON COLUMN "RCRA_PRM_MOD_EVENT"."MOD_EVENT_DATA_OWNER_CDE" IS 'Permit event owner (ModEventDataOwnerCode)';
+COMMENT ON COLUMN "RCRA_PRM_MOD_EVENT"."MOD_EVENT_CODE" IS 'Permit event code (ModEventCode)';
 --------------------------------------------------------
 --  DDL for Table RCRA_PRM_RELATED_EVENT
 --------------------------------------------------------
@@ -2226,7 +2260,10 @@ POSSIBILITY OF SUCH DAMAGE.
 	"PERMIT_SERIES_NAME" VARCHAR2(40 BYTE), 
 	"RESP_PERSON_DATA_OWNER_CODE" CHAR(2 BYTE), 
 	"RESP_PERSON_ID" VARCHAR2(5 BYTE), 
-	"SUPP_INFO_TXT" VARCHAR2(2000 BYTE)
+	"SUPP_INFO_TXT" VARCHAR2(2000 BYTE),
+	"ACTIVE_SERIES_IND" CHAR(1 BYTE),
+	"CREATED_BY_USER_ID" VARCHAR2(255 BYTE),
+	"P_CREATED_DATE" TIMESTAMP (6)
    ) ;
 
    COMMENT ON COLUMN "RCRA_PRM_SERIES"."PRM_SERIES_ID" IS 'Parent: Permit series Data (_PK)';
@@ -2237,6 +2274,9 @@ POSSIBILITY OF SUCH DAMAGE.
    COMMENT ON COLUMN "RCRA_PRM_SERIES"."RESP_PERSON_DATA_OWNER_CODE" IS 'Indicates the agency that defines the person identifier. (ResponsiblePersonDataOwnerCode)';
    COMMENT ON COLUMN "RCRA_PRM_SERIES"."RESP_PERSON_ID" IS 'Code indicating the person within the agency responsible for conducting the evaluation or who is the responsible Authority. (ResponsiblePersonID)';
    COMMENT ON COLUMN "RCRA_PRM_SERIES"."SUPP_INFO_TXT" IS 'Notes providing more information. (SupplementalInformationText)';
+   COMMENT ON COLUMN "RCRA_PRM_SERIES"."ACTIVE_SERIES_IND" IS 'Indicates if the permit series is active. Possible values are: Y/N (ActiveSeriesIndicator)';
+   COMMENT ON COLUMN "RCRA_PRM_SERIES"."CREATED_BY_USER_ID" IS 'User id of record creation (CreatedByUserid)';
+   COMMENT ON COLUMN "RCRA_PRM_SERIES"."P_CREATED_DATE" IS 'Creation date (PCreatedDate)';
    COMMENT ON TABLE "RCRA_PRM_SERIES"  IS 'Schema element: PermitSeriesDataType';
 --------------------------------------------------------
 --  DDL for Table RCRA_PRM_SUBM
@@ -2257,7 +2297,10 @@ POSSIBILITY OF SUCH DAMAGE.
 	"TRANS_CODE" CHAR(1 BYTE), 
 	"PERMIT_UNIT_SEQ_NUM" NUMBER(10,0), 
 	"PERMIT_UNIT_NAME" VARCHAR2(40 BYTE), 
-	"SUPP_INFO_TXT" VARCHAR2(2000 BYTE)
+	"SUPP_INFO_TXT" VARCHAR2(2000 BYTE),
+	"ACTIVE_UNIT_IND" CHAR(1 BYTE),
+	"CREATED_BY_USER_ID" VARCHAR2(255 BYTE),
+	"P_CREATED_DATE" timestamp(6)
    ) ;
 
    COMMENT ON COLUMN "RCRA_PRM_UNIT"."PRM_UNIT_ID" IS 'Parent: Permit Unit Data (_PK)';
@@ -2266,6 +2309,9 @@ POSSIBILITY OF SUCH DAMAGE.
    COMMENT ON COLUMN "RCRA_PRM_UNIT"."PERMIT_UNIT_SEQ_NUM" IS 'System-generated value used to uniquely identify a process unit. (PermitUnitSequenceNumber)';
    COMMENT ON COLUMN "RCRA_PRM_UNIT"."PERMIT_UNIT_NAME" IS 'Name or number assigned by the implementing agency to identify a process unit group. (PermitUnitName)';
    COMMENT ON COLUMN "RCRA_PRM_UNIT"."SUPP_INFO_TXT" IS 'Notes providing more information. (SupplementalInformationText)';
+   COMMENT ON COLUMN "RCRA_PRM_UNIT"."ACTIVE_UNIT_IND" IS 'Indicates if the permit unit is active. Possible values are: Y/N (ActiveUnitIndicator)';
+   COMMENT ON COLUMN "RCRA_PRM_UNIT"."CREATED_BY_USER_ID" IS 'User id of record creation (CreatedByUserid)';
+   COMMENT ON COLUMN "RCRA_PRM_UNIT"."P_CREATED_DATE" IS 'Creation date (PCreatedDate)';
    COMMENT ON TABLE "RCRA_PRM_UNIT"  IS 'Schema element: PermitUnitDataType';
 --------------------------------------------------------
 --  DDL for Table RCRA_PRM_UNIT_DETAIL
@@ -2288,7 +2334,10 @@ POSSIBILITY OF SUCH DAMAGE.
 	"MEASUREMENT_UNIT_CODE" CHAR(1 BYTE), 
 	"NUM_OF_UNITS_COUNT" NUMBER(10,0), 
 	"STANDARD_PERMIT_IND" CHAR(1 BYTE), 
-	"SUPP_INFO_TXT" VARCHAR2(2000 BYTE)
+	"SUPP_INFO_TXT" VARCHAR2(2000 BYTE),
+	"CURRENT_UNIT_DETAIL_IND" CHAR(1 BYTE),
+	"CREATED_BY_USER_ID" VARCHAR2(255 BYTE),
+	"P_CREATED_DATE" timestamp(6)
    ) ;
 
    COMMENT ON COLUMN "RCRA_PRM_UNIT_DETAIL"."PRM_UNIT_DETAIL_ID" IS 'Parent: Permit Unit Detail Data (_PK)';
@@ -2308,6 +2357,9 @@ POSSIBILITY OF SUCH DAMAGE.
    COMMENT ON COLUMN "RCRA_PRM_UNIT_DETAIL"."NUM_OF_UNITS_COUNT" IS 'Total number of units of the same process grouped together to form a single process unit group. (NumberOfUnitsCount)';
    COMMENT ON COLUMN "RCRA_PRM_UNIT_DETAIL"."STANDARD_PERMIT_IND" IS 'Indicates whether or not the permit is a standardized permit. (StandardPermitIndicator)';
    COMMENT ON COLUMN "RCRA_PRM_UNIT_DETAIL"."SUPP_INFO_TXT" IS 'Notes providing more information. (SupplementalInformationText)';
+   COMMENT ON COLUMN "RCRA_PRM_UNIT_DETAIL"."CURRENT_UNIT_DETAIL_IND" IS 'Indicates if the unit detail is current. Possible values are: Y/N (CurrentUnitDetailIndicator)';
+   COMMENT ON COLUMN "RCRA_PRM_UNIT_DETAIL"."CREATED_BY_USER_ID" IS 'User id of record creation (CreatedByUserid)';
+   COMMENT ON COLUMN "RCRA_PRM_UNIT_DETAIL"."P_CREATED_DATE" IS 'Creation date (PCreatedDate)';
    COMMENT ON TABLE "RCRA_PRM_UNIT_DETAIL"  IS 'Schema element: PermitUnitDetailDataType';
 --------------------------------------------------------
 --  DDL for Table RCRA_PRM_WASTE_CODE
@@ -2460,7 +2512,8 @@ POSSIBILITY OF SUCH DAMAGE.
 	"CONTACT_CITY" VARCHAR2(25 BYTE), 
 	"CONTACT_STATE" CHAR(2 BYTE), 
 	"CONTACT_COUNTRY" CHAR(2 BYTE), 
-	"CONTACT_ZIP" VARCHAR2(14 BYTE)
+	"CONTACT_ZIP" VARCHAR2(14 BYTE),
+	"SUBPART_P_IND" CHAR(1 BYTE)
    ) ;
 
    COMMENT ON COLUMN "RCRA_RU_REPORT_UNIV"."RU_REPORT_UNIV_ID" IS 'Parent: All information about the ReportUniv. (_PK)';
@@ -2592,6 +2645,7 @@ POSSIBILITY OF SUCH DAMAGE.
    COMMENT ON COLUMN "RCRA_RU_REPORT_UNIV"."CONTACT_STATE" IS 'Parent: RU contact address (MailingAddressStateUSPSCode)';
    COMMENT ON COLUMN "RCRA_RU_REPORT_UNIV"."CONTACT_COUNTRY" IS 'Parent: RU contact address (MailingAddressCountryName)';
    COMMENT ON COLUMN "RCRA_RU_REPORT_UNIV"."CONTACT_ZIP" IS 'Parent: RU contact address (MailingAddressZIPCode)';
+   COMMENT ON COLUMN "RCRA_RU_REPORT_UNIV"."SUBPART_P_IND" IS 'Subpart P code (SubpartPIndicator)';
    COMMENT ON TABLE "RCRA_RU_REPORT_UNIV"  IS 'Schema element: ReportUniv';
 --------------------------------------------------------
 --  DDL for Table RCRA_RU_REPORT_UNIV_SUBM
@@ -4320,6 +4374,21 @@ POSSIBILITY OF SUCH DAMAGE.
   ALTER TABLE "RCRA_PRM_EVENT" ADD CONSTRAINT "PK_PRM_EVENT" PRIMARY KEY ("PRM_EVENT_ID")
   USING INDEX  ENABLE;
 --------------------------------------------------------
+--  Constraints for Table RCRA_PRM_MOD_EVENT
+--------------------------------------------------------
+
+  ALTER TABLE "RCRA_PRM_MOD_EVENT" MODIFY ("PRM_MOD_EVENT_ID" NOT NULL ENABLE);
+  ALTER TABLE "RCRA_PRM_MOD_EVENT" MODIFY ("PRM_EVENT_ID" NOT NULL ENABLE);
+  ALTER TABLE "RCRA_PRM_MOD_EVENT" MODIFY ("MOD_HANDLER_ID" NOT NULL ENABLE);
+  ALTER TABLE "RCRA_PRM_MOD_EVENT" MODIFY ("MOD_ACT_LOC_CODE" NOT NULL ENABLE);
+  ALTER TABLE "RCRA_PRM_MOD_EVENT" MODIFY ("MOD_SERIES_SEQ_NUM" NOT NULL ENABLE);
+  ALTER TABLE "RCRA_PRM_MOD_EVENT" MODIFY ("MOD_EVENT_SEQ_NUM" NOT NULL ENABLE);
+  ALTER TABLE "RCRA_PRM_MOD_EVENT" MODIFY ("MOD_EVENT_AGN_CODE" NOT NULL ENABLE);
+  ALTER TABLE "RCRA_PRM_MOD_EVENT" MODIFY ("MOD_EVENT_DATA_OWNER_CDE" NOT NULL ENABLE);
+  ALTER TABLE "RCRA_PRM_MOD_EVENT" MODIFY ("MOD_EVENT_CODE" NOT NULL ENABLE);
+  ALTER TABLE "RCRA_PRM_MOD_EVENT" ADD CONSTRAINT "PK_RCRA_PRM_MOD_EVENT" PRIMARY KEY ("PRM_MOD_EVENT_ID")
+  USING INDEX  ENABLE;
+--------------------------------------------------------
 --  Ref Constraints for Table RCRA_CA_AREA
 --------------------------------------------------------
 
@@ -4710,6 +4779,12 @@ POSSIBILITY OF SUCH DAMAGE.
   ALTER TABLE "RCRA_PRM_FAC_SUBM" ADD CONSTRAINT "FK_PRM_FAC_SUBM_PRM_SUBM" FOREIGN KEY ("PRM_SUBM_ID")
 	  REFERENCES "RCRA_PRM_SUBM" ("PRM_SUBM_ID") ON DELETE CASCADE ENABLE;
 --------------------------------------------------------
+--  Ref Constraints for Table RCRA_PRM_MOD_EVENT
+--------------------------------------------------------
+
+  ALTER TABLE "RCRA_PRM_MOD_EVENT" ADD CONSTRAINT "FK_RCRA_PRM_MOD_EVENT_PARENT" FOREIGN KEY ("PRM_EVENT_ID")
+      REFERENCES "RCRA_PRM_EVENT" ("PRM_EVENT_ID") ON DELETE CASCADE ENABLE;
+--------------------------------------------------------
 --  Ref Constraints for Table RCRA_PRM_RELATED_EVENT
 --------------------------------------------------------
 
@@ -4761,3 +4836,7 @@ POSSIBILITY OF SUCH DAMAGE.
   ALTER TABLE "RCRA_EM_TR_NUM_ORIG" MODIFY EM_TR_NUM_ORIG_ID DEFAULT sys_guid();
 
   ALTER TABLE "RCRA_EM_WASTE_CD_TRANS" MODIFY EM_WASTE_CD_TRANS_ID DEFAULT sys_guid();
+
+  CREATE INDEX IX_EM_EMANIFEST_MAN_TR_NUM_VER ON RCRA_EM_EMANIFEST (MAN_TRACKING_NUM, CORR_VERSION_NUM);
+
+  CREATE INDEX IX_RU_REPORT_UNV_HANDLER_ID ON RCRA_RU_REPORT_UNIV (HANDLER_ID);

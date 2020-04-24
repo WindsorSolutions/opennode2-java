@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016, The Environmental Council of the States (ECOS)
+Copyright (c) 2020, The Environmental Council of the States (ECOS)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -42,6 +42,7 @@ POSSIBILITY OF SUCH DAMAGE.
  *    Analyst         Date            Comment
  *    ----------      ----------      ------------------------------------------------------------------------------
  *    Windsor         06/18/2019      Created
+ *    Windsor         08/16/2019      Added useful RU and EM indexes
  *
  ****************************************************************************************************************************
  */
@@ -632,11 +633,11 @@ CREATE TABLE [dbo].[RCRA_EM_EMANIFEST](
 	[IMP_GEN_NAME] [varchar](80) NULL,
 	[IMP_GEN_ADDRESS] [varchar](50) NULL,
 	[IMP_GEN_CITY] [varchar](25) NULL,
-	[IMP_GEN_POSTAL_CODE] [varchar](25) NULL,
+	[IMP_GEN_POSTAL_CODE] [varchar](50) NULL,
 	[IMP_GEN_PROVINCE] [varchar](50) NULL,
 	[IMP_GEN_CNTRY_CODE] [char](2) NULL,
 	[IMP_GEN_CNTRY_NAME] [varchar](100) NULL,
-	[IMP_PORT_CITY] [varchar](25) NULL,
+	[IMP_PORT_CITY] [varchar](100) NULL,
 	[IMP_PORT_STATE_CODE] [char](2) NULL,
 	[IMP_PORT_STATE_NAME] [varchar](100) NULL,
 	[PRINTED_DOC_NAME] [varchar](255) NULL,
@@ -1660,6 +1661,8 @@ CREATE TABLE [dbo].[RCRA_PRM_EVENT](
 	[EVENT_SUBORG_DATA_OWNER_CODE] [char](2) NULL,
 	[EVENT_SUBORG_CODE] [varchar](10) NULL,
 	[SUPP_INFO_TXT] [varchar](2000) NULL,
+	[CREATED_BY_USER_ID] [VARCHAR](255) NULL,
+	[P_CREATED_DATE] [datetime2] NULL,
  CONSTRAINT [PK_PRM_EVENT] PRIMARY KEY CLUSTERED 
 (
 	[PRM_EVENT_ID] ASC
@@ -1698,6 +1701,27 @@ CREATE TABLE [dbo].[RCRA_PRM_FAC_SUBM](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+/****** Object:  Table [dbo].[RCRA_PRM_MOD_EVENT]    Script Date: 4/22/2020 6:02:17 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RCRA_PRM_MOD_EVENT] (
+    [PRM_MOD_EVENT_ID] [VARCHAR](40) NOT NULL,
+    [PRM_EVENT_ID] [VARCHAR](40) NOT NULL,
+    [TRANS_CODE] [CHAR](1) NULL,
+    [MOD_HANDLER_ID] [VARCHAR](12) NOT NULL,
+    [MOD_ACT_LOC_CODE] [CHAR](2) NOT NULL,
+    [MOD_SERIES_SEQ_NUM] [INT] NOT NULL,
+    [MOD_EVENT_SEQ_NUM] [INT] NOT NULL,
+    [MOD_EVENT_AGN_CODE] [CHAR](1) NOT NULL,
+    [MOD_EVENT_DATA_OWNER_CDE] [CHAR](2) NOT NULL,
+    [MOD_EVENT_CODE] [VARCHAR](7) NOT NULL,
+    CONSTRAINT [PK_RCRA_PRM_MOD_EVENT] PRIMARY KEY CLUSTERED
+        ([PRM_MOD_EVENT_ID] ASC)
+        WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
 /****** Object:  Table [dbo].[RCRA_PRM_RELATED_EVENT]    Script Date: 5/30/2019 6:02:17 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -1733,6 +1757,9 @@ CREATE TABLE [dbo].[RCRA_PRM_SERIES](
 	[RESP_PERSON_DATA_OWNER_CODE] [char](2) NULL,
 	[RESP_PERSON_ID] [varchar](5) NULL,
 	[SUPP_INFO_TXT] [varchar](2000) NULL,
+	[ACTIVE_SERIES_IND] [CHAR](1) NULL,
+	[CREATED_BY_USER_ID] [VARCHAR](255) NULL,
+	[P_CREATED_DATE] [datetime2] NULL,
  CONSTRAINT [PK_PRM_SERIES] PRIMARY KEY CLUSTERED 
 (
 	[PRM_SERIES_ID] ASC
@@ -1764,6 +1791,9 @@ CREATE TABLE [dbo].[RCRA_PRM_UNIT](
 	[PERMIT_UNIT_SEQ_NUM] [int] NOT NULL,
 	[PERMIT_UNIT_NAME] [varchar](40) NULL,
 	[SUPP_INFO_TXT] [varchar](2000) NULL,
+	[ACTIVE_UNIT_IND] [CHAR](1) NULL,
+	[CREATED_BY_USER_ID] [VARCHAR](255) NULL,
+	[P_CREATED_DATE] [datetime2],
  CONSTRAINT [PK_PRM_UNIT] PRIMARY KEY CLUSTERED 
 (
 	[PRM_UNIT_ID] ASC
@@ -1793,6 +1823,9 @@ CREATE TABLE [dbo].[RCRA_PRM_UNIT_DETAIL](
 	[NUM_OF_UNITS_COUNT] [int] NULL,
 	[STANDARD_PERMIT_IND] [char](1) NULL,
 	[SUPP_INFO_TXT] [varchar](2000) NULL,
+	[CURRENT_UNIT_DETAIL_IND] [CHAR](1) NULL,
+	[CREATED_BY_USER_ID] [VARCHAR](255) NULL,
+	[P_CREATED_DATE] [datetime2] NULL,
  CONSTRAINT [PK_PRM_UNIT_DETAIL] PRIMARY KEY CLUSTERED 
 (
 	[PRM_UNIT_DETAIL_ID] ASC
@@ -1951,6 +1984,7 @@ CREATE TABLE [dbo].[RCRA_RU_REPORT_UNIV](
 	[CONTACT_STATE] [char](2) NULL,
 	[CONTACT_COUNTRY] [char](2) NULL,
 	[CONTACT_ZIP] [varchar](14) NULL,
+	[SUBPART_P_IND] [CHAR](1) NULL,
  CONSTRAINT [PK_RU_REPORT_UNIV] PRIMARY KEY CLUSTERED 
 (
 	[RU_REPORT_UNIV_ID] ASC
@@ -2997,6 +3031,12 @@ REFERENCES [dbo].[RCRA_PRM_UNIT_DETAIL] ([PRM_UNIT_DETAIL_ID])
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[RCRA_PRM_WASTE_CODE] CHECK CONSTRAINT [FK_PRM_WASTE_CDE_PRM_UNT_DETIL]
+GO
+ALTER TABLE [dbo].[RCRA_PRM_MOD_EVENT] WITH CHECK ADD  CONSTRAINT [FK_RCRA_PRM_MOD_EVENT_PARENT] FOREIGN KEY([PRM_EVENT_ID])
+REFERENCES [dbo].[RCRA_PRM_EVENT] ([PRM_EVENT_ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[RCRA_PRM_MOD_EVENT] CHECK CONSTRAINT [FK_RCRA_PRM_MOD_EVENT_PARENT]
 GO
 ALTER TABLE [dbo].[RCRA_RU_REPORT_UNIV]  WITH CHECK ADD  CONSTRAINT [FK_RU_RPRT_UNV_RU_RPRT_UNV_SBM] FOREIGN KEY([RU_REPORT_UNIV_SUBM_ID])
 REFERENCES [dbo].[RCRA_RU_REPORT_UNIV_SUBM] ([RU_REPORT_UNIV_SUBM_ID])
@@ -4686,6 +4726,10 @@ EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Event responsi
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Notes providing more information. (SupplementalInformationText)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_EVENT', @level2type=N'COLUMN',@level2name=N'SUPP_INFO_TXT'
 GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'User id of record creation (CreatedByUserid)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_EVENT', @level2type=N'COLUMN', @level2name=N'CREATED_BY_USER_ID'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Creation date (PCreatedDate)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_EVENT', @level2type=N'COLUMN', @level2name=N'P_CREATED_DATE'
+GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Schema element: PermitEventDataType' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_EVENT'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Parent: Linking Data for Commitment/Initiative and Corrective Action or Permitting Events. (_PK)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_EVENT_COMMITMENT', @level2type=N'COLUMN',@level2name=N'PRM_EVENT_COMMITMENT_ID'
@@ -4744,6 +4788,12 @@ EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Code indicatin
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Notes providing more information. (SupplementalInformationText)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_SERIES', @level2type=N'COLUMN',@level2name=N'SUPP_INFO_TXT'
 GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Indicates if the permit series is active. Possible values are: Y/N (ActiveSeriesIndicator)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_SERIES', @level2type=N'COLUMN', @level2name=N'ACTIVE_SERIES_IND'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'User id of record creation (CreatedByUserid)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_SERIES', @level2type=N'COLUMN', @level2name=N'CREATED_BY_USER_ID'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Creation date (PCreatedDate)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_SERIES', @level2type=N'COLUMN', @level2name=N'P_CREATED_DATE'
+GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Schema element: PermitSeriesDataType' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_SERIES'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Schema element: HazardousWastePermitDataType' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_SUBM'
@@ -4759,6 +4809,12 @@ GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Name or number assigned by the implementing agency to identify a process unit group. (PermitUnitName)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_UNIT', @level2type=N'COLUMN',@level2name=N'PERMIT_UNIT_NAME'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Notes providing more information. (SupplementalInformationText)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_UNIT', @level2type=N'COLUMN',@level2name=N'SUPP_INFO_TXT'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Indicates if the permit unit is active. Possible values are: Y/N (ActiveUnitIndicator)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_UNIT', @level2type=N'COLUMN', @level2name=N'ACTIVE_UNIT_IND'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'User id of record creation (CreatedByUserid)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_UNIT', @level2type=N'COLUMN', @level2name=N'CREATED_BY_USER_ID'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Creation date (PCreatedDate)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_UNIT', @level2type=N'COLUMN',@level2name=N'P_CREATED_DATE'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Schema element: PermitUnitDataType' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_UNIT'
 GO
@@ -4796,6 +4852,12 @@ EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Indicates whet
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Notes providing more information. (SupplementalInformationText)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_UNIT_DETAIL', @level2type=N'COLUMN',@level2name=N'SUPP_INFO_TXT'
 GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Indicates if the unit detail is current. Possible values are: Y/N (CurrentUnitDetailIndicator)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_UNIT_DETAIL', @level2type=N'COLUMN', @level2name=N'CURRENT_UNIT_DETAIL_IND'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'User id of record creation (CreatedByUserid)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_UNIT_DETAIL', @level2type=N'COLUMN', @level2name=N'CREATED_BY_USER_ID'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Creation date (PCreatedDate)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_UNIT_DETAIL', @level2type=N'COLUMN', @level2name=N'P_CREATED_DATE'
+GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Schema element: PermitUnitDetailDataType' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_UNIT_DETAIL'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Parent: Hazardous waste codes describing the handler''s hazardous waste streams. (_PK)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_WASTE_CODE', @level2type=N'COLUMN',@level2name=N'PRM_WASTE_CODE_ID'
@@ -4809,6 +4871,28 @@ GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Code used to describe hazardous waste. (WasteCode)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_WASTE_CODE', @level2type=N'COLUMN',@level2name=N'WASTE_CODE_TYPE'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Schema element: PermitHandlerWasteCodeDataType' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_PRM_WASTE_CODE'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Linking mod event for Permitting Events (PermitModEventDataType)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_MOD_EVENT'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Id of the mod event record (PK)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_MOD_EVENT', @level2type=N'COLUMN', @level2name=N'PRM_MOD_EVENT_ID'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Id of the parent PRM_EVENT record (FK)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_MOD_EVENT', @level2type=N'COLUMN', @level2name=N'PRM_EVENT_ID'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Transaction code used to define the add, update, or delete. (TransactionCode)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_MOD_EVENT', @level2type=N'COLUMN',@level2name=N'TRANS_CODE'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Handler id (ModHandlerId)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_MOD_EVENT', @level2type=N'COLUMN', @level2name=N'MOD_HANDLER_ID'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Permit event activity location (ModActivityLocationCode)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_MOD_EVENT', @level2type=N'COLUMN', @level2name=N'MOD_ACT_LOC_CODE'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Permit series sequence number (ModSeriesSequenceNumber)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_MOD_EVENT', @level2type=N'COLUMN', @level2name=N'MOD_SERIES_SEQ_NUM'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Permit event sequence number (ModEventSequenceNumber)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_MOD_EVENT', @level2type=N'COLUMN',@level2name=N'MOD_EVENT_SEQ_NUM'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Permit event owner (ModEventAgencyCode)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_MOD_EVENT', @level2type=N'COLUMN',@level2name=N'MOD_EVENT_AGN_CODE'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Permit event owner (ModEventDataOwnerCode)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_MOD_EVENT', @level2type=N'COLUMN',@level2name=N'MOD_EVENT_DATA_OWNER_CDE'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Permit event code (ModEventCode)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_PRM_MOD_EVENT', @level2type=N'COLUMN', @level2name=N'MOD_EVENT_CODE'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Parent: All information about the ReportUniv. (_PK)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_RU_REPORT_UNIV', @level2type=N'COLUMN',@level2name=N'RU_REPORT_UNIV_ID'
 GO
@@ -5068,6 +5152,8 @@ EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Parent: RU con
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Parent: RU contact address (MailingAddressZIPCode)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_RU_REPORT_UNIV', @level2type=N'COLUMN',@level2name=N'CONTACT_ZIP'
 GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Subpart P code (SubpartPIndicator)', @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'RCRA_RU_REPORT_UNIV',@level2type=N'COLUMN', @level2name=N'SUBPART_P_IND'
+GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Schema element: ReportUniv' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_RU_REPORT_UNIV'
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'Parent: This is the root element for this flow XML Schema. (_PK)' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'RCRA_RU_REPORT_UNIV_SUBM', @level2type=N'COLUMN',@level2name=N'RU_REPORT_UNIV_SUBM_ID'
@@ -5101,4 +5187,16 @@ GO
 
 ALTER TABLE dbo.RCRA_EM_WASTE_CD_TRANS
 	ADD CONSTRAINT DF_EM_WASTE_CD_TRANS_ID DEFAULT newId() FOR EM_WASTE_CD_TRANS_ID
+GO
+
+CREATE NONCLUSTERED INDEX [IX_EM_EMANIFEST_MAN_TR_NUM_VER] ON [dbo].[RCRA_EM_EMANIFEST]
+	(
+	 [MAN_TRACKING_NUM] ASC, [CORR_VERSION_NUM] ASC
+		) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+CREATE NONCLUSTERED INDEX [IX_RU_REPORT_UNV_HANDLER_ID] ON [dbo].[RCRA_RU_REPORT_UNIV]
+	(
+	 [HANDLER_ID] ASC
+		) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
