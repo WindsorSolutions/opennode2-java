@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations" xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+    xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance" xmlns:annox="http://annox.dev.java.net"
+    jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/7/RCRA_PermitUnitDetail_v5.7.xsd">
+
+    <jaxb:bindings node="//xsd:complexType[@name='PermitUnitDetailDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_PRM_UNIT_DETAIL"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="PRM_UNIT_DETAIL_ID"/>
+        </hj:generated-id>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='PermitUnitDetailDataType']//xsd:element[@ref='RC:TransactionCode']">
+        <hj:basic>
+            <orm:column name="TRANS_CODE" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:LegalOperatingStatusDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="LEGAL_OPER_STAT_DATA_OWNER_CDE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:MeasurementUnitDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="MEASUREMENT_UNIT_DATA_OWNR_CDE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:CommercialStatusCode']">
+        <hj:basic>
+            <orm:column name="COMMER_STAT_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:LegalOperatingStatusCode']">
+        <hj:basic>
+            <orm:column name="LEGAL_OPER_STAT_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:MeasurementUnitCode']">
+        <hj:basic>
+            <orm:column name="MEASUREMENT_UNIT_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ProcessUnitDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="PROC_UNIT_DATA_OWNER_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ProcessUnitCode']">
+        <hj:basic>
+            <orm:column name="PROC_UNIT_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:PermitRelatedEvent']">
+        <hj:one-to-many>
+            <orm:join-column name="PRM_UNIT_DETAIL_ID" updatable="false" insertable="true" nullable="false"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@name='HandlerWasteCodeDetails']">
+        <hj:one-to-many>
+            <orm:join-column name="PRM_UNIT_DETAIL_ID" updatable="false" insertable="true" nullable="false"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="//xsd:element[@ref='RC:ProcessUnitText']">
+        <hj:ignored/>
+    </jaxb:bindings>
+        
+    <jaxb:bindings node="//xsd:element[@ref='RC:CapacityTypeText']">
+        <hj:ignored/>
+    </jaxb:bindings>
+        
+    <jaxb:bindings node="//xsd:element[@ref='RC:CommercialStatusText']">
+        <hj:ignored/>
+    </jaxb:bindings>
+        
+    <jaxb:bindings node="//xsd:element[@ref='RC:LegalOperatingStatusText']">
+        <hj:ignored/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="//xsd:element[@ref='RC:MeasurementUnitText']">
+        <hj:ignored/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='PmHandlerWasteCodeDetailDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_PRM_WASTE_CODE"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="PRM_WASTE_CODE_ID"/>
+        </hj:generated-id>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:WasteCodeText']">
+        <hj:ignored/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:WasteCode']">
+        <hj:basic>
+            <orm:column name="WASTE_CODE_TYPE" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:WasteCodeOwnerName']">
+        <hj:basic>
+            <orm:column name="WASTE_CODE_OWNER" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='PmHandlerWasteCodeDetailDataType']//xsd:element[@ref='RC:TransactionCode']">
+        <hj:basic>
+            <orm:column name="TRANSACTION_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+ 
+</jaxb:bindings>
+
