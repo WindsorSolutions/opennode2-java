@@ -4,10 +4,10 @@
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
                xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
                jaxb:extensionBindingPrefixes="hj orm annox inheritance"
-               schemaLocation="../xsd/5/7/RCRA_Emanifest_v5.7.xsd">
+               schemaLocation="../xsd/5/8/RCRA_Emanifest_v5.8.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='EmanifestDataType']">
-        <inheritance:extends>com.windsor.node.plugin.rcra57.domain.AbstractEmanifest</inheritance:extends>
+        <inheritance:extends>com.windsor.node.plugin.rcra58.domain.AbstractEmanifest</inheritance:extends>
         <hj:entity>
             <orm:table name="RCRA_EM_EMANIFEST"/>
         </hj:entity>
