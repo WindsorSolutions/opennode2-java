@@ -89,6 +89,7 @@ public class EvaluationDeleteDataType {
         dest.setEvaluationActivityLocation(source.getEvaluationActivityLocation());
         dest.setEvaluationIdentifier(source.getEvaluationIdentifier());
         dest.setEvaluationResponsibleAgency(source.getEvaluationResponsibleAgency());
+        dest.setEvaluationStartDate(source.getEvaluationStartDate());
         dest.setNotes(source.getNotes());
         return dest;
     }

@@ -292,7 +292,7 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
             logger.info("SP call: " + spCall);
             Query query = getTargetEntityManager()
                     .createNativeQuery(spCall);
-            logger.info("Calling stored procedure: " + query.toString());
+            logger.info("Calling stored procedure: " + query.toString() + ", arg: " + type.getDbInfo().getType());
             query.setParameter(1, type.getDbInfo().getType());
             query.executeUpdate();
             getTargetEntityManager().getTransaction().commit();

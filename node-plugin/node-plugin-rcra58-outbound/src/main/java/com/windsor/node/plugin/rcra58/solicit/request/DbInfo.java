@@ -98,7 +98,7 @@ public enum DbInfo {
                     "RCRA_CME_MILESTONE", "RCRA_CME_PNLTY", "RCRA_CME_PYMT", "RCRA_CME_RQST", "RCRA_CME_SUBM",
                     "RCRA_CME_SUPP_ENVR_PRJT", "RCRA_CME_VIOL", "RCRA_CME_VIOL_ENFRC")
     ),
-    CE_DELETE("CED", "CMEFacilitySubmission",
+    CE_DELETE("CD", "CMEFacilitySubmission",
             new ParentFactory() {
                 @Override
                 public Object createParent(EntityManager em) {
