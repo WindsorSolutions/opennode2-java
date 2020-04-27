@@ -374,8 +374,8 @@ public class QueryDataProcessorOperation extends BaseRcraPlugin {
                 if (peek.isStartElement() && peek.asStartElement().getName().getLocalPart().equals(dbInfo.getXmlElementName())) {
                     JAXBElement<?> element = (JAXBElement<?>) unmarshaller.unmarshal(xer);
                     Object value = element.getValue();
-                    dbInfo.getPrePersistHandler().prePersist(value, parent);
-                    em.persist(value);
+                    Object objToPersist = dbInfo.getPrePersistHandler().prePersist(value, parent);
+                    em.persist(objToPersist);
                 } else {
                     xer.nextEvent();
                 }

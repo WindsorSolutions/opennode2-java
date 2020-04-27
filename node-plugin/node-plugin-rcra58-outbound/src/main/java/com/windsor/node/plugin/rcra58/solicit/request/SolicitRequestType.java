@@ -12,6 +12,7 @@ public enum SolicitRequestType {
     CA_BY_STATE("GetCADataByState", DbInfo.CA),
     CE_BY_HANDLER("GetCEDataByHandler", DbInfo.CE),
     CE_BY_STATE("GetCEDataByState", DbInfo.CE),
+    CE_DELETES_BY_STATE("GetCEDeletedDataByState", DbInfo.CE_DELETE),
     CE_EVALUATION_BY_HANDLER("GetCEEvaluationDataByHandler", DbInfo.CE),
     FA_BY_HANDLER("GetFADataByHandler", DbInfo.FA),
     FA_BY_STATE("GetFADataByState", DbInfo.FA),

@@ -17,6 +17,8 @@ import com.windsor.node.plugin.rcra58.domain.HazardousWasteReportUnivDataType;
 import com.windsor.node.plugin.rcra58.domain.PermitFacilitySubmissionDataType;
 import com.windsor.node.plugin.rcra58.domain.ReportUnivDataType;
 import com.windsor.node.plugin.rcra58.domain.ReportUnivsDataType;
+import com.windsor.node.plugin.rcra58.domain.CMEDeleteSubmissionDataType;
+import com.windsor.node.plugin.rcra58.domain.CMEFacilitySubmissionDeleteDataType;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -36,10 +38,11 @@ public enum DbInfo {
             },
             new ElementPrePersistHandler() {
                 @Override
-                public void prePersist(Object element, Object parent) {
+                public Object prePersist(Object element, Object parent) {
                     HazardousWasteCorrectiveActionDataType p = (HazardousWasteCorrectiveActionDataType) parent;
                     CorrectiveActionFacilitySubmissionDataType e = (CorrectiveActionFacilitySubmissionDataType) element;
                     e.setParent(p);
+                    return e;
                 }
             },
             new CleanupHandler() {
@@ -70,10 +73,11 @@ public enum DbInfo {
             },
             new ElementPrePersistHandler() {
                 @Override
-                public void prePersist(Object element, Object parent) {
+                public Object prePersist(Object element, Object parent) {
                     HazardousWasteCMESubmissionDataType p = (HazardousWasteCMESubmissionDataType) parent;
                     CMEFacilitySubmissionDataType e = (CMEFacilitySubmissionDataType) element;
                     e.setParent(p);
+                    return e;
                 }
             },
             new CleanupHandler() {
@@ -94,6 +98,42 @@ public enum DbInfo {
                     "RCRA_CME_MILESTONE", "RCRA_CME_PNLTY", "RCRA_CME_PYMT", "RCRA_CME_RQST", "RCRA_CME_SUBM",
                     "RCRA_CME_SUPP_ENVR_PRJT", "RCRA_CME_VIOL", "RCRA_CME_VIOL_ENFRC")
     ),
+    CE_DELETE("CED", "CMEFacilitySubmission",
+            new ParentFactory() {
+                @Override
+                public Object createParent(EntityManager em) {
+                    CMEDeleteSubmissionDataType parent = new CMEDeleteSubmissionDataType();
+                    em.persist(parent);
+                    return parent;
+                }
+            },
+            new ElementPrePersistHandler() {
+                @Override
+                public Object prePersist(Object element, Object parent) {
+                    CMEDeleteSubmissionDataType p = (CMEDeleteSubmissionDataType) parent;
+                    CMEFacilitySubmissionDataType e = (CMEFacilitySubmissionDataType) element;
+                    CMEFacilitySubmissionDeleteDataType delete = CMEFacilitySubmissionDeleteDataType
+                            .convertFromXml(e, p);
+                    delete.setParent(p);
+                    return delete;
+                }
+            },
+            new CleanupHandler() {
+                @Override
+                public void cleanup(EntityManager em) {
+                    em.createQuery("delete from " + CMEFacilitySubmissionDeleteDataType.class.getName() + " where 1=1").executeUpdate();
+                }
+            },
+            new ReattachHandler() {
+                @Override
+                public Object reattach(EntityManager em, Object obj) {
+                    CMEFacilitySubmissionDeleteDataType x = (CMEFacilitySubmissionDeleteDataType) obj;
+                    return em.find(CMEFacilitySubmissionDeleteDataType.class, x.getDbid());
+                }
+            },
+            asList("RCRA_CME_ENFRC_ACT_DEL", "RCRA_CME_EVAL_DEL", "RCRA_CME_FAC_SUBM_DEL", "RCRA_CME_VIOL_DEL",
+                    "RCRA_CME_SUBM_DEL")
+    ),
     FA("FA", "FinancialAssuranceFacilitySubmission",
             new ParentFactory() {
                 @Override
@@ -105,10 +145,11 @@ public enum DbInfo {
             },
             new ElementPrePersistHandler() {
                 @Override
-                public void prePersist(Object element, Object parent) {
+                public Object prePersist(Object element, Object parent) {
                     FinancialAssuranceSubmissionDataType p = (FinancialAssuranceSubmissionDataType) parent;
                     FinancialAssuranceFacilitySubmissionDataType e = (FinancialAssuranceFacilitySubmissionDataType) element;
                     e.setParent(p);
+                    return e;
                 }
             },
             new CleanupHandler() {
@@ -138,10 +179,11 @@ public enum DbInfo {
             },
             new ElementPrePersistHandler() {
                 @Override
-                public void prePersist(Object element, Object parent) {
+                public Object prePersist(Object element, Object parent) {
                     GeographicInformationSubmissionDataType p = (GeographicInformationSubmissionDataType) parent;
                     GISFacilitySubmissionDataType e = (GISFacilitySubmissionDataType) element;
                     e.setParent(p);
+                    return e;
                 }
             },
             new CleanupHandler() {
@@ -170,10 +212,11 @@ public enum DbInfo {
             },
             new ElementPrePersistHandler() {
                 @Override
-                public void prePersist(Object element, Object parent) {
+                public Object prePersist(Object element, Object parent) {
                     HazardousWasteHandlerSubmissionDataType p = (HazardousWasteHandlerSubmissionDataType) parent;
                     FacilitySubmissionDataType e = (FacilitySubmissionDataType) element;
                     e.setParent(p);
+                    return e;
                 }
             },
             new CleanupHandler() {
@@ -205,10 +248,11 @@ public enum DbInfo {
             },
             new ElementPrePersistHandler() {
                 @Override
-                public void prePersist(Object element, Object parent) {
+                public Object prePersist(Object element, Object parent) {
                     HazardousWastePermitDataType p = (HazardousWastePermitDataType) parent;
                     PermitFacilitySubmissionDataType e = (PermitFacilitySubmissionDataType) element;
                     e.setParent(p);
+                    return e;
                 }
             },
             new CleanupHandler() {
@@ -241,10 +285,11 @@ public enum DbInfo {
             },
             new ElementPrePersistHandler() {
                 @Override
-                public void prePersist(Object element, Object parent) {
+                public Object prePersist(Object element, Object parent) {
                     ReportUnivsDataType p = (ReportUnivsDataType) parent;
                     ReportUnivDataType e = (ReportUnivDataType) element;
                     e.setParent(p);
+                    return e;
                 }
             },
             new CleanupHandler() {
@@ -272,10 +317,11 @@ public enum DbInfo {
             },
             new ElementPrePersistHandler() {
                 @Override
-                public void prePersist(Object element, Object parent) {
+                public Object prePersist(Object element, Object parent) {
                     HazardousWasteEmanifestsDataType p = (HazardousWasteEmanifestsDataType) parent;
                     EmanifestDataType e = (EmanifestDataType) element;
                     e.setParent(p);
+                    return e;
                 }
             },
             new CleanupHandler() {

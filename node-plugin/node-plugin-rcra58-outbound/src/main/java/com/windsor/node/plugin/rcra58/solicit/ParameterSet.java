@@ -33,6 +33,9 @@ public enum ParameterSet {
     CE_BY_STATE(SolicitRequestType.CE_BY_STATE, new PluginServiceParameterDescriptor[] {
             PARAM_USE_SOLICIT_HISTORY, PARAM_STATE_REQ, PARAM_CHANGE_DATE
     }),
+    CE_DELETES_BY_STATE(SolicitRequestType.CE_DELETES_BY_STATE, new PluginServiceParameterDescriptor[] {
+            PARAM_USE_SOLICIT_HISTORY, PARAM_STATE_REQ, PARAM_CHANGE_DATE
+    }),
     CE_EVALUATION_BY_HANDLER(SolicitRequestType.CE_EVALUATION_BY_HANDLER, new PluginServiceParameterDescriptor[] {
             PARAM_USE_SOLICIT_HISTORY, PARAM_HANDLER_ID_REQ, PARAM_STATE, PARAM_AGENCY, PARAM_FROM_DATE, PARAM_TO_DATE, PARAM_CHANGE_DATE
     }),

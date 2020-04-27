@@ -62,6 +62,10 @@ public class SolicitRequestFactory {
         return createForState(SolicitRequestType.CE_BY_STATE, state, changeDate);
     }
 
+    public SolicitRequest getCEDeletesByState(String state, String changeDate) {
+        return createForState(SolicitRequestType.CE_DELETES_BY_STATE, state, changeDate);
+    }
+
     public SolicitRequest getCEEvaluationDataByHandler(String handlerId, String state, String agency,
                                                               Date fromDate, Date toDate, Date changeDate) {
         List<ParameterType> parameters = createParametersForHandlerState(handlerId, state, changeDate);
