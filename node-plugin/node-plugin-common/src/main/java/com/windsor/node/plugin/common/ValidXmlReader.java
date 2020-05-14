@@ -43,10 +43,6 @@ public class ValidXmlReader extends FilterReader {
                 String s = String.valueOf(Arrays.copyOfRange(charBuffer, 0, charsRead));
                 for (int i = 0; i < s.length(); i++) {
                     int codePoint = s.codePointAt(i);
-                    if (codePoint > 0xFFFF) {
-                        LOGGER.debug("Codepoint > 0xFFFF - " + codePoint);
-                        i++;
-                    }
                     if (codePoint == 0x9 || codePoint == 0xA || codePoint == 0xD
                             || codePoint >= 0x20 && codePoint <= 0xD7FF
                             || codePoint >= 0xE000 && codePoint <= 0xFFFD
