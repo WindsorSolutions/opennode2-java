@@ -15,7 +15,7 @@
         <!-- global settings -->
 
         <jaxb:schemaBindings>
-            <jaxb:package name="com.windsor.node.plugin.rcra58.domain"/>
+            <jaxb:package name="com.windsor.node.plugin.rcra59.domain"/>
         </jaxb:schemaBindings>
 
         <jaxb:globalBindings generateIsSetMethod="true" localScoping="toplevel">

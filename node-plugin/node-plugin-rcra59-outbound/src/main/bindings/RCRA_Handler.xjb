@@ -2,7 +2,7 @@
 <jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
-               jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/8/RCRA_Handler_v5.8.xsd">
+               jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/9/RCRA_Handler_v5.9.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='HandlerDataType']">
         <hj:entity>
@@ -314,6 +314,30 @@
         <hj:one-to-many>
             <orm:join-column name="HD_HANDLER_ID" nullable="false" updatable="false" insertable="true"/>
         </hj:one-to-many>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:CurrentRecord']">
+        <hj:basic>
+            <orm:column name="CURR_REC" column-definition="char(1)"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:CreatedByUserid']">
+        <hj:basic>
+            <orm:column name="CREATED_BY_USER_ID"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:HCreatedDate']">
+        <hj:basic>
+            <orm:column name="H_CREATED_DATE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DataOrig']">
+        <hj:basic>
+            <orm:column name="DATA_ORIG" column-definition="char(2)"/>
+        </hj:basic>
     </jaxb:bindings>
 
 </jaxb:bindings>
