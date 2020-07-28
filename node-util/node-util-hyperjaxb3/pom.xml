@@ -19,7 +19,7 @@
         <module>node-util-hyperjaxb3-wqx</module>
         <module>node-util-hyperjaxb3-facid</module>
         <module>node-util-hyperjaxb3-rcra56</module>
-		<module>node-util-hyperjaxb3-rcra58</module>
+		<module>node-util-hyperjaxb3-rcra59</module>
 		<module>node-util-hyperjaxb3-uic2</module>
     </modules>
 </project>

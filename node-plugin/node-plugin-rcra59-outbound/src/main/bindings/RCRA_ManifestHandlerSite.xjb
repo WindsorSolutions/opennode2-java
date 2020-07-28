@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
+               xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+               xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
+               jaxb:extensionBindingPrefixes="hj orm inheritance"
+               schemaLocation="../xsd/5/8/RCRA_ManifestHandlerSite_v5.8.xsd">
+
+    <jaxb:bindings node="//xsd:complexType[@name='ManifestHandlerSiteDataType']">
+        <inheritance:extends>com.windsor.node.plugin.rcra58.domain.AbstractManifestHandler</inheritance:extends>
+        <hj:entity>
+            <orm:table name="RCRA_EM_HANDLER"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="EM_HANDLER_ID"/>
+        </hj:generated-id>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:SiteType']">
+        <hj:basic>
+            <orm:column name="SITE_TYPE"/>
+        </hj:basic>
+    </jaxb:bindings>
+    <jaxb:bindings node="//xsd:element[@ref='RC:EpaSiteId']">
+        <hj:basic>
+            <orm:column name="EPA_SITE_ID"/>
+        </hj:basic>
+    </jaxb:bindings>
+    <jaxb:bindings node="//xsd:element[@ref='RC:EmanifestName']">
+        <hj:basic>
+            <orm:column name="MANIFEST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+    <jaxb:bindings node="//xsd:element[@ref='RC:EmanifestMailingAddress']">
+        <hj:embedded>
+            <orm:attribute-override name="streetNumber">
+                <orm:column name="MAIL_STREET_NUM"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="address1">
+                <orm:column name="MAIL_STREET1"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="address2">
+                <orm:column name="MAIL_STREET2"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="city">
+                <orm:column name="MAIL_CITY"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="country.manifestLocalityCode">
+                <orm:column name="MAIL_CNTRY_CODE"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="country.manifestLocalityName">
+                <orm:column name="MAIL_CNTRY_NAME"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="manifestState.manifestLocalityCode">
+                <orm:column name="MAIL_STATE_CODE"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="manifestState.manifestLocalityName">
+                <orm:column name="MAIL_STATE_NAME"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="zip">
+                <orm:column name="MAIL_ZIP"/>
+            </orm:attribute-override>
+        </hj:embedded>
+    </jaxb:bindings>
+    <jaxb:bindings node="//xsd:element[@ref='RC:SiteAddress']">
+        <hj:embedded>
+            <orm:attribute-override name="streetNumber">
+                <orm:column name="SITE_STREET_NUM"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="address1">
+                <orm:column name="SITE_STREET1"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="address2">
+                <orm:column name="SITE_STREET2"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="city">
+                <orm:column name="SITE_CITY"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="country.manifestLocalityCode">
+                <orm:column name="SITE_CNTRY_CODE"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="country.manifestLocalityName">
+                <orm:column name="SITE_CNTRY_NAME"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="manifestState.manifestLocalityCode">
+                <orm:column name="SITE_STATE_CODE"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="manifestState.manifestLocalityName">
+                <orm:column name="SITE_STATE_NAME"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="zip">
+                <orm:column name="SITE_ZIP"/>
+            </orm:attribute-override>
+        </hj:embedded>
+    </jaxb:bindings>
+    <jaxb:bindings node="//xsd:element[@ref='RC:ManifestContact']">
+        <hj:embedded>
+            <orm:attribute-override name="manifestFirstName">
+                <orm:column name="CONTACT_FIRST_NAME"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="manifestMiddleInitial">
+                <orm:column name="CONTACT_MIDDLE_INITIAL"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="manifestLastName">
+                <orm:column name="CONTACT_LAST_NAME"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="phone.phoneNumber">
+                <orm:column name="CONTACT_PHONE_NUM"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="phone.phoneExtension">
+                <orm:column name="CONTACT_PHONE_EXT"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="email">
+                <orm:column name="CONTACT_EMAIL"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="companyName">
+                <orm:column name="CONTACT_COMPANY_NAME"/>
+            </orm:attribute-override>
+        </hj:embedded>
+    </jaxb:bindings>
+    <jaxb:bindings node="//xsd:element[@ref='RC:EmergencyPhone']">
+        <hj:embedded>
+        <orm:attribute-override name="phoneNumber">
+            <orm:column name="EMERG_PHONE_NUM"/>
+        </orm:attribute-override>
+            <orm:attribute-override name="phoneExtension">
+                <orm:column name="EMERG_PHONE_EXT"/>
+            </orm:attribute-override>
+        </hj:embedded>
+    </jaxb:bindings>
+    <jaxb:bindings node="//xsd:element[@ref='RC:PaperSignatureInfo']">
+        <hj:embedded>
+            <orm:attribute-override name="printedName">
+                <orm:column name="PS_NAME"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="paperSignatureDate">
+                <orm:column name="PS_DATE"/>
+            </orm:attribute-override>
+        </hj:embedded>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ElectronicSignatureInfo']">
+        <hj:embedded>
+            <orm:attribute-override name="signer.manifestFirstName">
+                <orm:column name="ES_SIGNER_FIRST_NAME"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="signer.manifestLastName">
+                <orm:column name="ES_SIGNER_LAST_NAME"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="signer.signerUserId">
+                <orm:column name="ES_SIGNER_USER_ID"/>
+            </orm:attribute-override>
+
+            <orm:attribute-override name="electronicSignatureDate">
+                <orm:column name="ES_SIGN_DATE"/>
+            </orm:attribute-override>
+
+            <orm:attribute-override name="humanReadableDocument.documentName">
+                <orm:column name="ES_DOC_NAME"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="humanReadableDocument.size">
+                <orm:column name="ES_DOC_SIZE" column-definition="INT"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="humanReadableDocument.mimeType">
+                <orm:column name="ES_DOC_MIME_TYPE"/>
+            </orm:attribute-override>
+
+            <orm:attribute-override name="cromerrActivityId">
+                <orm:column name="ES_CROMERR_ACT_ID"/>
+            </orm:attribute-override>
+            <orm:attribute-override name="cromerrDocumentId">
+                <orm:column name="ES_CROMERR_DOC_ID"/>
+            </orm:attribute-override>
+        </hj:embedded>
+
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:Order']">
+        <hj:basic>
+            <orm:column name="ORDER_NUM"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:Registered']">
+        <hj:basic>
+            <orm:column name="REG_IND" column-definition="char(1)"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:Modified']">
+        <hj:basic>
+            <orm:column name="MOD_IND" column-definition="char(1)"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='CommentDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_EM_WASTE_COMMENT"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="EM_WASTE_COMMENT_ID"/>
+        </hj:generated-id>
+        <jaxb:bindings node="//xsd:element[@ref='RC:CommentDescription']">
+            <hj:basic>
+                <orm:column name="COMMENT_DESC"/>
+            </hj:basic>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xsd:element[@ref='RC:HandlerId']">
+            <hj:basic>
+                <orm:column name="HANDLER_ID"/>
+            </hj:basic>
+        </jaxb:bindings>
+        <jaxb:bindings node="//xsd:element[@ref='RC:CommentLabel']">
+            <hj:basic>
+                <orm:column name="COMMENT_LABEL"/>
+            </hj:basic>
+        </jaxb:bindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='AddressDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='DocumentDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='ElectronicSignatureInfoDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='ManifestContactDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='ManifestLocalityDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='PaperSignatureInfoDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+    <jaxb:bindings node="//xsd:complexType[@name='PhoneDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='SignerDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='ImportGeneratorDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='ImportPortInfoDataType']">
+        <hj:embeddable/>
+    </jaxb:bindings>
+
+</jaxb:bindings>
+
