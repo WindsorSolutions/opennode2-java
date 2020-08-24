@@ -31,9 +31,8 @@
         <module>node-plugin-icis-air</module>
         <module>node-plugin-mapforcebridge</module>
         <module>node-plugin-nct</module>
-        <module>node-plugin-rcra50</module>
-        <module>node-plugin-rcra56</module>
-        <module>node-plugin-rcra59-outbound</module>
+        <module>node-plugin-rcra</module>
+        <module>node-plugin-rcra-outbound</module>
         <module>node-plugin-sdwis</module>
         <module>node-plugin-uic</module>
         <module>node-plugin-uic2</module>

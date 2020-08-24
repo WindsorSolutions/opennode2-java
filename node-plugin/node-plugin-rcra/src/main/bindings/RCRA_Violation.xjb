@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations" xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+    xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance" xmlns:annox="http://annox.dev.java.net"
+    jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/9/RCRA_Violation_v5.9.xsd">
+
+    <jaxb:bindings node="//xsd:complexType[@name='ViolationDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_CME_VIOL"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="CME_VIOL_ID"/>
+        </hj:generated-id>
+    </jaxb:bindings>        
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AgencyText']">
+        <hj:ignored/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="//xsd:element[@ref='RC:ViolationTypeText']">
+        <hj:ignored/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="//xsd:element[@ref='RC:ReturnToComplianceQualifierText']">
+        <hj:ignored/>
+    </jaxb:bindings>
+    
+    <jaxb:bindings node="//xsd:element[@ref='RC:ViolationResponsibleAgencyText']">
+        <hj:ignored/>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:Citation']">
+        <hj:one-to-many>
+            <orm:join-column name="CME_VIOL_ID" nullable="false" insertable="true" updatable="false"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:TransactionCode']">
+        <hj:basic>
+            <orm:column name="TRANS_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ViolationType']">
+        <hj:basic>
+            <orm:column name="VIOL_TYPE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ViolationTypeOwner']">
+        <hj:basic>
+            <orm:column name="VIOL_TYPE_OWNER"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:CreatedByUserid']">
+        <hj:basic>
+            <orm:column name="CREATED_BY_USER_ID"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:CCreatedDate']">
+        <hj:basic>
+            <orm:column name="C_CREATED_DATE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+</jaxb:bindings>
+

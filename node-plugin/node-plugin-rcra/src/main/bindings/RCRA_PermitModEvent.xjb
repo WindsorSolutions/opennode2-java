@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations" xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+    xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance" xmlns:annox="http://annox.dev.java.net"
+    jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/9/RCRA_PermitModEvent_v5.9.xsd">
+
+    <jaxb:bindings node="//xsd:complexType[@name='PermitModEventDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_PRM_MOD_EVENT"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="PRM_MOD_EVENT_ID"/>
+        </hj:generated-id>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:TransactionCode']">
+        <hj:basic>
+            <orm:column name="TRANS_CODE" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ModHandlerId']">
+        <hj:basic>
+            <orm:column name="MOD_HANDLER_ID" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ModActivityLocationCode']">
+        <hj:basic>
+            <orm:column name="MOD_ACT_LOC_CODE" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ModSeriesSequenceNumber']">
+        <hj:basic>
+            <orm:column name="MOD_SERIES_SEQ_NUM" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ModEventSequenceNumber']">
+        <hj:basic>
+            <orm:column name="MOD_EVENT_SEQ_NUM" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ModEventAgencyCode']">
+        <hj:basic>
+            <orm:column name="MOD_EVENT_AGN_CODE" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ModEventDataOwnerCode']">
+        <hj:basic>
+            <orm:column name="MOD_EVENT_DATA_OWNER_CDE" />
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ModEventCode']">
+        <hj:basic>
+            <orm:column name="MOD_EVENT_CODE" />
+        </hj:basic>
+    </jaxb:bindings>
+
+</jaxb:bindings>
+
