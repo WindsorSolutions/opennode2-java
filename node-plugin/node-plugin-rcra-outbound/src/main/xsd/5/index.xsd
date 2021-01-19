@@ -3,12 +3,12 @@
 	<xsd:annotation>
 		<xsd:documentation>Schema Name: index.xsd</xsd:documentation>
 	</xsd:annotation>
-	<xsd:include schemaLocation="./9/RCRA_HazardousWasteCMESubmission_v5.9.xsd"/>
-	<xsd:include schemaLocation="./9/RCRA_HazardousWasteHandlerSubmission_v5.9.xsd"/>
-	<xsd:include schemaLocation="./9/RCRA_HazardousWasteCorrectiveActionSubmission_v5.9.xsd"/>
-	<xsd:include schemaLocation="./9/RCRA_HazardousWastePermitSubmission_v5.9.xsd"/>
-	<xsd:include schemaLocation="./9/RCRA_FinancialAssuranceSubmission_v5.9.xsd"/>
-	<xsd:include schemaLocation="./9/RCRA_GeographicInformationSubmission_v5.9.xsd"/>
-	<xsd:include schemaLocation="./9/RCRA_HazardousWasteReportUniv_v5.9.xsd"/>
-	<xsd:include schemaLocation="./9/RCRA_HazardousWasteEmanifests_v5.9.xsd"/>
+	<xsd:include schemaLocation="./10/RCRA_HazardousWasteCMESubmission_v5.10.xsd"/>
+	<xsd:include schemaLocation="./10/RCRA_HazardousWasteHandlerSubmission_v5.10.xsd"/>
+	<xsd:include schemaLocation="./10/RCRA_HazardousWasteCorrectiveActionSubmission_v5.10.xsd"/>
+	<xsd:include schemaLocation="./10/RCRA_HazardousWastePermitSubmission_v5.10.xsd"/>
+	<xsd:include schemaLocation="./10/RCRA_FinancialAssuranceSubmission_v5.10.xsd"/>
+	<xsd:include schemaLocation="./10/RCRA_GeographicInformationSubmission_v5.10.xsd"/>
+	<xsd:include schemaLocation="./10/RCRA_HazardousWasteReportUniv_v5.10.xsd"/>
+	<xsd:include schemaLocation="./10/RCRA_HazardousWasteEmanifests_v5.10.xsd"/>
 </xsd:schema>
