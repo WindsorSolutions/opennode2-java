@@ -51,7 +51,7 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:ModEventDataOwnerCode']">
         <hj:basic>
-            <orm:column name="MOD_EVENT_DATA_OWNER_CDE" />
+            <orm:column name="MOD_EVENT_DATA_OWNER_CODE" />
         </hj:basic>
     </jaxb:bindings>
 

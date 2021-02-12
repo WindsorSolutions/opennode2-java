@@ -153,7 +153,7 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:CreatedByUserid']">
         <hj:basic>
-            <orm:column name="CREATED_BY_USER_ID"/>
+            <orm:column name="CREATED_BY_USERID"/>
         </hj:basic>
     </jaxb:bindings>
 
