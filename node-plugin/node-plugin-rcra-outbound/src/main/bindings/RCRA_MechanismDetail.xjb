@@ -21,7 +21,7 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:CurrentMechanismDetailIndicator']">
         <hj:basic>
-            <orm:column name="CURR_MECH_DET_IND" column-definition="char(1)"/>
+            <orm:column name="CURRENT_MECHANISM_DETAIL_IND" column-definition="char(1)"/>
         </hj:basic>
     </jaxb:bindings>
 

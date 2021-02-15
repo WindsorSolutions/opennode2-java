@@ -232,11 +232,11 @@ public enum DbInfo {
                     return em.find(HazardousWasteHandlerSubmissionDataType.class, x.getDbid());
                 }
             },
-            asList("RCRA_HD_CERTIFICATION", "RCRA_HD_ENV_PERMIT", "RCRA_HD_EPISODIC_EVENT", "RCRA_HD_EPISODIC_WASTE",
-                    "RCRA_HD_EPISODIC_WASTE_CODE", "RCRA_HD_HANDLER", "RCRA_HD_HBASIC", "RCRA_HD_LQG_CLOSURE",
-                    "RCRA_HD_LQG_CONSOLIDATION", "RCRA_HD_NAICS", "RCRA_HD_OTHER_ID", "RCRA_HD_OWNEROP",
-                    "RCRA_HD_SEC_MATERIAL_ACTIVITY", "RCRA_HD_SEC_WASTE_CODE", "RCRA_HD_STATE_ACTIVITY",
-                    "RCRA_HD_SUBM", "RCRA_HD_UNIVERSAL_WASTE", "RCRA_HD_WASTE_CODE")),
+            asList("RCRA_HD_CERTIFICATION", "RCRA_HD_ENV_PERMIT", "RCRA_HD_EPISODIC_EVENT", "RCRA_HD_EPISODIC_PRJT",
+                    "RCRA_HD_EPISODIC_WASTE", "RCRA_HD_EPISODIC_WASTE_CODE", "RCRA_HD_HANDLER", "RCRA_HD_HBASIC",
+                    "RCRA_HD_LQG_CLOSURE","RCRA_HD_LQG_CONSOLIDATION", "RCRA_HD_NAICS", "RCRA_HD_OTHER_ID",
+                    "RCRA_HD_OWNEROP", "RCRA_HD_SEC_MATERIAL_ACTIVITY", "RCRA_HD_SEC_WASTE_CODE",
+                    "RCRA_HD_STATE_ACTIVITY", "RCRA_HD_SUBM", "RCRA_HD_UNIVERSAL_WASTE", "RCRA_HD_WASTE_CODE")),
     PM("PM", "PermitFacilitySubmission",
             new ParentFactory() {
                 @Override
@@ -269,7 +269,7 @@ public enum DbInfo {
                 }
             },
             asList("RCRA_PRM_EVENT", "RCRA_PRM_EVENT_COMMITMENT", "RCRA_PRM_FAC_SUBM", "RCRA_PRM_RELATED_EVENT",
-                    "RCRA_PRM_SERIES", "RCRA_PRM_SUBM", "RCRA_PRM_UNIT", "RCRA_PRM_UNIT_DETAIL",
+                    "RCRA_PRM_SERIES", "RCRA_PRM_SUBM", "RCRA_PRM_MOD_EVENT", "RCRA_PRM_UNIT", "RCRA_PRM_UNIT_DETAIL",
                     "RCRA_PRM_WASTE_CODE")),
     CH("CH", "ReportUniv",
             new ParentFactory() {

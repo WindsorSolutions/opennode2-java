@@ -326,15 +326,15 @@
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:HandlerEpisodicEvent']">
-        <hj:one-to-one>
+        <hj:one-to-many>
             <orm:join-column name="HD_HANDLER_ID" nullable="false" updatable="false" insertable="true"/>
-        </hj:one-to-one>
+        </hj:one-to-many>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:HandlerLqgClosure']">
-        <hj:one-to-one>
+        <hj:one-to-many>
             <orm:join-column name="HD_HANDLER_ID" nullable="false" updatable="false" insertable="true"/>
-        </hj:one-to-one>
+        </hj:one-to-many>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:CurrentRecord']">
