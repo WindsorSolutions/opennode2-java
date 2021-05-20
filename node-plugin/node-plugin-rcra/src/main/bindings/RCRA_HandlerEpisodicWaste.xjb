@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+               xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
+               xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+               jaxb:extensionBindingPrefixes="hj orm annox inheritance" schemaLocation="../xsd/5/10/RCRA_HandlerEpisodicWaste_v5.10.xsd">
+
+    <jaxb:bindings node="//xsd:complexType[@name='EpisodicWasteDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_HD_EPISODIC_WASTE"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="HD_EPISODIC_WASTE_ID"/>
+        </hj:generated-id>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='EpisodicHandlerWasteCodeDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_HD_EPISODIC_WASTE_CODE"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="HD_EPISODIC_WASTE_CODE_ID"/>
+        </hj:generated-id>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='EpisodicWasteDataType']//xsd:element[@ref='RC:TransactionCode']">
+        <hj:basic>
+            <orm:column name="TRANSACTION_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:complexType[@name='EpisodicHandlerWasteCodeDataType']//xsd:element[@ref='RC:TransactionCode']">
+        <hj:basic>
+            <orm:column name="TRANSACTION_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:WasteCode']">
+        <hj:basic>
+            <orm:column name="WASTE_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:WasteCodeText']">
+        <hj:basic>
+            <orm:column name="WASTE_CODE_TEXT"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:WasteCodeOwnerName']">
+        <hj:basic>
+            <orm:column name="WASTE_CODE_OWNER"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:EpisodicWasteSequenceNumber']">
+        <hj:basic>
+            <orm:column name="SEQ_NUMBER"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:EstimatedQuantity']">
+        <hj:basic>
+            <orm:column name="EST_QNTY"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@type='RC:EpisodicHandlerWasteCodeDataType']">
+        <hj:one-to-many>
+            <orm:join-column name="HD_EPISODIC_WASTE_ID" nullable="false" insertable="true" updatable="false"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
+</jaxb:bindings>

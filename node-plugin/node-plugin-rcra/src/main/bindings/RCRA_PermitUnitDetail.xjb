@@ -2,7 +2,7 @@
 <jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations" xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
     xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance" xmlns:annox="http://annox.dev.java.net"
-    jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/9/RCRA_PermitUnitDetail_v5.9.xsd">
+    jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/10/RCRA_PermitUnitDetail_v5.10.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='PermitUnitDetailDataType']">
         <hj:entity>
@@ -63,7 +63,7 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:CreatedByUserid']">
         <hj:basic>
-            <orm:column name="CREATED_BY_USER_ID" />
+            <orm:column name="CREATED_BY_USERID" />
         </hj:basic>
     </jaxb:bindings>
 

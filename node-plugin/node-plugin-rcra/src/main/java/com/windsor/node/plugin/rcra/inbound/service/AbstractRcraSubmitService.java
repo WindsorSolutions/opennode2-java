@@ -33,7 +33,7 @@ public abstract class AbstractRcraSubmitService<T> extends AbstractRcraService {
 	private static final String ARG_HEADER_RCRA_INFO_STATE_CODE = "RCRAInfoStateCode";
 	private static final String ARG_HEADER_RCRA_INFO_USER_ID = "RCRAInfoUserID";
 	private static final String ARG_HEADER_NOTIFICATION_URI = "notificationURI";
-	private static final String XSD_RELATIVE_FILE_PATH = "xsd/ExchangeNetworkDocument_RCRA_V5.4.xsd";
+	private static final String XSD_RELATIVE_FILE_PATH = "xsd/5/index.xsd";
 	
 	private static final List<String> HEADERS = Arrays.asList(
 			ARG_ADD_HEADER,

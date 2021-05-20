@@ -2,7 +2,7 @@
 <jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
-               jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/9/RCRA_Handler_v5.9.xsd">
+               jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/10/RCRA_Handler_v5.10.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='HandlerDataType']">
         <hj:entity>
@@ -144,6 +144,27 @@
     <jaxb:bindings node="//xsd:element[@ref='RC:SubpartPWithdrawal']">
         <hj:basic>
             <orm:column name="SUBPART_P_WITHDRAWAL"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:LocationLatitude']">
+        <hj:basic>
+            <orm:column name="LOCATION_LATITUDE"/>
+        </hj:basic>
+    </jaxb:bindings>
+    <jaxb:bindings node="//xsd:element[@ref='RC:LocationLongitude']">
+        <hj:basic>
+            <orm:column name="LOCATION_LONGITUDE"/>
+        </hj:basic>
+    </jaxb:bindings>
+    <jaxb:bindings node="//xsd:element[@ref='RC:LocationGisPrimary']">
+        <hj:basic>
+            <orm:column name="LOCATION_GIS_PRIM"/>
+        </hj:basic>
+    </jaxb:bindings>
+    <jaxb:bindings node="//xsd:element[@ref='RC:LocationGisOrig']">
+        <hj:basic>
+            <orm:column name="LOCATION_GIS_ORIG"/>
         </hj:basic>
     </jaxb:bindings>
 
@@ -318,13 +339,13 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:CurrentRecord']">
         <hj:basic>
-            <orm:column name="CURR_REC" column-definition="char(1)"/>
+            <orm:column name="CURRENT_RECORD" column-definition="char(1)"/>
         </hj:basic>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:CreatedByUserid']">
         <hj:basic>
-            <orm:column name="CREATED_BY_USER_ID"/>
+            <orm:column name="CREATED_BY_USERID"/>
         </hj:basic>
     </jaxb:bindings>
 

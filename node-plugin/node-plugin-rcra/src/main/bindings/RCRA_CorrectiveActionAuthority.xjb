@@ -3,7 +3,7 @@
                xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
                jaxb:extensionBindingPrefixes="hj orm inheritance"
-               schemaLocation="../xsd/5/9/RCRA_CorrectiveActionAuthority_v5.9.xsd">
+               schemaLocation="../xsd/5/10/RCRA_CorrectiveActionAuthority_v5.10.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='CorrectiveActionAuthorityDataType']">
         <hj:entity>
@@ -153,7 +153,7 @@
 
     <jaxb:bindings node="//xsd:element[@ref='RC:CreatedByUserid']">
         <hj:basic>
-            <orm:column name="CREATED_BY_USER_ID"/>
+            <orm:column name="CREATED_BY_USERID"/>
         </hj:basic>
     </jaxb:bindings>
 
