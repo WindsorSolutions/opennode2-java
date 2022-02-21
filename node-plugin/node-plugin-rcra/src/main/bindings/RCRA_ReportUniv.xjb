@@ -3,7 +3,7 @@
                xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
                xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
-               jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/10/RCRA_ReportUniv_v5.10.xsd"
+               jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/11/RCRA_ReportUniv_v5.11.xsd"
                xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc">
 
     <jaxb:bindings node="//xsd:complexType[@name='ReportUnivDataType']">

@@ -31,7 +31,6 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/generated</source>
                                 <source>src/main/java</source>
                                 <source>${project.build.directory}/generated-sources/metamodel</source>
                                 <source>${project.build.directory}/generated-sources/xjc</source>
@@ -69,13 +68,14 @@
                     <dependency>
                         <groupId>com.windsor.node.util.hyperjaxb3</groupId>
                         <artifactId>node-util-hyperjaxb3-rcra</artifactId>
-                        <version>2.20</version>
+                        <version>${project.version}</version>
                     </dependency>
                 </dependencies>
                 <configuration>
                     <extension>true</extension>
                     <args>
                         <arg>-npa</arg>
+                        <arg>-Xannotate</arg>
                     </args>
                 </configuration>
             </plugin>
@@ -83,7 +83,6 @@
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
             </plugin>
-            <!-- 
             <plugin>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
@@ -96,9 +95,6 @@
                         </goals>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <additionalSourceDirectories>
-                                <sourceDirectory>src/generated</sourceDirectory>
-                            </additionalSourceDirectories>
                             <outputDirectory>${project.build.directory}/generated-sources/metamodel</outputDirectory>
                             <processors>
                                 <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
@@ -114,7 +110,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-             -->
             <plugin>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
@@ -128,6 +123,15 @@
                 <artifactId>maven-assembly-plugin</artifactId>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+            <groupId>org.jvnet.hyperjaxb3</groupId>
+            <artifactId>maven-hyperjaxb3-plugin</artifactId>
+                </plugin>
+            </plugins>
+
+        </pluginManagement>
     </build>
     <dependencies>
         <dependency>
