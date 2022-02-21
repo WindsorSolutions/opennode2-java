@@ -19,6 +19,6 @@ public class SiteTypeDataTypeConverter implements AttributeConverter<SiteTypeDat
 
     @Override
     public SiteTypeDataType convertToEntityAttribute(String s) {
-        return SiteTypeDataType.fromValue(s);
+        return s == null ? null : SiteTypeDataType.fromValue(s);
     }
 }

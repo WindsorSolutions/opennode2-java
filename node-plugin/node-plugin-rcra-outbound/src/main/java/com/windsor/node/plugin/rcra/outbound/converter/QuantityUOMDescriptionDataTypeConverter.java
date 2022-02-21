@@ -19,6 +19,6 @@ public class QuantityUOMDescriptionDataTypeConverter implements AttributeConvert
 
     @Override
     public QuantityUOMDescriptionDataType convertToEntityAttribute(String s) {
-        return QuantityUOMDescriptionDataType.fromValue(s);
+        return s == null ? null : QuantityUOMDescriptionDataType.fromValue(s);
     }
 }

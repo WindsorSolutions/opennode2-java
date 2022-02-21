@@ -2,7 +2,7 @@
 <jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations" xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
     xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance" xmlns:annox="http://annox.dev.java.net"
-    jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/10/RCRA_HazardousWasteReportUniv_v5.10.xsd">
+    jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/11/RCRA_HazardousWasteReportUniv_v5.11.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='HazardousWasteReportUnivDataType']">
         <hj:entity>
@@ -14,9 +14,9 @@
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:ReportUnivs']">
-        <hj:one-to-many>
+        <hj:one-to-one>
             <orm:join-column name="RU_SUBM_ID" insertable="false" updatable="false"/>
-        </hj:one-to-many>
+        </hj:one-to-one>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:complexType[@name='ReportUnivsDataType']">

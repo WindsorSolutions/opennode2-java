@@ -19,6 +19,6 @@ public class AlternateDesignatedFacilityTypeDataTypeConverter implements Attribu
 
     @Override
     public AlternateDesignatedFacilityTypeDataType convertToEntityAttribute(String s) {
-        return AlternateDesignatedFacilityTypeDataType.fromValue(s);
+        return s == null ? null : AlternateDesignatedFacilityTypeDataType.fromValue(s);
     }
 }

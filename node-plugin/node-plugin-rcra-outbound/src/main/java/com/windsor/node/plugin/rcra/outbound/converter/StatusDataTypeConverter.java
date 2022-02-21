@@ -19,6 +19,6 @@ public class StatusDataTypeConverter implements AttributeConverter<StatusDataTyp
 
     @Override
     public StatusDataType convertToEntityAttribute(String s) {
-        return StatusDataType.fromValue(s);
+        return s == null ? null : StatusDataType.fromValue(s);
     }
 }

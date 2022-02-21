@@ -19,6 +19,6 @@ public class QuantityUOMCodeDataTypeConverter implements AttributeConverter<Quan
 
     @Override
     public QuantityUOMCodeDataType convertToEntityAttribute(String s) {
-        return QuantityUOMCodeDataType.fromValue(s);
+        return s == null ? null : QuantityUOMCodeDataType.fromValue(s);
     }
 }

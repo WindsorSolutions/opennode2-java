@@ -19,6 +19,6 @@ public class RejectionTypeDataTypeConverter implements AttributeConverter<Reject
 
     @Override
     public RejectionTypeDataType convertToEntityAttribute(String s) {
-        return RejectionTypeDataType.fromValue(s);
+        return s == null ? null : RejectionTypeDataType.fromValue(s);
     }
 }

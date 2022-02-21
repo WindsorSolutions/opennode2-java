@@ -19,6 +19,6 @@ public class SubmissionTypeDataTypeConverter implements AttributeConverter<Submi
 
     @Override
     public SubmissionTypeDataType convertToEntityAttribute(String s) {
-        return SubmissionTypeDataType.fromValue(s);
+        return s == null ? null : SubmissionTypeDataType.fromValue(s);
     }
 }

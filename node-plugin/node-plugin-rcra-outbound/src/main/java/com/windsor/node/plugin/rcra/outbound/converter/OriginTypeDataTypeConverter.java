@@ -19,6 +19,6 @@ public class OriginTypeDataTypeConverter implements AttributeConverter<OriginTyp
 
     @Override
     public OriginTypeDataType convertToEntityAttribute(String s) {
-        return OriginTypeDataType.fromValue(s);
+        return s == null ? null : OriginTypeDataType.fromValue(s);
     }
 }

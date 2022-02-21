@@ -3,7 +3,7 @@
                xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
                jaxb:extensionBindingPrefixes="hj orm inheritance"
-               schemaLocation="../xsd/5/10/RCRA_ManifestWaste_v5.10.xsd">
+               schemaLocation="../xsd/5/11/RCRA_ManifestWaste_v5.11.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='ManifestWasteDataType']">
         <hj:entity>
@@ -347,6 +347,23 @@
             </hj:basic>
         </jaxb:bindings>
     </jaxb:bindings>
+
+    <!--
+    <jaxb:bindings node="//xsd:element[@name='TxWasteCodeDataType']">
+        <hj:entity>
+            <orm:table name="RCRA_EM_WASTE_CD_TRANS"/>
+        </hj:entity>
+        <hj:generated-id name="Dbid">
+            <orm:column name="EM_WASTE_CD_TRANS_ID"/>
+        </hj:generated-id>
+        <jaxb:bindings
+                node="//xsd:complexType[@name='TxWasteCodeDataType']">
+            <hj:basic>
+                <orm:column name="WASTE_CODE"/>
+            </hj:basic>
+        </jaxb:bindings>
+    </jaxb:bindings>
+    -->
 
     <jaxb:bindings node="//xsd:complexType[@name='AdditionalInfoDataType']">
         <hj:embeddable/>
