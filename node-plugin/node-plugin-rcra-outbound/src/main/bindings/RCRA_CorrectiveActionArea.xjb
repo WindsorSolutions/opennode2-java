@@ -96,6 +96,12 @@
         </hj:one-to-many>
     </jaxb:bindings>
 
+    <jaxb:bindings node="//xsd:element[@ref='RC:CorrectiveActionRelatedPermitUnit']">
+        <hj:one-to-many>
+            <orm:join-column name="CA_AREA_ID" insertable="true" updatable="false" nullable="false"/>
+        </hj:one-to-many>
+    </jaxb:bindings>
+
     <jaxb:bindings node="//xsd:element[@ref='RC:CreatedByUserid']">
         <hj:basic>
             <orm:column name="CREATED_BY_USERID"/>
