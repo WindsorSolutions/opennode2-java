@@ -5,6 +5,7 @@
     jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/11/RCRA_HandlerEpisodicEvent_v5.11.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='HandlerEpisodicEventDataType']">
+        <inheritance:extends>com.windsor.node.plugin.rcra.outbound.domain.AbstractOneToOneHandler</inheritance:extends>
         <hj:entity>
             <orm:table name="RCRA_HD_EPISODIC_EVENT"/>
         </hj:entity>

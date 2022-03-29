@@ -5,6 +5,7 @@
     jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/11/RCRA_HandlerLqgClosure_v5.11.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='HandlerLqgClosureDataType']">
+        <inheritance:extends>com.windsor.node.plugin.rcra.inbound.domain.AbstractOneToOneHandler</inheritance:extends>
         <hj:entity>
             <orm:table name="RCRA_HD_LQG_CLOSURE"/>
         </hj:entity>

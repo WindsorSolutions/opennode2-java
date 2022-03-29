@@ -2,9 +2,11 @@
 <jaxb:bindings version="2.1" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+               xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
                jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/11/RCRA_Handler_v5.11.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='HandlerDataType']">
+        <inheritance:extends>com.windsor.node.plugin.rcra.outbound.domain.AbstractHandler</inheritance:extends>
         <hj:entity>
             <orm:table name="RCRA_HD_HANDLER"/>
         </hj:entity>
@@ -328,12 +330,14 @@
     <!-- -->
     <jaxb:bindings node="//xsd:element[@ref='RC:HandlerEpisodicEvent']">
         <hj:one-to-one>
+            <orm:cascade/>
             <orm:join-column name="HD_HANDLER_ID" nullable="false" updatable="false" insertable="true"/>
         </hj:one-to-one>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:HandlerLqgClosure']">
         <hj:one-to-one>
+            <orm:cascade/>
             <orm:join-column name="HD_HANDLER_ID" nullable="false" updatable="false" insertable="true"/>
         </hj:one-to-one>
     </jaxb:bindings>
