@@ -10,6 +10,8 @@ import com.windsor.node.domain.entity.Account;
 import com.windsor.node.repo.AccountRepository;
 import com.windsor.node.service.props.NaasProperties;
 
+import java.util.Optional;
+
 /**
  * Provides the auditor for the current session.
  */
@@ -27,7 +29,7 @@ public class SpringSecurityAuditorAware implements AuditorAware<Account> {
 
     @SuppressWarnings("rawtypes")
     @Override
-    public Account getCurrentAuditor() {
+    public Optional<Account> getCurrentAuditor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Account account = null;
         if ((authentication == null) 
@@ -46,6 +48,6 @@ public class SpringSecurityAuditorAware implements AuditorAware<Account> {
 	        account = (Account) ((com.windsor.stack.domain.security.SecurityUser) authentication
 	                .getPrincipal()).getUser();
         }
-        return account;
+        return Optional.ofNullable(account);
     }
 }

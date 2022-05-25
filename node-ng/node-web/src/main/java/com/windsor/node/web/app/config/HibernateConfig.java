@@ -1,8 +1,8 @@
 package com.windsor.node.web.app.config;
 
+import org.hibernate.SessionFactory;
 import org.hibernate.event.service.spi.EventListenerRegistry;
 import org.hibernate.internal.SessionFactoryImpl;
-import org.hibernate.jpa.HibernateEntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 
@@ -12,11 +12,11 @@ import org.springframework.context.annotation.Bean;
 public class HibernateConfig {
 
     @Autowired
-    private HibernateEntityManagerFactory entityManagerFactory;
+    private SessionFactory sessionFactory;
 
     @Bean
     public EventListenerRegistry eventListenerRegistry() {
-        SessionFactoryImpl sessionFactory = (SessionFactoryImpl) entityManagerFactory.getSessionFactory();
-        return sessionFactory.getServiceRegistry().getService(EventListenerRegistry.class);
+        SessionFactoryImpl sf = (SessionFactoryImpl) sessionFactory;
+        return sf.getServiceRegistry().getService(EventListenerRegistry.class);
     }
 }
