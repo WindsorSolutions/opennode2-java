@@ -369,7 +369,7 @@
 /*     */       
 /* 372 */       ArrayList<Object> results = new ArrayList();
 /*     */       
-/* 374 */       Iterator<Object> rows = rsdc.iterator();
+/* 374 */       Iterator<?> rows = rsdc.iterator();
 /* 375 */       while (rows.hasNext()) {
 /* 376 */         DynaBean bean = (DynaBean)rows.next();
 /* 377 */         results.add(bean.get(propertyName));
@@ -435,7 +435,7 @@
 /*     */ 
 /* 438 */       DynaBean newRow = null;
 /*     */       
-/* 440 */       Iterator<Object> rows = rsdc.iterator();
+/* 440 */       Iterator<?> rows = rsdc.iterator();
 /* 441 */       if (rows.hasNext()) {
 /* 442 */         DynaBean oldRow = (DynaBean)rows.next();
 /* 443 */         newRow = bdc.newInstance();
@@ -544,7 +544,7 @@
 /*     */ 
 /*     */ 
 /*     */ 
-/* 549 */       Iterator<Object> rows = rsdc.iterator();
+/* 549 */       Iterator<?> rows = rsdc.iterator();
 /* 550 */       while (rows.hasNext()) {
 /* 551 */         DynaBean oldRow = (DynaBean)rows.next();
 /* 552 */         DynaBean newRow = bdc.newInstance();

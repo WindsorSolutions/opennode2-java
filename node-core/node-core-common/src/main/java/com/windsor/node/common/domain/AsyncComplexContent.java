@@ -34,8 +34,6 @@ package com.windsor.node.common.domain;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.ListUtils;
-import org.apache.commons.collections.MapUtils;
 import java.util.Random;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -45,10 +43,10 @@ public class AsyncComplexContent extends ComplexContent {
 
     private static final long serialVersionUID = 1;
 
-    private List recipients;
-    private Map notifications;
+    private List<String> recipients;
+    private Map<String, WnosTransactionNotificationType> notifications;
 
-    public List getRecipients() {
+    public List<String> getRecipients() {
         return recipients;
     }
 
@@ -57,11 +55,11 @@ public class AsyncComplexContent extends ComplexContent {
      * 
      * @param recipients
      */
-    public void setRecipients(List recipients) {
-        this.recipients = ListUtils.typedList(recipients, String.class);
+    public void setRecipients(List<String> recipients) {
+        this.recipients = recipients;
     }
 
-    public Map getNotifications() {
+    public Map<String, WnosTransactionNotificationType> getNotifications() {
         return notifications;
     }
 
@@ -70,9 +68,8 @@ public class AsyncComplexContent extends ComplexContent {
      * 
      * @return
      */
-    public void setNotifications(Map notifications) {
-        this.notifications = MapUtils.typedMap(notifications, String.class,
-                WnosTransactionNotificationType.class);
+    public void setNotifications(Map<String, WnosTransactionNotificationType> notifications) {
+        this.notifications = notifications;
     }
 
     public String toString() {

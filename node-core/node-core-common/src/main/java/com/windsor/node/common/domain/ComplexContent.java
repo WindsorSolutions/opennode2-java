@@ -31,22 +31,21 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package com.windsor.node.common.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import org.apache.commons.collections.ListUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 public class ComplexContent implements Serializable {
 
     private static final long serialVersionUID = 1;
 
     private OperationDataFlow flow;
-    private List documents;
+    private List<Document> documents;
     private String transactionId;
 
     public ComplexContent() {
@@ -61,7 +60,7 @@ public class ComplexContent implements Serializable {
         this.flow = flow;
     }
 
-    public List getDocuments() {
+    public List<Document> getDocuments() {
         return documents;
     }
 
@@ -70,8 +69,8 @@ public class ComplexContent implements Serializable {
      * 
      * @param documents
      */
-    public void setDocuments(List documents) {
-        this.documents = ListUtils.typedList(documents, Document.class);
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
     }
 
     public String getTransactionId() {

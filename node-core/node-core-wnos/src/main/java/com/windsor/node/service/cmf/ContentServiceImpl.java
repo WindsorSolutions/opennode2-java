@@ -560,7 +560,7 @@ public class ContentServiceImpl extends BaseService implements ContentService,
                 // Save Request
                 DataRequest submitProcessingRequest = new DataRequest();
                 submitProcessingRequest.setModifiedById(account.getId());
-                submitProcessingRequest.setNotifications(content
+                submitProcessingRequest.setNotifications((Map<String, Object>)(Map<?, ?>)content
                         .getNotifications());
                 submitProcessingRequest.setRecipients(content.getRecipients());
                 submitProcessingRequest.setRequestor(account);

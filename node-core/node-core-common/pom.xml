@@ -11,8 +11,8 @@
     <name>Node Core - Common Library</name>
     <dependencies>
         <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

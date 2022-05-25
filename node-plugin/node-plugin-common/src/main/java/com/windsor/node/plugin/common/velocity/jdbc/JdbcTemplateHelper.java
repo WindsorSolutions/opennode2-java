@@ -371,7 +371,7 @@ public class JdbcTemplateHelper extends TemplateHelper {
 
             ArrayList<Object> results = new ArrayList<Object>();
 
-            Iterator<Object> rows = rsdc.iterator();
+            Iterator<?> rows = rsdc.iterator();
             while (rows.hasNext()) {
                 DynaBean bean = (DynaBean) rows.next();
                 results.add(bean.get(propertyName));
@@ -437,7 +437,7 @@ public class JdbcTemplateHelper extends TemplateHelper {
 
             DynaBean newRow = null;
 
-            Iterator<Object> rows = rsdc.iterator();
+            Iterator<?> rows = rsdc.iterator();
             if (rows.hasNext()) {
                 DynaBean oldRow = (DynaBean) rows.next();
                 newRow = bdc.newInstance();
@@ -546,7 +546,7 @@ public class JdbcTemplateHelper extends TemplateHelper {
 
             // Note: This is ugly but necessary to disconnect the Iterator
             // from the underlining result set and its connection.
-            Iterator<Object> rows = rsdc.iterator();
+            Iterator<?> rows = rsdc.iterator();
             while (rows.hasNext()) {
                 DynaBean oldRow = (DynaBean) rows.next();
                 DynaBean newRow = bdc.newInstance();
