@@ -1,6 +1,5 @@
 package com.windsor.node.plugin.common;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import com.windsor.node.common.domain.NodeTransaction;
 import com.windsor.node.plugin.BaseWnosPlugin;
 import com.windsor.node.plugin.common.domain.DocumentHeaderType;

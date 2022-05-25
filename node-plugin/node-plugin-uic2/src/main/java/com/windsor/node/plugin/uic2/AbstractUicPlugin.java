@@ -1,6 +1,5 @@
 package com.windsor.node.plugin.uic2;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import com.windsor.node.common.domain.CommonContentType;
 import com.windsor.node.common.domain.CommonTransactionStatusCode;
 import com.windsor.node.common.domain.DataServiceRequestParameter;
