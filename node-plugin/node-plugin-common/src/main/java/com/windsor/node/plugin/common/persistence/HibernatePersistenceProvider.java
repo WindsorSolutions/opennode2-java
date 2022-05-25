@@ -8,11 +8,10 @@ import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.cfg.Environment;
-import org.hibernate.ejb.HibernatePersistence;
 
 public class HibernatePersistenceProvider {
 
-    private final PersistenceProvider provider = new HibernatePersistence();
+    private final PersistenceProvider provider = new org.hibernate.jpa.HibernatePersistenceProvider();
 
     public EntityManagerFactory createEntityManagerFactory(DataSource dataSource, PluginPersistenceConfig config) {
 

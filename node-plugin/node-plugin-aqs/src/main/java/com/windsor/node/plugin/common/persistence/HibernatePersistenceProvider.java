@@ -5,14 +5,13 @@
 /*    */ import javax.persistence.spi.PersistenceProvider;
 /*    */ import javax.sql.DataSource;
 /*    */ import org.apache.commons.lang3.StringUtils;
-/*    */ import org.hibernate.ejb.HibernatePersistence;
 /*    */ 
 /*    */ 
 /*    */ 
 /*    */ 
 /*    */ public class HibernatePersistenceProvider
 /*    */ {
-/* 15 */   private final PersistenceProvider provider = new HibernatePersistence();
+/* 15 */   private final PersistenceProvider provider = new org.hibernate.jpa.HibernatePersistenceProvider();
 /*    */   
 /*    */   public EntityManagerFactory createEntityManagerFactory(DataSource dataSource, PluginPersistenceConfig config)
 /*    */   {
