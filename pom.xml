@@ -110,7 +110,7 @@
 
         <!-- library versions -->
         <apt.maven.plugin.version>1.1.1</apt.maven.plugin.version>
-        <springframework.version>3.2.8.RELEASE</springframework.version>
+        <springframework.version>5.3.20</springframework.version>
         <springframework.remotingversion>2.0.8</springframework.remotingversion>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <commons.beanutils.version>1.9.4</commons.beanutils.version>

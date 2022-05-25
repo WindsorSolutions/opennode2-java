@@ -177,6 +177,6 @@ public class UicStatusDao extends BaseJdbcDao
         checkDaoConfig();
 
         this.logger.debug("sql: " + SQL_COUNT_PENDING_BY_OPERATION_TYPE_AND_ORG_ID);
-        return getJdbcTemplate().queryForInt(SQL_COUNT_PENDING_BY_OPERATION_TYPE_AND_ORG_ID, new Object[]{ operationType.toString(), orgId });
+        return getJdbcTemplate().queryForObject(SQL_COUNT_PENDING_BY_OPERATION_TYPE_AND_ORG_ID, Integer.class, new Object[]{ operationType.toString(), orgId });
     }
 }

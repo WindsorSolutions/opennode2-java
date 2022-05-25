@@ -31,14 +31,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package com.windsor.node.service.helper.email;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Map;
-import javax.mail.internet.MimeMessage;
+import com.windsor.node.common.domain.Document;
+import com.windsor.node.common.exception.WinNodeException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +43,13 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.ui.velocity.VelocityEngineUtils;
-import com.windsor.node.common.domain.Document;
-import com.windsor.node.common.exception.WinNodeException;
+
+import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.io.StringWriter;
+import java.rmi.RemoteException;
+import java.util.List;
+import java.util.Map;
 
 public class EmailMessagePreparator implements InitializingBean,
         MimeMessagePreparator {
@@ -135,8 +135,9 @@ public class EmailMessagePreparator implements InitializingBean,
             helper.setTo(to);
             helper.setSubject(subject);
 
-            //TODO Set UTF-8 encoding for the new 3rd param (1 based counting) to get rid of deprecated 
-            helper.setText(VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, template, data), true);
+            StringWriter w = new StringWriter();
+            velocityEngine.mergeTemplate(template, "UTF-8", new VelocityContext(data), w);
+            helper.setText(w.toString());
 
             if(attachment != null)
             {
