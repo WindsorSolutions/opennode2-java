@@ -41,7 +41,7 @@ public class EditAccountBeanServiceImpl implements EditAccountBeanService {
     @Transactional(readOnly = false)
     @Override
     public Account save(EditAccountBean bean) {
-        Account account = repo.findOne(bean.getId());
+        Account account = repo.findById(bean.getId()).orElse(null);
         merge(account, bean);
         return repo.save(account);
     }

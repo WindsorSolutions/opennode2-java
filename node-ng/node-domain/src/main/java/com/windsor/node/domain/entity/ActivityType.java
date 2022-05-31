@@ -25,8 +25,9 @@ public enum ActivityType {
     }
 
     public static Stream<ActivityType> getMatches(String term) {
-        return Stream.of(values())
-                .filter(dsp -> dsp.getDescription().toLowerCase().contains(term.toLowerCase()));
+        Stream<ActivityType> s = Stream.of(values());
+        return term == null ? s :
+                s.filter(dsp -> dsp.getDescription().toLowerCase().contains(term.toLowerCase()));
     }
 
     @Override

@@ -60,41 +60,59 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-
-        http.formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/");
-
-        http.logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .deleteCookies("JSESSIONID")
-                .invalidateHttpSession(true);
-
-        http.authorizeRequests()
-                .antMatchers(
-                        PATH_401_ERROR,
-                        PATH_404_ERROR,
-                        PATH_500_ERROR,
-                        PATH_EXPIRED_ERROR,
-                        PATH_LOGIN,
-                        PATH_LOGOUT)
-                .permitAll()
-                .antMatchers(PATH_MONITORING)
-                .hasAuthority(NodeConstants.PERM_NAME_MONITOR_APPLICATION)
-                .anyRequest()
-                .authenticated();
-
-        http.headers().frameOptions().disable();
-        http.csrf().disable();
-
-        /*
-         * Redirect to HTTPS in non-development envs.
-         */
-//        if ((!NodeConstants.DEV_ENV_NAME.equalsIgnoreCase(envLocation))
-//                && (!NodeConstants.DOCKER_ENV_NAME.equalsIgnoreCase(envLocation))) {
-//            http.requiresChannel().anyRequest().requiresSecure();
-//        }
+            http
+                    .csrf()
+                    .disable()
+                    .headers()
+                    .frameOptions()
+                    .sameOrigin()
+                    .and()
+                    .authorizeRequests()
+                    .antMatchers("/login").permitAll()
+                    .anyRequest().authenticated()
+                    .and()
+                    .formLogin()
+//                    .successHandler(WartAuthenticationSuccessHandler(useDashboard))
+                    .loginPage("/login")
+                    .permitAll()
+                    .and()
+                    .logout()
+                    .permitAll();
+//
+//        http.formLogin()
+//                .loginPage("/login")
+//                .defaultSuccessUrl("/");
+//
+//        http.logout()
+//                .logoutUrl("/logout")
+//                .logoutSuccessUrl("/")
+//                .deleteCookies("JSESSIONID")
+//                .invalidateHttpSession(true);
+//
+//        http.authorizeRequests()
+//                .antMatchers(
+//                        PATH_401_ERROR,
+//                        PATH_404_ERROR,
+//                        PATH_500_ERROR,
+//                        PATH_EXPIRED_ERROR,
+//                        PATH_LOGIN,
+//                        PATH_LOGOUT)
+//                .permitAll()
+//                .antMatchers(PATH_MONITORING)
+//                .hasAuthority(NodeConstants.PERM_NAME_MONITOR_APPLICATION)
+//                .anyRequest()
+//                .authenticated();
+//
+//        http.headers().frameOptions().disable();
+//        http.csrf().disable();
+//
+//        /*
+//         * Redirect to HTTPS in non-development envs.
+//         */
+////        if ((!NodeConstants.DEV_ENV_NAME.equalsIgnoreCase(envLocation))
+////                && (!NodeConstants.DOCKER_ENV_NAME.equalsIgnoreCase(envLocation))) {
+////            http.requiresChannel().anyRequest().requiresSecure();
+////        }
     }
 
     @Override

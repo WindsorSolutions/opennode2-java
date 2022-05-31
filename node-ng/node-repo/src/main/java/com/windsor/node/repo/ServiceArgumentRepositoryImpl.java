@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
-import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.expr.BooleanExpression;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.windsor.node.domain.entity.ServiceArgument;
 import com.windsor.node.domain.search.EntityAlias;
 import com.windsor.node.domain.search.ServiceArgumentSearchCriteria;

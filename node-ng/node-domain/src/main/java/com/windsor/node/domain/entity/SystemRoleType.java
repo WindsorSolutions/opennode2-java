@@ -82,7 +82,8 @@ public enum SystemRoleType implements IIdentifiable<String> {
     }
 
     public static Stream<SystemRoleType> getMatches(String term) {
-        return Stream.of(values())
+        Stream<SystemRoleType> s = Stream.of(values());
+        return term == null ? s : s
                 .filter(dsp -> dsp.getDescription().toLowerCase().contains(term.toLowerCase()));
     }
 

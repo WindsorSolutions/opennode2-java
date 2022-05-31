@@ -45,8 +45,8 @@ public enum DataSourceProvider implements IIdentifiable<String> {
     }
 
     public static Stream<DataSourceProvider> getMatches(String term) {
-        return Stream.of(values())
-                .filter(dsp -> dsp.getDescription().toLowerCase().contains(term.toLowerCase()));
+        Stream<DataSourceProvider> s = Stream.of(values());
+        return term == null ? s : s.filter(dsp -> dsp.getDescription().toLowerCase().contains(term.toLowerCase()));
     }
 
     public static Optional<DataSourceProvider> findById(long id) {

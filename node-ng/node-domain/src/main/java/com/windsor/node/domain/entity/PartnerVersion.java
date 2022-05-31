@@ -45,7 +45,8 @@ public enum PartnerVersion implements IIdentifiable<String> {
     }
 
     public static Stream<PartnerVersion> getMatches(String term) {
-        return Stream.of(values())
+        Stream<PartnerVersion> s = Stream.of(values());
+        return term == null ? s : s
                 .filter(dsp -> dsp.getDescription().toLowerCase().contains(term.toLowerCase()));
     }
 

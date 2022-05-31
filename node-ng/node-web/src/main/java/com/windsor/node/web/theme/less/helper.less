@@ -1,3 +1,5 @@
+@import 'variables';
+
 .container-full {
   margin: 0 auto;
   width: 100%;
@@ -36,7 +38,7 @@
   width: 150px
 }
 .width-180-px {
-  width: 180px;
+  width: 180px
 }
 .width-240-px {
   width: 240px
@@ -75,6 +77,162 @@
   border-color: #ccc !important;
 }
 
-button:not([disabled]).btn i.glyphicon-stop {
-  color: @brand-danger;
+td span.select2-container .select2-selection--single {
+  height: 30px;
+}
+
+tr.filters-tr td span.select2-container {
+  display: block;
+}
+
+span.selection span.select2-selection {
+  border-radius: 0px;
+}
+
+li span.select2-container {
+  margin-top: 5px;
+}
+
+span.select2-container--default .select2-selection--single {
+  border-radius: 0px;
+}
+
+.tab-content .panel-heading {
+  padding: 5px 15px;
+}
+
+.panel .panel-title {
+  margin-top: 10px;
+}
+
+textarea {
+  width: 100%;
+  height: 80px;
+}
+
+span
+.btn.disabled,
+.btn[disabled],
+fieldset[disabled] .btn {
+  opacity: .45;
+}
+
+div.dropdown ul.dropdown-menu a.btn {
+  text-align: left;
+}
+
+.label-assessment-status-final {
+  background-color: @brand-success;
+}
+
+.label-assessment-status-notstarted {
+  background-color: @gray-light;
+}
+
+.label-assessment-status-provisional {
+  background-color: @brand-primary;
+}
+
+.label-attainment-category-allsupported {
+  background-color: @brand-success;
+}
+
+.label-attainment-category-somesupported {
+  background-color: @brand-info;
+}
+
+.label-attainment-category-insufficientdata {
+  background-color: @gray-light;
+}
+
+.label-attainment-category-attainmentexpected,
+.label-attainment-category-otherpollutants,
+.label-attainment-category-tmdlexists {
+  background-color: @brand-primary;
+}
+
+.label-attainment-category-tmdlneeded {
+  background-color: @brand-danger;
+}
+
+.label-designated-use-result-insufficientdata {
+  background-color: @brand-info;
+}
+
+.label-designated-use-result-notassessed {
+  background-color: @gray-light;
+}
+
+.label-designated-use-result-notsupporting {
+  background-color: @brand-danger;
+}
+
+.label-designated-use-result-supports {
+  background-color: @brand-success;
+}
+
+.label-segment-standard-status-meetsstandard {
+  background-color: @brand-success;
+}
+
+.label-segment-standard-status-notmeetstandard {
+  background-color: @brand-danger;
+}
+
+.label-segment-standard-status-insufficientdata {
+  background-color: @gray-light;
+}
+
+.label-segment-standard-status-notassessed {
+  background-color: @brand-info;
+}
+
+div.checkbox {
+  margin-bottom: 0px;
+}
+
+.table-borderless > tbody > tr > td,
+.table-borderless > tbody > tr > th,
+.table-borderless > tfoot > tr > td,
+.table-borderless > tfoot > tr > th,
+.table-borderless > thead > tr > td,
+.table-borderless > thead > tr > th {
+  border: none;
+}
+
+ul.nav-tabs {
+  border-bottom: 0px;
+  > li.active > a,
+  > li.active > a:hover,
+  > li.active > a:focus {
+    background-color: rgb(245, 245, 245);
+  }
+}
+
+span.select2-selection.reporting-cycle > span {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  line-height: 20px;
+}
+
+span.select2-dropdown.reporting-cycle span > ul > li {
+  font: normal normal normal 14px/1 FontAwesome;
+}
+
+ul.dropdown-menu a.btn {
+  border: #fff;
+}
+
+.label-sample-anomalous-value {
+  background-color: @brand-danger;
+}
+
+.width-30 {
+  width: 30px;
+}
+
+.hideSearch .select2-search,
+.hideSearch .select2-results,
+.hideSearch .select2-dropdown {
+  display: none;
 }

@@ -61,7 +61,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Windsor Dependency Version -->
-        <com.windsor.stack.version>1.0.12-SNAPSHOT</com.windsor.stack.version>
+        <com.windsor.stack.version>2.0.0-SNAPSHOT</com.windsor.stack.version>
 
         <specification.vendor>Environmental Council of the States (ECOS)</specification.vendor>
         <specification.vendor.url>http://www.ecos.org/</specification.vendor.url>
@@ -112,7 +112,7 @@
         <apt.maven.plugin.version>1.1.1</apt.maven.plugin.version>
         <springframework.version>5.3.20</springframework.version>
         <springframework.remotingversion>2.0.8</springframework.remotingversion>
-        <hibernate.version>4.3.11.Final</hibernate.version>
+        <hibernate.version>5.6.9.Final</hibernate.version>
         <commons.beanutils.version>1.9.4</commons.beanutils.version>
         <jaxb.implementation.version>3.0.2</jaxb.implementation.version>
         <junit.version>4.0</junit.version>
@@ -124,7 +124,7 @@
         <commons-codec.version>1.15</commons-codec.version>
         <com.mysema.querydsl.version>3.4.0</com.mysema.querydsl.version>
         <javax.validation.version>1.1.0.Final</javax.validation.version>
-        <net.bull.javamelody.version>1.54.0</net.bull.javamelody.version>
+        <net.bull.javamelody.version>1.91.0</net.bull.javamelody.version>
         <net.sf.ehcache.version>2.7.4</net.sf.ehcache.version>
         <jackson.version>2.8.4</jackson.version>
         <gson.version>2.8.0</gson.version>
@@ -307,9 +307,9 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${plugin.compiler.version}</version>
                     <configuration>
-                        <source>7</source>
-                        <target>7</target>
-                        <compilerArgument>-proc:none</compilerArgument>
+                        <source>8</source>
+                        <target>8</target>
+<!--                        <compilerArgument>-proc:none</compilerArgument>-->
                     </configuration>
                 </plugin>
                 <plugin>
@@ -409,6 +409,10 @@
                 <exclusion>
                     <groupId>org.javassist</groupId>
                     <artifactId>javassist</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish.jaxb</groupId>
+                    <artifactId>jaxb-runtime</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

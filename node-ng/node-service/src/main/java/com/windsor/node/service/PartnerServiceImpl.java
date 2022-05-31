@@ -20,8 +20,7 @@ import com.windsor.node.service.helper.naas.auth.AuthMethod;
 import com.windsor.node.service.props.NaasProperties;
 import com.windsor.node.ws1.client.NetworkNode11Client;
 import com.windsor.node.ws2.client.NetworkNode21Client;
-import com.windsor.stack.domain.repo.ICrudRepository;
-import com.windsor.stack.domain.service.AbstractCrudService;
+import com.windsor.node.repo.ICrudRepository;
 
 /**
  * Provides an implementation of the Partner service.

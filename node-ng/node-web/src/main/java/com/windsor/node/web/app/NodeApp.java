@@ -1,14 +1,14 @@
 package com.windsor.node.web.app;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.Properties;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
-import javax.servlet.http.HttpSessionListener;
-import javax.sql.DataSource;
-
+import com.windsor.node.domain.entity.Account;
+import com.windsor.node.service.SpringSecurityAuditorAware;
+import com.windsor.node.service.props.JdbcProperties;
+import com.windsor.node.service.props.NosProperties;
+import com.windsor.node.web.app.config.SecurityConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import net.bull.javamelody.MonitoringFilter;
+import net.bull.javamelody.Parameter;
+import net.bull.javamelody.SessionListener;
 import org.apache.wicket.RuntimeConfigurationType;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.WicketFilter;
@@ -38,16 +38,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
-import com.windsor.node.domain.entity.Account;
-import com.windsor.node.service.SpringSecurityAuditorAware;
-import com.windsor.node.service.props.JdbcProperties;
-import com.windsor.node.service.props.NosProperties;
-import com.windsor.node.web.app.config.SecurityConfig;
-import com.zaxxer.hikari.HikariDataSource;
-
-import net.bull.javamelody.MonitoringFilter;
-import net.bull.javamelody.Parameter;
-import net.bull.javamelody.SessionListener;
+import javax.servlet.DispatcherType;
+import javax.servlet.Filter;
+import javax.servlet.http.HttpSessionListener;
+import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Properties;
 
 /**
  * Bootstraps the Node Administration web application.
@@ -59,12 +56,12 @@ import net.bull.javamelody.SessionListener;
 @EntityScan(basePackages = {"com.windsor.stack.domain", "com.windsor.node.domain"})
 @EnableJpaRepositories(basePackages = {"com.windsor.stack", "com.windsor.node.repo"})
 @ComponentScan(basePackages = {"com.windsor.stack", "com.windsor.node.web", "com.windsor.node.service"})
-@ImportResource({"classpath:net/bull/javamelody/monitoring-spring.xml"})
+//@ImportResource({"classpath:net/bull/javamelody/monitoring-spring.xml"})
 public class NodeApp {
 
-    @Autowired
-    @Qualifier("springSecurityFilterChain")
-    private Filter springSecurityFilter;
+//    @Autowired
+//    @Qualifier("springSecurityFilterChain")
+//    private Filter springSecurityFilter;
 
     @Value("${wicket.configuration:DEVELOPMENT}")
     private String config;
@@ -78,15 +75,15 @@ public class NodeApp {
         return new SpringSecurityAuditorAware();
     }
 
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    @Bean
-    public FilterRegistrationBean getSpringSecurityFilter() {
-        FilterRegistrationBean registration = new FilterRegistrationBean(springSecurityFilter);
-        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return registration;
-    }
+//    @Order(Ordered.HIGHEST_PRECEDENCE)
+//    @Bean
+//    public FilterRegistrationBean getSpringSecurityFilter() {
+//        FilterRegistrationBean registration = new FilterRegistrationBean(springSecurityFilter);
+//        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//        return registration;
+//    }
 
-    @Order(Ordered.HIGHEST_PRECEDENCE + 2)
+//    @Order(Ordered.HIGHEST_PRECEDENCE + 2)
     @Bean
     public FilterRegistrationBean newUsernameLoggingFilter() {
         FilterRegistrationBean registration = new FilterRegistrationBean(new Slf4jSpringUsernameFilter());
@@ -95,25 +92,25 @@ public class NodeApp {
         return registration;
     }
 
-    @Order(Ordered.HIGHEST_PRECEDENCE + 5)
-    @Bean
-    public FilterRegistrationBean newMonitoringFilter() {
-        FilterRegistrationBean registration = new FilterRegistrationBean(new MonitoringFilter());
-        registration.setUrlPatterns(Arrays.asList("/*"));
-        registration.addInitParameter(Parameter.MONITORING_PATH.getCode(), SecurityConfig.PATH_MONITORING);
-        registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 5);
-        return registration;
-    }
+//    @Order(Ordered.HIGHEST_PRECEDENCE + 5)
+//    @Bean
+//    public FilterRegistrationBean newMonitoringFilter() {
+//        FilterRegistrationBean registration = new FilterRegistrationBean(new MonitoringFilter());
+//        registration.setUrlPatterns(Arrays.asList("/*"));
+//        registration.addInitParameter(Parameter.MONITORING_PATH.getCode(), SecurityConfig.PATH_MONITORING);
+//        registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 5);
+//        return registration;
+//    }
 
-    @Order(Ordered.HIGHEST_PRECEDENCE + 10)
+    @Order(/*Ordered.HIGHEST_PRECEDENCE +*/ 10)
     @Bean
     public FilterRegistrationBean getOpenEntityManagerInViewFilter() {
         FilterRegistrationBean registration = new FilterRegistrationBean(new OpenEntityManagerInViewFilter());
-        registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 10);
+        //registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 10);
         return registration;
     }
 
-    @Order(Ordered.HIGHEST_PRECEDENCE + 15)
+    @Order(/*Ordered.HIGHEST_PRECEDENCE +*/ 15)
     @Bean
     public FilterRegistrationBean getWicketFiler() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -123,7 +120,7 @@ public class NodeApp {
         wicketFilter.setFilterPath("/");
         registration.setFilter(wicketFilter);
         registration.setDispatcherTypes(EnumSet.allOf(DispatcherType.class));
-        registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 15);
+        //registration.setOrder(Ordered.HIGHEST_PRECEDENCE + 15);
         return registration;
     }
 

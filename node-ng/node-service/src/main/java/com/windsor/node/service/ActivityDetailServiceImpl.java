@@ -8,8 +8,7 @@ import com.windsor.node.domain.entity.ActivityDetail;
 import com.windsor.node.domain.search.ActivityDetailSearchCriteria;
 import com.windsor.node.domain.search.ActivityDetailSort;
 import com.windsor.node.repo.ActivityDetailRepository;
-import com.windsor.stack.domain.repo.ICrudRepository;
-import com.windsor.stack.domain.service.AbstractCrudService;
+import com.windsor.node.repo.ICrudRepository;
 
 /**
  * Provides an implementation of the Activity Detail Service.

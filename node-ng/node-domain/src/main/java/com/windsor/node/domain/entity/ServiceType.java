@@ -17,7 +17,8 @@ public enum ServiceType {
     QueryOrExecute;
 
     public static Stream<ServiceType> getMatches(String term) {
-        return Stream.of(values())
+        Stream<ServiceType> s = Stream.of(values());
+        return term == null ? s : s
                 .filter(t -> t.toString().toLowerCase().contains(term.toLowerCase()));
     }
 }

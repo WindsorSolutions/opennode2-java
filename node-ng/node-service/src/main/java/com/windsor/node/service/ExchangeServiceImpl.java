@@ -10,8 +10,7 @@ import com.windsor.node.domain.entity.Exchange;
 import com.windsor.node.domain.search.ExchangeSearchCriteria;
 import com.windsor.node.domain.search.ExchangeSort;
 import com.windsor.node.repo.ExchangeRepository;
-import com.windsor.stack.domain.repo.ICrudRepository;
-import com.windsor.stack.domain.service.AbstractCrudService;
+import com.windsor.node.repo.ICrudRepository;
 
 /**
  * Provides an implementation of the Exchange Service.

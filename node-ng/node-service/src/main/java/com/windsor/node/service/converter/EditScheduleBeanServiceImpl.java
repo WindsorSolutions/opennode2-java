@@ -229,7 +229,7 @@ public class EditScheduleBeanServiceImpl implements EditScheduleBeanService {
         String scheduleId = bean.getId();
         Schedule schedule = null;
         if (scheduleId != null) {
-            schedule = scheduleRepo.findOne(scheduleId);
+            schedule = scheduleRepo.findById(scheduleId).orElse(null);
         } else {
             Exchange exchange = exchangeService.load(bean.getExchangeId());
             schedule = Schedule.newDefault(exchange);

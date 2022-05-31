@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.windsor.node.domain.entity.Account;
 import com.windsor.node.domain.search.AccountSearchCriteria;
 import com.windsor.node.domain.search.AccountSort;
-import com.windsor.stack.domain.repo.ICrudRepository;
 
 /**
  * Provides a repository for managing Account instances.

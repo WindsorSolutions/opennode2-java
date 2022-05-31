@@ -1,9 +1,9 @@
 package com.windsor.node.repo;
 
 import com.google.common.collect.ImmutableMap;
-import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.expr.BooleanExpression;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.windsor.node.domain.entity.Argument;
 import com.windsor.node.domain.search.ArgumentSearchCriteria;
 import com.windsor.node.domain.search.ArgumentSort;

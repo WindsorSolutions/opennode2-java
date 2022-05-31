@@ -7,6 +7,8 @@ package de.agilecoders.wicket.core.markup.html.bootstrap.html;
  */
 public class OptimizedMobileViewportMetaTag extends MetaTag {
 
+
+
     /**
      * Construct.
      *

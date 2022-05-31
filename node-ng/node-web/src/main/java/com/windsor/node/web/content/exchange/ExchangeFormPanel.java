@@ -156,13 +156,13 @@ public class ExchangeFormPanel extends ModalizablePanel<EditExchangeBean> {
                     new SaveButton(id, form) {
 
                         @Override
-                        protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                        protected void onSubmit(AjaxRequestTarget target) {
                             FileUpload file = fileUpload.getFileUpload();
                             if (file != null) {
                                 ExchangeFormPanel.this.getModel().getObject()
                                         .setPluginContent(file.getBytes());
                             }
-                            super.onSubmit(target, form);
+                            super.onSubmit(target);
                         }
 
                     },

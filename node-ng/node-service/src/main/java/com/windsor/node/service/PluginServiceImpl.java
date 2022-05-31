@@ -81,7 +81,7 @@ public class PluginServiceImpl implements PluginService {
 
     @Override
     public BaseWnosPlugin getPlugin(Exchange exchange, String implementorClass) throws IOException {
-        exchange = exchangeRepository.findOne(exchange.getId());
+        exchange = exchangeRepository.findById(exchange.getId()).orElse(null);
         File contentDirectory = getContentDirectory(exchange);
         return (BaseWnosPlugin) getCachingPluginClassLoader().getPluginInstance(contentDirectory, implementorClass);
     }
@@ -94,7 +94,7 @@ public class PluginServiceImpl implements PluginService {
 
     @Override
     public PluginMetaData getPluginMetadata(Exchange exchange) throws IOException {
-        exchange = exchangeRepository.findOne(exchange.getId());
+        exchange = exchangeRepository.findById(exchange.getId()).orElse(null);
         File contentDirectory = getContentDirectory(exchange);
         return getCachingPluginClassLoader().getPluginMetaData(contentDirectory);
     }

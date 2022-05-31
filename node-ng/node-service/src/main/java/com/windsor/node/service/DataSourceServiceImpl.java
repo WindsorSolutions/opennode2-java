@@ -14,8 +14,7 @@ import com.windsor.node.domain.entity.DataSource;
 import com.windsor.node.domain.search.DataSourceSearchCriteria;
 import com.windsor.node.domain.search.DataSourceSort;
 import com.windsor.node.repo.DataSourceRepository;
-import com.windsor.stack.domain.repo.ICrudRepository;
-import com.windsor.stack.domain.service.AbstractCrudService;
+import com.windsor.node.repo.ICrudRepository;
 
 /**
  * Provides an implementation of the DataSource service.

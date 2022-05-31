@@ -2,6 +2,7 @@ package com.windsor.node.service;
 
 import java.util.Optional;
 
+import com.windsor.node.repo.ICrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +15,6 @@ import com.windsor.node.domain.search.AccountSort;
 import com.windsor.node.domain.search.AccountSorts;
 import com.windsor.node.repo.AccountRepository;
 import com.windsor.node.service.props.NaasProperties;
-import com.windsor.stack.domain.repo.ICrudRepository;
-import com.windsor.stack.domain.service.AbstractCrudService;
 
 /**
  * Provides an implementation of the Account Service.

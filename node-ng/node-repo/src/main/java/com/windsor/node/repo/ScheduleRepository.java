@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.windsor.node.domain.entity.Schedule;
 import com.windsor.node.domain.search.ScheduleSearchCriteria;
 import com.windsor.node.domain.search.ScheduleSort;
-import com.windsor.stack.domain.repo.ICrudRepository;
 
 /**
  * Provides a repository for managing Schedule instances.

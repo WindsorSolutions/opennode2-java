@@ -13,8 +13,7 @@ import com.windsor.node.domain.search.ScheduleSearchCriteria;
 import com.windsor.node.domain.search.ScheduleSort;
 import com.windsor.node.repo.ExchangeServiceRepository;
 import com.windsor.node.repo.ScheduleRepository;
-import com.windsor.stack.domain.repo.ICrudRepository;
-import com.windsor.stack.domain.service.AbstractCrudService;
+import com.windsor.node.repo.ICrudRepository;
 
 /**
  * Provides an implementation of the Schedule service.
@@ -55,7 +54,7 @@ public class ScheduleServiceImpl extends AbstractCrudService<Schedule, String, S
     @Transactional(readOnly = false)
 	@Override
 	public Schedule runNow(String scheduleId) {
-		Schedule schedule = repository.findOne(scheduleId);
+		Schedule schedule = repository.findById(scheduleId).orElse(null);
 		schedule.setRunNow(true);
 		return repository.save(schedule);
 	}

@@ -3,8 +3,6 @@ package com.windsor.node.web.component.select2;
 import com.windsor.node.domain.search.AccountSearchCriteria;
 import com.windsor.node.domain.search.AccountSorts;
 import com.windsor.node.service.AccountService;
-import org.apache.wicket.ajax.json.JSONException;
-import org.apache.wicket.ajax.json.JSONWriter;
 import org.wicketstuff.select2.ChoiceProvider;
 import org.wicketstuff.select2.Response;
 
@@ -34,9 +32,19 @@ public class AccountNameChoiceProvider extends ChoiceProvider<String> {
     }
 
     @Override
-    public void toJson(String choice, JSONWriter writer) throws JSONException {
-        writer.key("id").value(choice).key("text").value(choice);
+    public String getDisplayValue(String s) {
+        return s;
     }
+
+    @Override
+    public String getIdValue(String s) {
+        return s;
+    }
+
+//    @Override
+//    public void toJson(String choice, JSONWriter writer) throws JSONException {
+//        writer.key("id").value(choice).key("text").value(choice);
+//    }
 
     @Override
     public Collection<String> toChoices(Collection<String> collection) {

@@ -1,16 +1,15 @@
 package com.windsor.node.repo;
 
 import com.google.common.collect.ImmutableMap;
-import com.mysema.query.QueryMetadata;
-import com.mysema.query.jpa.impl.JPAQuery;
-import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.expr.BooleanExpression;
+import com.querydsl.core.QueryMetadata;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.windsor.node.domain.entity.Plugin;
 import com.windsor.node.domain.search.EntityAlias;
 import com.windsor.node.domain.search.PluginSearchCriteria;
 import com.windsor.node.domain.search.PluginSort;
-import com.windsor.node.domain.search.PluginSorts;
 import com.windsor.stack.domain.repo.IFinderRepository;
 import com.windsor.stack.domain.search.CriteriaHandler;
 import com.windsor.stack.domain.search.IField;
@@ -74,10 +73,11 @@ public class PluginRepositoryImpl extends AbstractQuerydslFinderRepository<Plugi
     @Override
     public Stream<Plugin> find(PluginSearchCriteria criteria, ISortGroup<PluginSort> sortInfo, long offset, long limit) {
         QueryMetadata metadata = getFindQueryMetadata(criteria, sortInfo);
-        return new JPAQuery(getEntityManager(), metadata).from(this.getFrom())
+        return new JPAQuery<>(getEntityManager(), metadata).from(this.getFrom())
                 .offset(offset)
                 .limit(limit)
-                .list(this.getFrom())
+                .select(this.getFrom())
+//                .list(this.getFrom())
                 .stream();
     }
 

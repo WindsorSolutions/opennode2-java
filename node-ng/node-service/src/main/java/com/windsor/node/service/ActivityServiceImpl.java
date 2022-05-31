@@ -15,8 +15,7 @@ import com.windsor.node.domain.entity.ActivityType;
 import com.windsor.node.domain.search.ActivitySearchCriteria;
 import com.windsor.node.domain.search.ActivitySort;
 import com.windsor.node.repo.ActivityRepository;
-import com.windsor.stack.domain.repo.ICrudRepository;
-import com.windsor.stack.domain.service.AbstractCrudService;
+import com.windsor.node.repo.ICrudRepository;
 
 /**
  * Provides an implementation of the Activity service.

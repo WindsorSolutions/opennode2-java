@@ -111,9 +111,9 @@ public class NodeWebApp extends WindsorWebApplication {
     }
 
     private void configureSelect2() {
-        ApplicationSettings applicationSettings = ApplicationSettings.get();
-        applicationSettings.setCssReference(new WebjarsCssResourceReference("select2/current/select2.css"));
-        applicationSettings.setJavaScriptReference(new WebjarsJavaScriptResourceReference("select2/current/select2.js"));
+//        ApplicationSettings applicationSettings = ApplicationSettings.get();
+//        applicationSettings.setCssReference(new WebjarsCssResourceReference("select2/current/select2.css"));
+//        applicationSettings.setJavaScriptReference(new WebjarsJavaScriptResourceReference("select2/current/select2.js"));
     }
 
     private void configureAuthorizationStrategy() {

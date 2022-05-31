@@ -8,8 +8,7 @@ import com.windsor.node.domain.entity.Document;
 import com.windsor.node.domain.search.DocumentSearchCriteria;
 import com.windsor.node.domain.search.DocumentSort;
 import com.windsor.node.repo.DocumentRepository;
-import com.windsor.stack.domain.repo.ICrudRepository;
-import com.windsor.stack.domain.service.AbstractCrudService;
+import com.windsor.node.repo.ICrudRepository;
 
 /**
  * Provides an implementation of the Document service.

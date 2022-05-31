@@ -8,8 +8,7 @@ import com.windsor.node.domain.entity.AccountPolicy;
 import com.windsor.node.domain.search.AccountPolicySearchCriteria;
 import com.windsor.node.domain.search.AccountPolicySort;
 import com.windsor.node.repo.AccountPolicyRepository;
-import com.windsor.stack.domain.repo.ICrudRepository;
-import com.windsor.stack.domain.service.AbstractCrudService;
+import com.windsor.node.repo.ICrudRepository;
 
 /**
  * Provides an implementation of the Account Service.

@@ -56,6 +56,7 @@ public class DataSourceFormPanel extends ModalizablePanel<DataSource> {
                         .setLabel(new IdentifiableResourceModel(NodeResourceModelKeys.LABEL_NAME))
                         .setRequired(true)
                         .add(new InputBehavior())));
+        // FIXME: change this to a RequireableSelectFormGroup
         form.add(new RequirableFormGroup("providerGroup")
                 .add(new WindsorSelect2Choice<DataSourceProvider>("field", DataSourceModels.bindProvider(getModel()),
                         new DataSourceProviderChoiceProvider())

@@ -135,5 +135,6 @@
             <artifactId>node-plugin-test</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 </project>

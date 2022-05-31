@@ -19,8 +19,10 @@
 <!--        <springframework.version>4.2.8.RELEASE</springframework.version>-->
         <spring.boot.deps.version>2.7.0</spring.boot.deps.version>
         <plugin.resources.version>2.7</plugin.resources.version>
-        <de.agilecoders.wicket.webjars.version>0.4.10</de.agilecoders.wicket.webjars.version>
-        <wicket-bootstap.version>0.9.8</wicket-bootstap.version>
+        <de.agilecoders.wicket.webjars.version>2.0.20</de.agilecoders.wicket.webjars.version>
+        <wicket-bootstap.version>2.0.15</wicket-bootstap.version>
+        <wicket.version>8.14.0</wicket.version>
+        <org.wicketstuff.version>8.14.0</org.wicketstuff.version>
         <mysql.version>5.1.46</mysql.version>
         <oracle.version>12.1.0.1</oracle.version>
         <jtds.version>1.2.4</jtds.version>
@@ -56,11 +58,11 @@
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${plugin.compiler.version}</version>
-                    <configuration>
-                        <source>8</source>
-                        <target>8</target>
-                        <compilerArgument>-proc:none</compilerArgument>
-                    </configuration>
+<!--                    <configuration>-->
+<!--                        <source>8</source>-->
+<!--                        <target>8</target>-->
+<!--                        <compilerArgument>-proc:none</compilerArgument>-->
+<!--                    </configuration>-->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -218,6 +220,36 @@
                 <groupId>de.agilecoders.wicket</groupId>
                 <artifactId>wicket-bootstrap-themes</artifactId>
                 <version>${wicket-bootstap.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-core</artifactId>
+                <version>${wicket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-bean-validation</artifactId>
+                <version>${wicket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-auth-roles</artifactId>
+                <version>${wicket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-extensions</artifactId>
+                <version>${wicket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-spring</artifactId>
+                <version>${wicket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wicketstuff</groupId>
+                <artifactId>wicketstuff-select2</artifactId>
+                <version>${org.wicketstuff.version}</version>
             </dependency>
 
             <!-- Windsor Stack Dependencies -->

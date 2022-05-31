@@ -10,7 +10,8 @@ public enum ScheduleFrequencyType {
     Never, Once, Minutes, Hours, Days, Weekdays, Weeks, Months;
 
     public static Stream<ScheduleFrequencyType> getMatches(String term) {
-        return Stream.of(values())
+        Stream<ScheduleFrequencyType> s = Stream.of(values());
+        return term == null ? s : s
                 .filter(dsp -> dsp.toString().toLowerCase().contains(term.toLowerCase()));
     }
 }

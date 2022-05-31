@@ -10,10 +10,10 @@ import java.util.stream.Stream;
 import javax.persistence.TypedQuery;
 
 import com.google.common.collect.ImmutableMap;
-import com.mysema.query.jpa.JPASubQuery;
-import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.expr.BooleanExpression;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.windsor.node.domain.LoginInfo;
 import com.windsor.node.domain.NaasSyncInfo;
 import com.windsor.node.domain.entity.Activity;
@@ -85,12 +85,12 @@ public class ActivityRepositoryImpl extends AbstractQuerydslFinderRepository<Act
                     .build();
 
     private static BooleanExpression hasDocsHandler(CriteriaField<?> field) {
-        return ((CriteriaField<Boolean>) field).getValue() ? QueryObjects.TRANSACTION.id.in(new JPASubQuery()
+        return ((CriteriaField<Boolean>) field).getValue() ? QueryObjects.TRANSACTION.id.in(new JPAQuery<>()
                 .from(QueryObjects.DOCUMENT)
-                .list(QueryObjects.DOCUMENT.transaction.id)) :
-                QueryObjects.TRANSACTION.id.notIn(new JPASubQuery()
+                .select(QueryObjects.DOCUMENT.transaction.id)) :
+                QueryObjects.TRANSACTION.id.notIn(new JPAQuery<>()
                         .from(QueryObjects.DOCUMENT)
-                        .list(QueryObjects.DOCUMENT.transaction.id));
+                        .select(QueryObjects.DOCUMENT.transaction.id));
     }
 
     public final Map<Object, CriteriaHandler<BooleanExpression, ? extends IField<?>, ?>> CRITERIA_FIELD_HANDLER =
