@@ -158,7 +158,7 @@
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
-            <version>1.2.1</version>
+            <version>1.3.3</version>
             <!-- FIXME Need to update to to the IptabeLes and IptabLex vulns, need an update newer than 1.3.1 -->
         </dependency>
         <dependency>
