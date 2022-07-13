@@ -78,7 +78,7 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-transports-http</artifactId>
-            <version>2.6.2</version>
+            <version>2.6.7</version>
         </dependency>
         <!-- Force newer JAXWS for Eclipse IDE -->
         <dependency>
