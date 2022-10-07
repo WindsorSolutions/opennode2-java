@@ -22,7 +22,7 @@ public class SystemRoleTypeProviderChoiceProvider extends LambdaChoiceProvider<S
                 SystemRoleType::getDescription,
                 SystemRoleType::ordinal,
                 (term, size) -> roles.stream()
-                    .filter(dsp -> dsp.getDescription().toLowerCase().contains(term.toLowerCase())),
+                    .filter(dsp -> term == null || dsp.getDescription().toLowerCase().contains(term.toLowerCase())),
                 s -> SystemRoleType.values()[Integer.parseInt(s)], ids -> ids);
     }
 

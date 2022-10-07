@@ -178,20 +178,28 @@
 	<bean id="httpClient" class="org.apache.commons.httpclient.HttpClient"
 		lazy-init="true" />
 
+	<!-- FIXME: error creating this -->
+	<!--
+	Error:
+	Instantiation of bean failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.
+	springframework.remoting.httpinvoker.HttpComponentsHttpInvokerRequestExecutor]: No default constructor found; nested exception is java.lang.NoClassDefFoundError: org/apache/http/NoHttpResponseException
+	-->
+	<!-- FIXME: I think the problem is that HttpClient is not in the jar -->
 	<bean id="httpInvoker1"
-		class="org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor"
+		class="org.springframework.remoting.httpinvoker.HttpComponentsHttpInvokerRequestExecutor"
 		lazy-init="true">
 		<property name="readTimeout" value="0" />
 	</bean>
 
 	<bean id="httpInvoker2"
-		class="org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor"
+		class="org.springframework.remoting.httpinvoker.HttpComponentsHttpInvokerRequestExecutor"
 		lazy-init="true">
 		<property name="readTimeout" value="0" />
 	</bean>
 
 
 	<!-- Node Client v.1.1 -->
+	<!-- FIXME: error creating this -->
 	<bean id="nodeClient11"
 		class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean"
 		lazy-init="true">
@@ -263,6 +271,7 @@
 	</bean>
 
 	<!-- NODE CLIENT FACTORY -->
+	<!-- FIXME: this is failing -->
 	<bean id="nodeClientFactory"
 		class="com.windsor.node.service.helper.client.NodeClientFactory"
 		lazy-init="true">
@@ -275,6 +284,7 @@
 	<!-- END Node Client & supporting beans -->
 
     <!--  Support for ENDS2 plugin to load other plugin implementors -->
+	<!-- FIXME: this is failing -->
     <bean id="pluginHelper" class="com.windsor.node.plugin.WnosPluginHelper">
         <property name="nosConfig" ref="nosConfig" />
         <property name="classLoader" ref="classLoader" />

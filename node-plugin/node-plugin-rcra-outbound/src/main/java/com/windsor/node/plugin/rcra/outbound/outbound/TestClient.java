@@ -17,22 +17,34 @@ import java.util.GregorianCalendar;
 
 public class TestClient {
 
-    private final static String TEST_NAAS = "https://naas.epacdxnode.net/xml/auth.wsdl";
-    private final static String PROD_NAAS = "https://cdxnodenaas.epa.gov/xml/auth.wsdl";
-    private final static String NAAS_ACCOUNT = "chris_miles@windsorsolutions.com";
-    private final static String TEST_NASS_PASS = "Wp893D73";
-    private final static String PROD_NAAS_PASS = "Wp7A0D30";
+    private final static String NAAS_ENDPOINT = "https://cdxnodenaas.epa.gov/xml/auth.wsdl"; //"https://naas.epacdxnode.net/xml/auth.wsdl";
+//    private final static String NAAS_ACCOUNT = "noderuntime@windsorsolutions.com";
+//    private final static String NAAS_PASSWORD = "kJnx8m7pyb";
+
+    private final static String STATE = "NC";
+
+//    private final static String NAAS_ACCOUNT = "andrew_geery@windsorsolutions.com";
+//    private final static String NAAS_PASSWORD = "M3moria!";
+
+    // PROD
+    private final static String NAAS_ACCOUNT = "node_operator@ncmail.net";
+    private final static String NAAS_PASSWORD = "ot*V0326";
+
+    // TEST
+//    private final static String NAAS_ACCOUNT = "testuser@ncmail.net";
+//    private final static String NAAS_PASSWORD = "suT8*jkl";
+
+    private final static String SERVICE_ENDPOINT = "https://cdxnodengn.epa.gov/ngn-enws20/services/NetworkNode2ServiceConditionalMTOM";
 
     public static void main(String[] args) {
 
         String securityToken = null;
         String transactionId = null;
-        String testEndpoint = "https://testngn.epacdxnode.net/ngn-enws20/services/NetworkNode2ServiceConditionalMTOM";
 
         try {
             NetworkSecurityBindingStub securityBindingStub =
-                    new NetworkSecurityBindingStub(new URL(TEST_NAAS), null);
-            securityToken = securityBindingStub.authenticate(NAAS_ACCOUNT, TEST_NASS_PASS,
+                    new NetworkSecurityBindingStub(new URL(NAAS_ENDPOINT), null);
+            securityToken = securityBindingStub.authenticate(NAAS_ACCOUNT, NAAS_PASSWORD,
                     AuthMethod.fromValue("password"));
             System.out.println("Security Token: " + securityToken);
         } catch(MalformedURLException exception) {
@@ -44,9 +56,8 @@ public class TestClient {
         }
 
         SolicitRequestFactory requestFactory =
-                new SolicitRequestFactory(testEndpoint, securityToken);
-        SolicitRequest request = requestFactory.getCAByState("MA",
-                new GregorianCalendar(2016, Calendar.MARCH, 1).getTime());
+                new SolicitRequestFactory(SERVICE_ENDPOINT, securityToken);
+        SolicitRequest request = requestFactory.getCAByState(STATE, "2022-07-01");
 
         try {
             StatusResponseType responseType = request.execute();
@@ -55,7 +66,7 @@ public class TestClient {
             System.out.println("Response: " + responseType.getStatus());
             System.out.println("Response: " + responseType.getStatusDetail());
 
-            GetStatusRequest getStatusRequest = new GetStatusRequest(testEndpoint, securityToken, transactionId);
+            GetStatusRequest getStatusRequest = new GetStatusRequest(SERVICE_ENDPOINT, securityToken, transactionId);
             responseType = getStatusRequest.execute();
             System.out.println("Response: " + responseType.getTransactionId());
             System.out.println("Response: " + responseType.getStatus());
@@ -68,7 +79,7 @@ public class TestClient {
                 System.out.println("Sleeping for 10 secounds...");
                 Thread.sleep(10000);
 
-                getStatusRequest = new GetStatusRequest(testEndpoint, securityToken, transactionId);
+                getStatusRequest = new GetStatusRequest(SERVICE_ENDPOINT, securityToken, transactionId);
                 responseType = getStatusRequest.execute();
                 status = responseType.getStatus().toString();
                 System.out.println("Response: " + responseType.getTransactionId());

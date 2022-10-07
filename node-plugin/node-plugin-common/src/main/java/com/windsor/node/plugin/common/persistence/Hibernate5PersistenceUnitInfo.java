@@ -28,16 +28,16 @@ import javax.sql.DataSource;
  * TODO Document me.
  *
  */
-public class HibernatePersistenceUnitInfo implements PersistenceUnitInfo {
+public class Hibernate5PersistenceUnitInfo implements PersistenceUnitInfo {
 
-    private static final Logger logger = LoggerFactory.getLogger(HibernatePersistenceUnitInfo.class);
+    private static final Logger logger = LoggerFactory.getLogger(Hibernate5PersistenceUnitInfo.class);
 
     private final Properties jpaProperties;
     private final String entityPackageName;
     private final String[] additionalEntityPackages;
     private final ClassLoader classLoader;
 
-    public HibernatePersistenceUnitInfo(Properties jpaProperties, PluginPersistenceConfig config) {
+    public Hibernate5PersistenceUnitInfo(Properties jpaProperties, PluginPersistenceConfig config) {
         this.jpaProperties = jpaProperties;
         this.entityPackageName = config.getRootEntityPackage();
         this.classLoader = config.getClassLoader();
@@ -76,7 +76,7 @@ public class HibernatePersistenceUnitInfo implements PersistenceUnitInfo {
 
     @Override
     public String getPersistenceUnitName() {
-        return null;
+        return "ON2 Plugin";
     }
 
     @Override

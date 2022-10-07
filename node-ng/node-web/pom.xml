@@ -81,6 +81,10 @@
                     <groupId>net.sourceforge.jtds</groupId>
                     <artifactId>jtds</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.persistence</groupId>
+                    <artifactId>eclipselink</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -277,11 +281,6 @@
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>6.2.3.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>2.0.1.Final</version>
         </dependency>
         <dependency>
             <groupId>javax.persistence</groupId>

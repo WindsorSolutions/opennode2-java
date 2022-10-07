@@ -33,7 +33,7 @@
 /* 33 */       jpaProperties.put("hibernate.dialect", config.getHibernateDialect());
 /*    */     }
 /*    */     
-/* 36 */     return this.provider.createContainerEntityManagerFactory(new HibernatePersistenceUnitInfo(jpaProperties, config), jpaProperties);
+/* 36 */     return this.provider.createContainerEntityManagerFactory(new Hibernate5PersistenceUnitInfo(jpaProperties, config), jpaProperties);
 /*    */   }
 /*    */ }
 

@@ -9,7 +9,7 @@ import com.windsor.node.common.util.NodeClientService;
 import com.windsor.node.data.dao.PluginServiceParameterDescriptor;
 import com.windsor.node.data.dao.jdbc.JdbcTransactionDao;
 import com.windsor.node.plugin.common.BaseWnosJaxbPlugin;
-import com.windsor.node.plugin.common.persistence.HibernatePersistenceUnitInfo;
+import com.windsor.node.plugin.common.persistence.Hibernate5PersistenceUnitInfo;
 import com.windsor.node.plugin.common.persistence.PluginPersistenceConfig;
 import com.windsor.node.plugin.rcra.inbound.domain.HandlerDataType;
 import com.windsor.node.plugin.rcra.inbound.dao.RcraDao;
@@ -213,7 +213,7 @@ public abstract class AbstractRcraService extends BaseWnosJaxbPlugin implements 
             }
 
             return provider.createContainerEntityManagerFactory(
-                    new HibernatePersistenceUnitInfo(jpaProperties, config),
+                    new Hibernate5PersistenceUnitInfo(jpaProperties, config),
                     jpaProperties);
         }
     }

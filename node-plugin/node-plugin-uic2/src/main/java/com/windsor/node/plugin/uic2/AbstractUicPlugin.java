@@ -11,7 +11,7 @@ import com.windsor.node.common.domain.RequestType;
 import com.windsor.node.data.dao.PluginServiceParameterDescriptor;
 import com.windsor.node.data.dao.jdbc.JdbcTransactionDao;
 import com.windsor.node.plugin.common.BaseWnosJaxbPlugin;
-import com.windsor.node.plugin.common.persistence.HibernatePersistenceUnitInfo;
+import com.windsor.node.plugin.common.persistence.Hibernate5PersistenceUnitInfo;
 import com.windsor.node.plugin.common.persistence.PluginPersistenceConfig;
 import com.windsor.node.plugin.uic2.domain.ObjectFactory;
 import com.windsor.node.plugin.uic2.domain.UICDataType;
@@ -306,7 +306,7 @@ public abstract class AbstractUicPlugin<T> extends BaseWnosJaxbPlugin {
             }
 
             return provider.createContainerEntityManagerFactory(
-                    new HibernatePersistenceUnitInfo(jpaProperties, config),
+                    new Hibernate5PersistenceUnitInfo(jpaProperties, config),
                     jpaProperties);
         }
     }

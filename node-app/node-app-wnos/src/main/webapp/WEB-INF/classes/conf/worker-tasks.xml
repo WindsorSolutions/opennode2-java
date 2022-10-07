@@ -17,10 +17,10 @@
 		Initial delay: 30 min
 	-->
 	<bean id="naasSyncTaskWorkerTask"
-		class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
 		<property name="period" value="${naasSyncTaskWorkerTask.period}" />
 		<property name="delay" value="${naasSyncTaskWorkerTask.delay}" />
-		<property name="timerTask" ref="naasSyncTaskWorker" />
+		<property name="runnable" ref="naasSyncTaskWorker" />
 	</bean>
 
 	<!-- 
@@ -29,10 +29,10 @@
 		Initial delay: 3 min
 	-->
 	<bean id="tempCleanupWorkerTask"
-		class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
 		<property name="period" value="${tempCleanupWorkerTask.period}" />
 		<property name="delay" value="${tempCleanupWorkerTask.delay}" />
-		<property name="timerTask" ref="tempCleanupWorker" />
+		<property name="runnable" ref="tempCleanupWorker" />
 	</bean>
 
 	<!-- 
@@ -41,10 +41,10 @@
 		Initial delay: 3 min
 	-->
 	<bean id="submitDocumentWorkerTask"
-		class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
 		<property name="period" value="${submitDocumentWorkerTask.period}" />
 		<property name="delay" value="${submitDocumentWorkerTask.delay}" />
-		<property name="timerTask" ref="submitProcessWorker" />
+		<property name="runnable" ref="submitProcessWorker" />
 	</bean>
 
 	<!-- 
@@ -53,10 +53,10 @@
 		Initial delay: 3 min
 	-->
 	<bean id="notifyDocumentWorkerTask"
-		class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
 		<property name="period" value="${notifyDocumentWorkerTask.period}" />
 		<property name="delay" value="${notifyDocumentWorkerTask.delay}" />
-		<property name="timerTask" ref="notifyProcessWorker" />
+		<property name="runnable" ref="notifyProcessWorker" />
 	</bean>
 
 	<!-- 
@@ -65,10 +65,10 @@
 		Initial delay: 3 min
 	-->
 	<bean id="solicitRequestWorkerTask"
-		class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
 		<property name="period" value="${solicitRequestWorkerTask.period}" />
 		<property name="delay" value="${solicitRequestWorkerTask.delay}" />
-		<property name="timerTask" ref="solicitProcessWorker" />
+		<property name="runnable" ref="solicitProcessWorker" />
 	</bean>
 
 	<!-- 
@@ -77,70 +77,70 @@
 		Initial delay: 3 min
 	-->
 	<bean id="scheduleWorkerTask"
-		class="org.springframework.scheduling.timer.ScheduledTimerTask">
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorTask">
 		<property name="period" value="${scheduleWorkerTask.period}" />
 		<property name="delay" value="${scheduleWorkerTask.delay}" />
-		<property name="timerTask" ref="scheduleWorker" />
+		<property name="runnable" ref="scheduleWorker" />
 	</bean>
 	
 	
 
 	<!-- workerFactory  -->
 	<bean id="scheduleWorkerFactory"
-		class="org.springframework.scheduling.timer.TimerFactoryBean">
-		<property name="scheduledTimerTasks">
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+		<property name="scheduledExecutorTasks">
 			<list>
-				<ref local="scheduleWorkerTask" />
+				<ref bean="scheduleWorkerTask" />
 			</list>
 		</property>
 		<property name="daemon" value="true" />
 	</bean>
 	
 	<bean id="submitWorkerFactory"
-		class="org.springframework.scheduling.timer.TimerFactoryBean">
-		<property name="scheduledTimerTasks">
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+		<property name="scheduledExecutorTasks">
 			<list>
-				<ref local="submitDocumentWorkerTask" />
+				<ref bean="submitDocumentWorkerTask" />
 			</list>
 		</property>
 		<property name="daemon" value="true" />
 	</bean>
 	
 	<bean id="notifyWorkerFactory"
-		class="org.springframework.scheduling.timer.TimerFactoryBean">
-		<property name="scheduledTimerTasks">
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+		<property name="scheduledExecutorTasks">
 			<list>
-				<ref local="notifyDocumentWorkerTask" />
+				<ref bean="notifyDocumentWorkerTask" />
 			</list>
 		</property>
 		<property name="daemon" value="true" />
 	</bean>
 	
 	<bean id="solicitWorkerFactory"
-		class="org.springframework.scheduling.timer.TimerFactoryBean">
-		<property name="scheduledTimerTasks">
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+		<property name="scheduledExecutorTasks">
 			<list>
-				<ref local="solicitRequestWorkerTask" />
+				<ref bean="solicitRequestWorkerTask" />
 			</list>
 		</property>
 		<property name="daemon" value="true" />
 	</bean>
 	
 	<bean id="tempCleanupWorkerFactory"
-		class="org.springframework.scheduling.timer.TimerFactoryBean">
-		<property name="scheduledTimerTasks">
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+		<property name="scheduledExecutorTasks">
 			<list>
-				<ref local="tempCleanupWorkerTask" />
+				<ref bean="tempCleanupWorkerTask" />
 			</list>
 		</property>
 		<property name="daemon" value="true" />
 	</bean>
 	
 	<bean id="naasSyncWorkerFactory"
-		class="org.springframework.scheduling.timer.TimerFactoryBean">
-		<property name="scheduledTimerTasks">
+		class="org.springframework.scheduling.concurrent.ScheduledExecutorFactoryBean">
+		<property name="scheduledExecutorTasks">
 			<list>
-				<ref local="naasSyncTaskWorkerTask" />
+				<ref bean="naasSyncTaskWorkerTask" />
 			</list>
 		</property>
 		<property name="daemon" value="true" />

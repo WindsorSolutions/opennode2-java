@@ -26,7 +26,7 @@ public class ServiceTypeChoiceProvider extends LambdaChoiceProvider<ServiceType,
                 ServiceType::toString,
                 ServiceType::name,
                 (term, size) ->  choicesModel.getObject().stream()
-                        .filter(t -> t.toString().toLowerCase().contains(term.toLowerCase())),
+                        .filter(t -> term == null || t.toString().toLowerCase().contains(term.toLowerCase())),
                 s -> ServiceType.valueOf(s),
                 ids -> ids);
     }

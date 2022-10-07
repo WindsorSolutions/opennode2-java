@@ -1,6 +1,6 @@
 package com.windsor.node.plugin.rcra.outbound.outbound;
 
-import com.windsor.node.plugin.common.persistence.HibernatePersistenceUnitInfo;
+import com.windsor.node.plugin.common.persistence.Hibernate5PersistenceUnitInfo;
 import com.windsor.node.plugin.common.persistence.PluginPersistenceConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.cfg.Environment;
@@ -27,6 +27,7 @@ public class RcraHibernatePersistenceProvider {
             jpaProperties.put(Environment.FORMAT_SQL, Boolean.TRUE);
             jpaProperties.put(Environment.USE_SQL_COMMENTS, Boolean.TRUE);
             jpaProperties.put(Environment.USE_NEW_ID_GENERATOR_MAPPINGS, Boolean.FALSE);
+            jpaProperties.put("hibernate.persistenceUnitName", "ON2 Plugin");
         }
 
         if (config.getBatchFetchSize() != null) {
@@ -42,7 +43,7 @@ public class RcraHibernatePersistenceProvider {
         }
 
         return provider.createContainerEntityManagerFactory(
-                new HibernatePersistenceUnitInfo(jpaProperties, config),
+                new Hibernate5PersistenceUnitInfo(jpaProperties, config),
                 jpaProperties);
     }
 }

@@ -16,7 +16,7 @@ public class NodeStringChoiceProvider extends LambdaChoiceProvider<String, Strin
                 String::toString,
                 choices::indexOf,
                 (term, size) -> choices.stream()
-                        .filter(t -> t.toString().toLowerCase().contains(term.toLowerCase())),
+                        .filter(t -> term == null || t.toString().toLowerCase().contains(term.toLowerCase())),
                 s -> choices.get(Integer.parseInt(s)),
                 ids -> ids);
     }

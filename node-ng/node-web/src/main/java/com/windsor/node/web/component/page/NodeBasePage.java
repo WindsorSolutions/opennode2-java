@@ -151,5 +151,11 @@ public class NodeBasePage<T> extends HeaderFooterPage<T> {
         String moveDebugLink = "$(function() { if((typeof Wicket.Ajax.DebugWindow !== 'undefined') && Wicket.Ajax.DebugWindow.enabled) { setTimeout(function() { $('#wicketDebugLink').css('bottom', '50px'); }, 500); }});";
 
         response.render(OnDomReadyHeaderItem.forScript(moveDebugLink));
+        /*
+         * Fixes an issue with select2 when used in a modal in Bootstrap 3.
+         * See https://github.com/select2/select2/issues/5062
+         * and https://stackoverflow.com/questions/18487056/select2-doesnt-work-when-embedded-in-a-bootstrap-modal/19574076#19574076
+         */
+        response.render(OnDomReadyHeaderItem.forScript("$.fn.modal.Constructor.prototype.enforceFocus = function() {};"));
     }
 }

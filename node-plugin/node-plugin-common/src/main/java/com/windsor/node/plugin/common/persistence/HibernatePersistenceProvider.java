@@ -33,7 +33,7 @@ public class HibernatePersistenceProvider {
         }
 
         return provider.createContainerEntityManagerFactory(
-                new HibernatePersistenceUnitInfo(jpaProperties, config),
+                new Hibernate5PersistenceUnitInfo(jpaProperties, config),
                 jpaProperties);
     }
 }

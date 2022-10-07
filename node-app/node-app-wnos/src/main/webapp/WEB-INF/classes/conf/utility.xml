@@ -14,6 +14,7 @@
 	<bean id="idGenerator" class="com.windsor.node.service.helper.id.UUIDGenerator" />
 	
 	<!-- LOACAL SERVICE PROCESSOR -->
+	<!-- FIXME: this is failing -->
 	<bean id="localServiceDataProcessor" class="com.windsor.node.worker.schedule.processor.LocalServiceDataProcessor">
 		<property name="serviceDao" ref="serviceDao" />
 		<property name="transactionDao" ref="transactionDao" />

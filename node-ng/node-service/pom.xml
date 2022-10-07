@@ -73,6 +73,10 @@
                     <groupId>com.microsoft.sqlserver</groupId>
                     <artifactId>sqljdbc4</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.persistence</groupId>
+                    <artifactId>eclipselink</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!-- Spring -->

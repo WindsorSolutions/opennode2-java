@@ -82,7 +82,7 @@ public abstract class AbstractJpaIT {
 	public EntityManager getEntityManager() {
 		if (entityManager == null) {
 			final HibernatePersistenceProvider provider = new HibernatePersistenceProvider();
-			final PluginPersistenceConfig config = new PluginPersistenceConfig() //
+			 final PluginPersistenceConfig config = new PluginPersistenceConfig() //
 					.debugSql(showSql()) //
 					.setBatchFetchSize(getBatchFetchSize()) //
 					.rootEntityPackage(getRootEntityPackage());

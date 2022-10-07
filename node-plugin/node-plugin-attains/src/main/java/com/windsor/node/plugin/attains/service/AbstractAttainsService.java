@@ -9,7 +9,7 @@ import com.windsor.node.plugin.attains.dao.AttainsDaoImpl;
 import com.windsor.node.plugin.attains.domain.OperationType;
 import com.windsor.node.plugin.attains.domain.OrganizationDataType;
 import com.windsor.node.plugin.common.BaseWnosJaxbPlugin;
-import com.windsor.node.plugin.common.persistence.HibernatePersistenceUnitInfo;
+import com.windsor.node.plugin.common.persistence.Hibernate5PersistenceUnitInfo;
 import com.windsor.node.plugin.common.persistence.PluginPersistenceConfig;
 import com.windsor.node.service.helper.CompressionService;
 import com.windsor.node.service.helper.IdGenerator;
@@ -211,7 +211,7 @@ public abstract class AbstractAttainsService extends BaseWnosJaxbPlugin implemen
             }
 
             return provider.createContainerEntityManagerFactory(
-                    new HibernatePersistenceUnitInfo(jpaProperties, config),
+                    new Hibernate5PersistenceUnitInfo(jpaProperties, config),
                     jpaProperties);
         }
     }

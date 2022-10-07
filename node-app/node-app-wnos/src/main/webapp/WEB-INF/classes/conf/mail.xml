@@ -170,8 +170,8 @@
 
 	<!-- Velocity -->
 	<bean id="velocityEngine"
-		class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
-		<property name="velocityProperties">
+		class="org.apache.velocity.app.VelocityEngine">
+		<constructor-arg name="p">
 			<props>
 				<prop key="resource.loader">class</prop>
 				<prop key="class.resource.loader.class">
@@ -179,7 +179,7 @@
 				</prop>
 				<prop key="velocimacro.library"></prop>
 			</props>
-		</property>
+		</constructor-arg>
 	</bean>
 
 </beans>
