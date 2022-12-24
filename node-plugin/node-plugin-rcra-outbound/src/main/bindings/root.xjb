@@ -3,6 +3,7 @@
                xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
+               xmlns:RC="http://www.exchangenetwork.net/schema/RCRA/5"
                xmlns:annox="http://annox.dev.java.net"
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm" jaxb:extensionBindingPrefixes="hj orm annox">
 

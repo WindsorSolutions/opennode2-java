@@ -337,10 +337,10 @@ public enum DbInfo {
                     return em.find(HazardousWasteEmanifestsDataType.class, x.getDbid());
                 }
             },
-            asList("RCRA_EM_EMANIFEST", "RCRA_EM_EMANIFEST_COMMENT", "RCRA_EM_HANDLER", "RCRA_EM_SUBM",
-                    "RCRA_EM_TR_NUM_ORIG", "RCRA_EM_TR_NUM_REJ", "RCRA_EM_TR_NUM_RESIDUE_NEW", "RCRA_EM_TR_NUM_WASTE",
-                    "RCRA_EM_WASTE", "RCRA_EM_WASTE_CD_FED", "RCRA_EM_WASTE_CD_GEN", "RCRA_EM_WASTE_CD_TRANS",
-                    "RCRA_EM_WASTE_CD_TSDF", "RCRA_EM_WASTE_COMMENT", "RCRA_EM_WASTE_PCB")
+            asList("RCRA_EM_EMANIFEST", "RCRA_EM_EMANIFEST_COMMENT",
+                    "RCRA_EM_FED_WASTE_CODE_DESC", "RCRA_EM_STATE_WASTE_CODE_DESC",
+                    "RCRA_EM_SUBM", "RCRA_EM_TRANSPORTER", "RCRA_EM_WASTE",
+                    "RCRA_EM_WASTE_CD_TRANS", "RCRA_EM_WASTE_COMMENT", "RCRA_EM_WASTE_PCB")
     );
 
     private String type;

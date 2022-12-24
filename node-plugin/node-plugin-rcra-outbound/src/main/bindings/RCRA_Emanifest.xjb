@@ -4,7 +4,7 @@
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
                xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
                jaxb:extensionBindingPrefixes="hj orm annox inheritance"
-               schemaLocation="../xsd/5/11/RCRA_Emanifest_v5.11.xsd">
+               schemaLocation="../xsd/5/12/RCRA_Emanifest_v5.12.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='EmanifestDataType']">
         <inheritance:extends>com.windsor.node.plugin.rcra.outbound.domain.AbstractEmanifest</inheritance:extends>
@@ -14,6 +14,12 @@
         <hj:generated-id name="Dbid">
             <orm:column name="EM_EMANIFEST_ID"/>
         </hj:generated-id>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AdditionalComment']">
+        <hj:one-to-many>
+            <orm:join-column name="EM_EMANIFEST_ID" updatable="false" nullable="false"/>
+        </hj:one-to-many>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:ManifestTrackingNumber']">
@@ -52,18 +58,6 @@
         </hj:basic>
     </jaxb:bindings>
 
-    <jaxb:bindings node="//xsd:element[@ref='RC:IsPublic']">
-        <hj:basic>
-            <orm:column name="PUBLIC_IND" column-definition="char(1)"/>
-        </hj:basic>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@ref='RC:SignatureStatus']">
-        <hj:basic>
-            <orm:column name="SIGN_STATUS_IND" column-definition="char(1)"/>
-        </hj:basic>
-    </jaxb:bindings>
-
     <jaxb:bindings node="//xsd:element[@ref='RC:ReceivedDate']">
         <hj:basic>
             <orm:column name="RECEIVED_DATE"/>
@@ -76,36 +70,10 @@
         </hj:basic>
     </jaxb:bindings>
 
-    <jaxb:bindings node="//xsd:element[@ref='RC:CertifiedBy']">
-        <hj:embedded>
-            <orm:attribute-override name="manifestFirstName">
-                <orm:column name="CERT_BY_FIRST_NAME"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="manifestLastName">
-                <orm:column name="CERT_BY_LAST_NAME"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="signerUserId">
-                <orm:column name="CERT_BY_USER_ID"/>
-            </orm:attribute-override>
-        </hj:embedded>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@ref='RC:Generator']">
-        <hj:one-to-one>
-            <orm:join-column name="EM_EMANIFEST_ID" insertable="true" updatable="false"/>
-        </hj:one-to-one>
-    </jaxb:bindings>
-
     <jaxb:bindings node="//xsd:element[@ref='RC:Transporter']">
         <hj:one-to-many>
-            <orm:join-column name="EM_EMANIFEST_ID" insertable="true" updatable="false"/>
+            <orm:join-column name="EM_EMANIFEST_ID" updatable="false" nullable="false"/>
         </hj:one-to-many>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@ref='RC:DesignatedFacility']">
-        <hj:one-to-one>
-            <orm:join-column name="EM_EMANIFEST_ID" insertable="true" updatable="false"/>
-        </hj:one-to-one>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:Waste']">
@@ -124,13 +92,13 @@
     <jaxb:bindings node="//xsd:element[@ref='RC:RejectionInfo']">
         <hj:embedded>
             <orm:attribute-override name="transporterOnSite">
-                <orm:column name="REJ_TRANS_ON_SITE_IND" column-definition="char(1)"/>
+                <orm:column name="TRANSPORTER_ON_SITE" column-definition="char(1)"/>
             </orm:attribute-override>
             <orm:attribute-override name="rejectionType">
-                <orm:column name="REJ_TYPE"/>
+                <orm:column name="REJECTION_TYPE"/>
             </orm:attribute-override>
             <orm:attribute-override name="alternateDesignatedFacilityType">
-                <orm:column name="REJ_ALT_DES_FAC_TYPE"/>
+                <orm:column name="ALTERNATE_DESIGNATED_FAC_TYPE"/>
             </orm:attribute-override>
 
             <orm:attribute-override name="generatorPaperSignature.printedName">
@@ -192,37 +160,16 @@
         </hj:embedded>
     </jaxb:bindings>
 
-    <jaxb:bindings node="//xsd:element[@ref='RC:AlternateDesignatedFacility']">
-        <hj:one-to-one>
-            <orm:join-column name="EM_EMANIFEST_ID" insertable="true" updatable="false"/>
-        </hj:one-to-one>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@ref='RC:Discrepancy']">
-        <hj:basic>
-            <orm:column name="DISCREPANCY_IND" column-definition="char(1)"/>
-        </hj:basic>
-    </jaxb:bindings>
-
     <jaxb:bindings node="//xsd:element[@ref='RC:Residue']">
         <hj:basic>
-            <orm:column name="RESIDUE_IND" column-definition="char(1)"/>
+            <orm:column name="RESIDUE" column-definition="char(1)"/>
         </hj:basic>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@ref='RC:ResidueNewManifestTrackingNumber']">
-        <hj:element-collection name="residueNewManifestTrackingNumber">
-            <orm:collection-table name="RCRA_EM_TR_NUM_RESIDUE_NEW">
-                <orm:join-column name="EM_EMANIFEST_ID" updatable="false"/>
-            </orm:collection-table>
-            <orm:column name="MANIFEST_TRACKING_NUM"/>
-        </hj:element-collection>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:Import']">
         <jaxb:property name="importIndicator"/>
         <hj:basic>
-            <orm:column name="IMP_IND" column-definition="char(1)"/>
+            <orm:column name="IMPORT" column-definition="char(1)"/>
         </hj:basic>
     </jaxb:bindings>
 
@@ -263,152 +210,7 @@
         </hj:embedded>
     </jaxb:bindings>
 
-    <jaxb:bindings node="//xsd:element[@ref='RC:ContainsPreviousRejectOrResidue']">
-        <hj:basic>
-            <orm:column name="CONT_PREV_REJ_RES_IND" column-definition="char(1)"/>
-        </hj:basic>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@ref='RC:PrintedDocument']">
-        <hj:embedded>
-            <orm:attribute-override name="documentName">
-                <orm:column name="PRINTED_DOC_NAME"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="size">
-                <orm:column name="PRINTED_DOC_SIZE" column-definition="INT"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="mimeType">
-                <orm:column name="PRINTED_DOC_MIME_TYPE"/>
-            </orm:attribute-override>
-        </hj:embedded>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@ref='RC:FormDocument']">
-        <hj:embedded>
-            <orm:attribute-override name="documentName">
-                <orm:column name="FORM_DOC_NAME"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="size">
-                <orm:column name="FORM_DOC_SIZE" column-definition="INT"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="mimeType">
-                <orm:column name="FORM_DOC_MIME_TYPE"/>
-            </orm:attribute-override>
-        </hj:embedded>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@name='AdditionalComment']">
-        <hj:one-to-many>
-            <orm:join-column name="EM_EMANIFEST_ID" referenced-column-name="EM_EMANIFEST_ID"
-                             updatable="false" nullable="false"/>
-        </hj:one-to-many>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:complexType[@name='ManifestCommentDataType']">
-        <hj:entity>
-            <orm:table name="RCRA_EM_EMANIFEST_COMMENT"/>
-        </hj:entity>
-        <hj:generated-id name="Dbid">
-            <orm:column name="EM_EMANIFEST_COMMENT_ID"/>
-        </hj:generated-id>
-        <jaxb:bindings node="//xsd:element[@ref='RC:CommentDescription']">
-            <hj:basic>
-                <orm:column name="COMMENT_DESC"/>
-            </hj:basic>
-        </jaxb:bindings>
-        <jaxb:bindings node="//xsd:element[@ref='RC:HandlerId']">
-            <hj:basic>
-                <orm:column name="HANDLER_ID"/>
-            </hj:basic>
-        </jaxb:bindings>
-        <jaxb:bindings node="//xsd:element[@ref='RC:CommentLabel']">
-            <hj:basic>
-                <orm:column name="COMMENT_LABEL"/>
-            </hj:basic>
-        </jaxb:bindings>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@name='AdditionalInfo']">
-        <hj:embedded>
-            <orm:association-override name="additionalComment">
-                <orm:join-column name="EM_EMANIFEST_ID" updatable="false" nullable="false"/>
-            </orm:association-override>
-            <orm:attribute-override name="newManifestDestination">
-                <orm:column name="ADD_INFO_NEW_MAN_DEST"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="consentNumber">
-                <orm:column name="ADD_INFO_CONSENT_NUM"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="handlingInstructions">
-                <orm:column name="ADD_INFO_HAND_INSTR"/>
-            </orm:attribute-override>
-        </hj:embedded>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@ref='RC:CorrectionInfo']">
-        <hj:embedded>
-            <orm:attribute-override name="versionNumber">
-                <orm:column name="CORR_VERSION_NUM" column-definition="INT"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="active">
-                <orm:column name="CORR_ACTIVE_IND" column-definition="char(1)"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="electronicSignatureInfo.signer.manifestFirstName">
-                <orm:column name="CORR_ES_SIGNER_FIRST_NAME"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="electronicSignatureInfo.signer.manifestLastName">
-                <orm:column name="CORR_ES_SIGNER_LAST_NAME"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="electronicSignatureInfo.signer.signerUserId">
-                <orm:column name="CORR_ES_SIGNER_USER_ID"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="electronicSignatureInfo.electronicSignatureDate">
-                <orm:column name="CORR_ES_SIGN_DATE"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="electronicSignatureInfo.humanReadableDocument.documentName">
-                <orm:column name="CORR_ES_DOC_NAME"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="electronicSignatureInfo.humanReadableDocument.size">
-                <orm:column name="CORR_ES_DOC_SIZE" column-definition="INT"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="electronicSignatureInfo.humanReadableDocument.mimeType">
-                <orm:column name="CORR_ES_DOC_MIME_TYPE"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="electronicSignatureInfo.cromerrActivityId">
-                <orm:column name="CORR_ES_CROMERR_ACT_ID"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="electronicSignatureInfo.cromerrDocumentId">
-                <orm:column name="CORR_ES_CROMERR_DOC_ID"/>
-            </orm:attribute-override>
-            <orm:attribute-override name="epaSiteId">
-                <orm:column name="CORR_EPA_SITE_ID"/>
-            </orm:attribute-override>
-        </hj:embedded>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@ref='RC:OriginalManifestTrackingNumber']">
-        <hj:element-collection name="originalManifestTrackingNumber">
-            <orm:collection-table name="RCRA_EM_TR_NUM_ORIG">
-                <orm:join-column name="EM_EMANIFEST_ID" updatable="false" nullable="false"/>
-            </orm:collection-table>
-            <orm:column name="MANIFEST_TRACKING_NUM"/>
-        </hj:element-collection>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:element[@ref='RC:NewManifestTrackingNumber']">
-        <hj:element-collection name="newManifestTrackingNumber">
-            <orm:collection-table name="RCRA_EM_TR_NUM_REJ">
-                <orm:join-column name="EM_EMANIFEST_ID" updatable="false" nullable="false"/>
-            </orm:collection-table>
-            <orm:column name="MANIFEST_TRACKING_NUM"/>
-        </hj:element-collection>
-    </jaxb:bindings>
-
     <jaxb:bindings node="//xsd:complexType[@name='RejectionInfoDataType']">
-        <hj:embeddable/>
-    </jaxb:bindings>
-
-    <jaxb:bindings node="//xsd:complexType[@name='CorrectionInfoDataType']">
         <hj:embeddable/>
     </jaxb:bindings>
 
@@ -416,8 +218,222 @@
         <hj:embeddable/>
     </jaxb:bindings>
 
-    <jaxb:bindings node="//xsd:complexType[@name='ManifestAdditionalInfoDataType']">
-        <hj:embeddable/>
+    <!-- NEW -->
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ForeignGeneratorCountryCode']">
+        <hj:basic>
+            <orm:column name="FOREIGN_GENERATOR_CTRY_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DesFacContactCompanyName']">
+        <hj:basic>
+            <orm:column name="DES_FAC_CONTACT_COMPANY_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DesFacContactFirstName']">
+        <hj:basic>
+            <orm:column name="DES_FAC_CONTACT_FIRST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DesFacContactLastName']">
+        <hj:basic>
+            <orm:column name="DES_FAC_CONTACT_LAST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeneratorEsigFirstName']">
+        <hj:basic>
+            <orm:column name="GENERATOR_ESIG_FIRST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeneratorEsigLastName']">
+        <hj:basic>
+            <orm:column name="GENERATOR_ESIG_LAST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeneratorPrintedName']">
+        <hj:basic>
+            <orm:column name="GENERATOR_PRINTED_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeneratorContactFirstName']">
+        <hj:basic>
+            <orm:column name="GENERATOR_CONTACT_FIRST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeneratorContactLastName']">
+        <hj:basic>
+            <orm:column name="GENERATOR_CONTACT_LAST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeneratorContactCompanyName']">
+        <hj:basic>
+            <orm:column name="GENERATOR_CONTACT_COMPANY_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AltFacPrintedName']">
+        <hj:basic>
+            <orm:column name="ALT_FAC_PRINTED_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AltFacEsigFirstName']">
+        <hj:basic>
+            <orm:column name="ALT_FAC_ESIG_FIRST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AltFacEsigLastName']">
+        <hj:basic>
+            <orm:column name="ALT_FAC_ESIG_LAST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AltFacilityName']">
+        <hj:basic>
+            <orm:column name="ALT_FAC_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AltFacContactFirstName']">
+        <hj:basic>
+            <orm:column name="ALT_FAC_CONTACT_FIRST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AltFacContactLastName']">
+        <hj:basic>
+            <orm:column name="ALT_FAC_CONTACT_LAST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AltFacContactCompanyName']">
+        <hj:basic>
+            <orm:column name="ALT_FAC_CONTACT_COMPANY_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ForeignGeneratorName']">
+        <hj:basic>
+            <orm:column name="FOREIGN_GENERATOR_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DesFacEsigFirstName']">
+        <hj:basic>
+            <orm:column name="DES_FAC_ESIG_FIRST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DesFacEsigLastName']">
+        <hj:basic>
+            <orm:column name="DES_FAC_ESIG_LAST_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeneratorMailState']">
+        <hj:basic>
+            <orm:column name="GENERATOR_MAIL_STA"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeneratorLocationState']">
+        <hj:basic>
+            <orm:column name="GENERATOR_LOC_STA"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DesFacMailState']">
+        <hj:basic>
+            <orm:column name="DES_FAC_MAIL_STA"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DesFacLocationState']">
+        <hj:basic>
+            <orm:column name="DES_FAC_LOC_STA"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AltFacMailState']">
+        <hj:basic>
+            <orm:column name="ALT_FAC_MAIL_STA"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:PortOfEntryState']">
+        <hj:basic>
+            <orm:column name="PORT_OF_ENTRY_STA"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeneratorMailCountry']">
+        <hj:basic>
+            <orm:column name="GENERATOR_MAIL_CTRY"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DesFacMailCountry']">
+        <hj:basic>
+            <orm:column name="DES_FAC_MAIL_CTRY"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ForeignGeneratorCountryName']">
+        <hj:basic>
+            <orm:column name="FOREIGN_GENERATOR_CTRY_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DesFacPrintedName']">
+        <hj:basic>
+            <orm:column name="DES_FAC_PRINTED_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:DesFacilityName']">
+        <hj:basic>
+            <orm:column name="DES_FAC_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:GeneratorName']">
+        <hj:basic>
+            <orm:column name="GENERATOR_NAME"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:ForeignGeneratorPostalCode']">
+        <hj:basic>
+            <orm:column name="FOREIGN_GENERATOR_POST_CODE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:LastEMUpdatedDate']">
+        <hj:basic>
+            <orm:column name="LAST_EM_UPDT_DATE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:OrigSubmissionType']">
+        <hj:basic>
+            <orm:column name="ORIG_SUBM_TYPE"/>
+        </hj:basic>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@ref='RC:AltFacLocationState']">
+        <hj:basic>
+            <orm:column name="ALT_FAC_LOC_STA"/>
+        </hj:basic>
     </jaxb:bindings>
 
 </jaxb:bindings>
