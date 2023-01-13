@@ -1562,10 +1562,10 @@ begin
                         left join RCRA_EM_HANDLER gen
                                   on m.EM_EMANIFEST_ID = gen.EM_EMANIFEST_ID and gen.MANIFEST_HANDLER_TYPE = ''Generator''
                         left join RCRA_EM_HANDLER tsdf
-                                  on m.EM_EMANIFEST_ID = gen.EM_EMANIFEST_ID and
+                                  on m.EM_EMANIFEST_ID = tsdf.EM_EMANIFEST_ID and
                                      tsdf.MANIFEST_HANDLER_TYPE = ''DesignatedFacility''
                         left join RCRA_EM_HANDLER alt on m.EM_EMANIFEST_ID = alt.EM_EMANIFEST_ID and
-                                                         alt.MANIFEST_HANDLER_TYPE = ''AlternateDesignateFacility'') s
+                                                         alt.MANIFEST_HANDLER_TYPE in (''AlternateDesignatedFacility'', ''AlternateDesignateFacility'') s
         on (d.EM_EMANIFEST_ID = s.EM_EMANIFEST_ID)
         when matched then
             update

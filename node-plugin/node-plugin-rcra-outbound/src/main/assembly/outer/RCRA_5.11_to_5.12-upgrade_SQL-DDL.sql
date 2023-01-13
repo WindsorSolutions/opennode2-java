@@ -1195,12 +1195,12 @@ PRINT N'Dropping foreign keys from [dbo].[RCRA_EM_HANDLER]'
 GO
 ALTER TABLE [dbo].[RCRA_EM_HANDLER] DROP CONSTRAINT [FK_EM_HANDLER_EM_EMANIFEST]
     GO
-    IF @@ERROR <> 0 SET NOEXEC ON
-    GO
-    PRINT N'Dropping foreign keys from [dbo].[RCRA_EM_TR_NUM_ORIG]'
-    GO
-ALTER TABLE [dbo].[RCRA_EM_TR_NUM_ORIG] DROP CONSTRAINT [FK_EM_TR_NUM_ORIG_EM_EMANIFEST]
-    GO
+--     IF @@ERROR <> 0 SET NOEXEC ON
+--     GO
+--     PRINT N'Dropping foreign keys from [dbo].[RCRA_EM_TR_NUM_ORIG]'
+--     GO
+-- ALTER TABLE [dbo].[RCRA_EM_TR_NUM_ORIG] DROP CONSTRAINT [FK_EM_TR_NUM_ORIG_EM_EMANIFEST]
+--     GO
     IF @@ERROR <> 0 SET NOEXEC ON
     GO
     PRINT N'Dropping foreign keys from [dbo].[RCRA_EM_TR_NUM_REJ]'
@@ -1291,12 +1291,12 @@ ALTER TABLE [dbo].[RCRA_EM_WASTE_CD_TSDF] DROP CONSTRAINT [PK_EM_WASTE_CD_TSDF]
     GO
 DROP INDEX [IX_EM_HANDLER_EM_EMANIFEST_ID] ON [dbo].[RCRA_EM_HANDLER]
     GO
-    IF @@ERROR <> 0 SET NOEXEC ON
-    GO
-    PRINT N'Dropping index [IX_EM_TR_NM_ORG_EM_EMNIFEST_ID] from [dbo].[RCRA_EM_TR_NUM_ORIG]'
-    GO
-DROP INDEX [IX_EM_TR_NM_ORG_EM_EMNIFEST_ID] ON [dbo].[RCRA_EM_TR_NUM_ORIG]
-    GO
+--     IF @@ERROR <> 0 SET NOEXEC ON
+--     GO
+--     PRINT N'Dropping index [IX_EM_TR_NM_ORG_EM_EMNIFEST_ID] from [dbo].[RCRA_EM_TR_NUM_ORIG]'
+--     GO
+-- DROP INDEX [IX_EM_TR_NM_ORG_EM_EMNIFEST_ID] ON [dbo].[RCRA_EM_TR_NUM_ORIG]
+--     GO
     IF @@ERROR <> 0 SET NOEXEC ON
     GO
     PRINT N'Dropping index [IX_EM_TR_NUM_RJ_EM_EMNIFEST_ID] from [dbo].[RCRA_EM_TR_NUM_REJ]'
@@ -1336,9 +1336,11 @@ DROP INDEX [IX_EM_WASTE_CD_TSDF_EM_WSTE_ID] ON [dbo].[RCRA_EM_WASTE_CD_TSDF]
 -- This index was added for working with the RCRA Reporting DB
     IF @@ERROR <> 0 SET NOEXEC ON
     GO
-    PRINT N'Dropping index [IX_EM_EMANIFEST_MAN_TR_NUM_VER] from [dbo].[RCRA_EM_EMANIFEST]'
-    GO
-DROP INDEX [IX_EM_EMANIFEST_MAN_TR_NUM_VER] ON [dbo].[RCRA_EM_EMANIFEST]
+    if exists(select 1 from sys.indexes i where i.name = 'IX_EM_EMANIFEST_MAN_TR_NUM_VER')
+    begin
+        PRINT N'Dropping index [IX_EM_EMANIFEST_MAN_TR_NUM_VER] from [dbo].[RCRA_EM_EMANIFEST]'
+        DROP INDEX [IX_EM_EMANIFEST_MAN_TR_NUM_VER] ON [dbo].[RCRA_EM_EMANIFEST]
+    end
     GO
     IF @@ERROR <> 0 SET NOEXEC ON
     GO

@@ -1776,10 +1776,10 @@ if object_id('dbo.RCRA_EM_HANDLER') is not null
                  left join dbo.RCRA_EM_HANDLER gen
                            on m.EM_EMANIFEST_ID = gen.EM_EMANIFEST_ID and gen.MANIFEST_HANDLER_TYPE = 'Generator'
                  left join dbo.RCRA_EM_HANDLER tsdf
-                           on m.EM_EMANIFEST_ID = gen.EM_EMANIFEST_ID and
+                           on m.EM_EMANIFEST_ID = tsdf.EM_EMANIFEST_ID and
                               tsdf.MANIFEST_HANDLER_TYPE = 'DesignatedFacility'
                  left join dbo.RCRA_EM_HANDLER alt on m.EM_EMANIFEST_ID = alt.EM_EMANIFEST_ID and
-                                                      alt.MANIFEST_HANDLER_TYPE = 'AlternateDesignateFacility'
+                                                      alt.MANIFEST_HANDLER_TYPE in ('AlternateDesignateFacility', 'AlternateDesignatedFacility')
         where 1 = 1
         print format(getdate(), 'yyyy-MM-dd HH:mm:ss.fff') + ': '
             + 'Count of updated RCRA_EM_EMANIFEST records with generator, destination and alt dest handler info: '

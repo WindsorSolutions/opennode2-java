@@ -1,1983 +1,7962 @@
--- set the SEQ_RCRA_EM_EMANIFEST next sequence number to be bigger than the current max value for
+create sequence SEQ_RCRA_CA_AREA
+/
 
-create or replace procedure handle_db_action(type_code varchar2,
-                                             obj_name varchar2,
-                                             obj_def varchar2,
-                                             target_name varchar2,
-                                             log_level int default 1) as
+create sequence SEQ_RCRA_CA_AREA_REL_EVENT
+/
 
-    query       varchar2(4000);
-    error_code1 int;
-    error_code2 int;
-begin
-    select case type_code
-               when 'AC' then 'alter table ' || target_name || ' add ' || obj_name || ' ' || obj_def
-               when 'CI' then 'create index ' || obj_name || ' on ' || target_name || ' (' || obj_def || ')'
-               when 'CQ' then 'create sequence ' || obj_name
-               when 'CS' then 'create synonym ' || obj_name || ' for ' || target_name
-               when 'CT' then 'create table ' || obj_name || ' (' || obj_def || ')'
-               when 'CV' then 'create or replace view ' || obj_name || ' as ' || obj_def
-               when 'DC' then 'alter table ' || target_name || ' drop column ' || obj_name
-               when 'DP' then 'drop procedure ' || obj_name
-               when 'DQ' then 'drop sequence ' || obj_name
-               when 'DS' then 'drop synonym ' || obj_name
-               when 'DT' then 'drop table ' || obj_name
-               when 'DV' then 'drop view ' || obj_name
-               when 'MC' then 'alter table ' || target_name || ' modify ' || obj_name || ' ' || obj_def
-               when 'RC' then 'alter table ' || target_name || ' rename column ' || obj_name || ' to ' || obj_def
-               end
-    into query
-    from dual;
+create sequence SEQ_RCRA_CA_AUTHORITY
+/
 
-    select case type_code
-               when 'AC' then -1430 -- -904
-               when 'CI' then -955
-               when 'CQ' then -955
-               when 'CS' then -955
-               when 'CV' then null
-               when 'CT' then -955
-               when 'DC' then -904
-               when 'DP' then -4043
-               when 'DQ' then -2289
-               when 'DS' then -1434
-               when 'DT' then -942
-               when 'DV' then -942
-               when 'MC' then -1451 -- -904
-               when 'RC' then -957 -- -904
-               end
-    into error_code1
-    from dual;
+create sequence SEQ_RCRA_CA_AUTH_REL_EVENT
+/
 
-    select case type_code
-               when 'AC' then -942
-               when 'DC' then -942
-               when 'MC' then -942
-               when 'RC' then -942
-               else error_code1
-               end
-    into error_code2
-    from dual;
+create sequence SEQ_RCRA_CA_EVENT
+/
 
-    dbms_output.put_line('query: ' || query);
+create sequence SEQ_RCRA_CA_EVENT_COMMITMENT
+/
 
-    begin
-        execute immediate query;
-    exception
-        when others then
-            if error_code1 is null or (sqlcode != error_code1 and sqlcode != error_code2) then
-                dbms_output.put_line('Unexpected error in "' || query || '": ' + sqlcode + ' - ' + sqlerrm);
-                raise;
-            else
-                dbms_output.put_line('Skipped statement "' || query || '" ' ||
-                                     'because the conditions to execute it are not met');
-            end if;
-    end;
-end;
+create sequence SEQ_RCRA_CA_FAC_SUBM
+/
 
-declare
-    source_db   varchar2(100) := 'RCRA_REPORTING';
-    target_db   varchar2(100) := 'NODE_FLOW_RCRA';
-    type_code   varchar2(2);
-    obj_name    varchar2(100);
-    obj_def     varchar2(4000);
-    target_name varchar2(100);
-    exists_ind  number(1, 0);
-    query       varchar2(32000);
-    max_val     int;
-    next_val    int;
-    cursor x is
-        with t( --
-               sort_order, type_code, obj_name, obj_def, target_name) as ( --
-            select 1,
-                   'CT',
-                   'RCRA_EM_FED_WASTE_CODE_DESC',
-                   'EM_FED_WASTE_CODE_DESC_ID int 
-                        constraint PK_EM_FED_WASTE_CODE_DESC primary key,
-                    EM_WASTE_ID int NOT NULL
-                        constraint FK_RCRA_EM_FED_WS_CD_EM_WS_ID references RCRA_EM_WASTE on delete cascade,
-                    FED_MANIFEST_WASTE_CODE varchar2(6) NOT NULL,
-                    MANIFEST_WASTE_DESC varchar2(2000) NULL,
-                    COI_IND char(1) NULL',
-                   null
-            from dual
-            union all
-            select 2,
-                   'CT',
-                   'RCRA_EM_STATE_WASTE_CODE_DESC',
-                   'EM_STATE_WASTE_CODE_DESC_ID int 
-                        constraint PK_EM_STATE_WASTE_CODE_DESC primary key,
-                    EM_WASTE_ID int NOT NULL
-                        constraint FK_EM_ST_WST_CD_DESC_EM_WST_ID references RCRA_EM_WASTE on delete cascade,
-                    STA_MANIFEST_WASTE_CODE varchar2(8) NOT NULL,
-                    MANIFEST_WASTE_DESC varchar2(2000) NULL',
-                   null
-            from dual
-            union all
-            select 3,
-                   'CT',
-                   'RCRA_EM_TRANSPORTER',
-                   'EM_TRANSPORTER_ID int 
-                        constraint PK_EM_TRANSPORTER primary key,
-                    EM_EMANIFEST_ID int NOT NULL
-                        constraint FK_RCRA_EM_TRANS_EM_EM_ID references RCRA_EM_EMANIFEST on delete cascade,
-                    TRANSPORTER_ID varchar2(15) NULL,
-                    TRANSPORTER_NAME varchar2(80) NULL,
-                    TRANSPORTER_PRINTED_NAME varchar2(80) NULL,
-                    TRANSPORTER_SIGNATURE_DATE date null,
-                    TRANSPORTER_ESIG_FIRST_NAME varchar2(38) NULL,
-                    TRANSPORTER_ESIG_LAST_NAME varchar2(38) NULL,
-                    TRANS_ESIG_SIGNATURE_DATE date null,
-                    TRANSPORTER_LINE_NUM varchar2(19) NULL,
-                    TRANSPORTER_REGISTERED char(1) NULL',
-                   null
-            from dual
-            union all
-            select 4,
-                   'CI',
-                   'IX_EM_FD_WST_CDE_DSC_EM_WST_ID',
-                   'EM_WASTE_ID',
-                   'RCRA_EM_FED_WASTE_CODE_DESC'
-            from dual
-            union all
-            select 5,
-                   'CI',
-                   'IX_EM_STT_WST_CDE_DSC_EM_WS_ID',
-                   'EM_WASTE_ID',
-                   'RCRA_EM_STATE_WASTE_CODE_DESC'
-            from dual
-            union all
-            select 6,
-                   'CI',
-                   'IX_EM_TRNSPORTER_EM_EMNIFST_ID',
-                   'EM_EMANIFEST_ID',
-                   'RCRA_EM_TRANSPORTER'
-            from dual
-            union all
-            select 7, 'DS', 'NODE_RCRA_EM_WASTE_CD_TSDF', null, null
-            from dual
-            union all
-            select 8, 'DS', 'NODE_RCRA_EM_WASTE_CD_GEN', null, null
-            from dual
-            union all
-            select 9, 'DS', 'NODE_RCRA_EM_WASTE_CD_FED', null, null
-            from dual
-            union all
-            select 10, 'DS', 'NODE_RCRA_EM_TR_NUM_WASTE', null, null
-            from dual
-            union all
-            select 11, 'DS', 'NODE_RCRA_EM_TR_NUM_REJ', null, null
-            from dual
-            union all
-            select 12, 'DS', 'NODE_RCRA_EM_TR_NUM_ORIG', null, null
-            from dual
-            union all
-            select 13, 'DS', 'NODE_RCRA_EM_TR_NUM_RES_NEW', null, null
-            from dual
-            union all
-            select 14, 'DS', 'NODE_RCRA_EM_HANDLER', null, null
-            from dual
-            union all
-            select 15, 'DS', 'NODE_RCRA_EM_EMANIFEST', null, null
-            from dual
-            union all
-            select 16, 'DS', 'NODE_RCRA_EM_EMANIFEST_COMMENT', null, null
-            from dual
-            union all
-            select 17, 'DS', 'NODE_RCRA_EM_WASTE', null, null
-            from dual
-            union all
-            select 18, 'DS', 'NODE_RCRA_EM_WASTE_COMMENT', null, null
-            from dual
-            union all
-            select 19, 'DS', 'NODE_RCRA_EM_WASTE_PCB', null, null
-            from dual
-            union all
-            select 20,
-                   'CS',
-                   'NODE_RCRA_EM_FED_WASTE_CODE',
-                   null,
-                   target_db || '.' || 'RCRA_EM_FED_WASTE_CODE_DESC'
-            from dual
-            union all
-            select 21,
-                   'CS',
-                   'NODE_RCRA_EM_STATE_WASTE_CODE',
-                   null,
-                   target_db || '.' || 'RCRA_EM_STATE_WASTE_CODE_DESC'
-            from dual
-            union all
-            select 22,
-                   'CS',
-                   'NODE_RCRA_EM_TRANSPORTER',
-                   null,
-                   target_db || '.' || 'RCRA_EM_TRANSPORTER'
-            from dual
-            union all
-            select 23,
-                   'CS',
-                   'NODE_RCRA_EM_EMANIFEST',
-                   null,
-                   target_db || '.' || 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 24,
-                   'CS',
-                   'NODE_RCRA_EM_EMANIFEST_COMMENT',
-                   null,
-                   target_db || '.' || 'RCRA_EM_EMANIFEST_COMMENT'
-            from dual
-            union all
-            select 25,
-                   'CS',
-                   'NODE_RCRA_EM_WASTE',
-                   null,
-                   target_db || '.' || 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 26,
-                   'CS',
-                   'NODE_RCRA_EM_WASTE_COMMENT',
-                   null,
-                   target_db || '.' || 'RCRA_EM_WASTE_COMMENT'
-            from dual
-            union all
-            select 27,
-                   'CS',
-                   'NODE_RCRA_EM_WASTE_PCB',
-                   null,
-                   target_db || '.' || 'RCRA_EM_WASTE_PCB'
-            from dual
-            union all
-            select 28, 'AC', 'GENERATOR_ID', 'varchar2(15)', 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 29,
-                   'AC',
-                   'GENERATOR_NAME',
-                   'varchar2(80)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 30,
-                   'AC',
-                   'GENERATOR_MAIL_STREET_NUM',
-                   'varchar2(12) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 31,
-                   'AC',
-                   'GENERATOR_MAIL_STREET_1',
-                   'varchar2(50)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 32,
-                   'AC',
-                   'GENERATOR_MAIL_STREET_2',
-                   'varchar2(50)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 33,
-                   'AC',
-                   'GENERATOR_MAIL_CITY',
-                   'varchar2(35) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 34,
-                   'AC',
-                   'GENERATOR_MAIL_CTRY',
-                   'char(2)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 35,
-                   'AC',
-                   'GENERATOR_MAIL_STA',
-                   'char(2)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 36,
-                   'AC',
-                   'GENERATOR_MAIL_ZIP',
-                   'varchar2(50)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 37,
-                   'AC',
-                   'GENERATOR_LOC_STREET_NUM',
-                   'varchar2(12) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 38,
-                   'AC',
-                   'GENERATOR_LOC_STREET_1',
-                   'varchar2(50)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 39,
-                   'AC',
-                   'GENERATOR_LOC_STREET_2',
-                   'varchar2(50)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 40,
-                   'AC',
-                   'GENERATOR_LOC_CITY',
-                   'varchar2(35) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 41,
-                   'AC',
-                   'GENERATOR_LOC_STA',
-                   'char(2) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 42,
-                   'AC',
-                   'GENERATOR_LOC_ZIP',
-                   'varchar2(25) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 43,
-                   'AC',
-                   'GENERATOR_CONTACT_FIRST_NAME',
-                   'varchar2(38)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 44,
-                   'AC',
-                   'GENERATOR_CONTACT_LAST_NAME',
-                   'varchar2(38)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 45,
-                   'AC',
-                   'GENERATOR_CONTACT_COMPANY_NAME',
-                   'varchar2(80) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 46,
-                   'AC',
-                   'GENERATOR_CONTACT_EMAIL',
-                   'varchar2(80)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 47,
-                   'AC',
-                   'GENERATOR_CONTACT_PHONE_NUM',
-                   'varchar2(15) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 48,
-                   'AC',
-                   'GENERATOR_CONTACT_PHONE_EXT',
-                   'varchar2(6) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 49,
-                   'AC',
-                   'GENERATOR_PRINTED_NAME',
-                   'varchar2(80) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 50,
-                   'AC',
-                   'GENERATOR_SIGNATURE_DATE',
-                   'date',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 51,
-                   'AC',
-                   'GENERATOR_ESIG_FIRST_NAME',
-                   'varchar2(38)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 52,
-                   'AC',
-                   'GENERATOR_ESIG_LAST_NAME',
-                   'varchar2(38)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 53,
-                   'AC',
-                   'GENERATOR_ESIG_SIGNATURE_DATE',
-                   'date',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 54,
-                   'AC',
-                   'GENERATOR_REGISTERED',
-                   'char(1)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 55,
-                   'AC',
-                   'GENERATOR_MODIFIED',
-                   'char(1)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 56,
-                   'AC',
-                   'DES_FAC_ID',
-                   'varchar2(15) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 57,
-                   'AC',
-                   'DES_FAC_NAME',
-                   'varchar2(80) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 58,
-                   'AC',
-                   'DES_FAC_MAIL_STREET_NUM',
-                   'varchar2(12) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 59,
-                   'AC',
-                   'DES_FAC_MAIL_STREET_1',
-                   'varchar2(50)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 60,
-                   'AC',
-                   'DES_FAC_MAIL_STREET_2',
-                   'varchar2(50)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 61,
-                   'AC',
-                   'DES_FAC_MAIL_CITY',
-                   'varchar2(35) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 62,
-                   'AC',
-                   'DES_FAC_MAIL_CTRY',
-                   'char(2) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 63,
-                   'AC',
-                   'DES_FAC_MAIL_STA',
-                   'char(2) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 64,
-                   'AC',
-                   'DES_FAC_MAIL_ZIP',
-                   'varchar2(25) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 65,
-                   'AC',
-                   'DES_FAC_LOC_STREET_NUM',
-                   'varchar2(12) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 66,
-                   'AC',
-                   'DES_FAC_LOC_STREET_1',
-                   'varchar2(50)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 67,
-                   'AC',
-                   'DES_FAC_LOC_STREET_2',
-                   'varchar2(50)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 68,
-                   'AC',
-                   'DES_FAC_LOC_CITY',
-                   'varchar2(35) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 69,
-                   'AC',
-                   'DES_FAC_LOC_STA',
-                   'char(2) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 70,
-                   'AC',
-                   'DES_FAC_LOC_ZIP',
-                   'varchar2(25) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 71,
-                   'AC',
-                   'DES_FAC_CONTACT_FIRST_NAME',
-                   'varchar2(38)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 72,
-                   'AC',
-                   'DES_FAC_CONTACT_LAST_NAME',
-                   'varchar2(38)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 73,
-                   'AC',
-                   'DES_FAC_CONTACT_COMPANY_NAME',
-                   'varchar2(80) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 74,
-                   'AC',
-                   'DES_FAC_CONTACT_PHONE_NUM',
-                   'varchar2(15) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 75,
-                   'AC',
-                   'DES_FAC_CONTACT_PHONE_EXT',
-                   'varchar2(6) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 76,
-                   'AC',
-                   'DES_FAC_CONTACT_EMAIL',
-                   'varchar2(80) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 77,
-                   'AC',
-                   'DES_FAC_PRINTED_NAME',
-                   'varchar2(80) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 78,
-                   'AC',
-                   'DES_FAC_SIGNATURE_DATE',
-                   'date',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 79,
-                   'AC',
-                   'DES_FAC_ESIG_FIRST_NAME',
-                   'varchar2(38) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 80,
-                   'AC',
-                   'DES_FAC_ESIG_LAST_NAME',
-                   'varchar2(38) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 81,
-                   'AC',
-                   'DES_FAC_ESIG_SIGNATURE_DATE',
-                   'date null',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 82,
-                   'AC',
-                   'DES_FAC_REGISTERED',
-                   'char(1)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 83, 'AC', 'DES_FAC_MODIFIED', 'char(1)', 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 84,
-                   'AC',
-                   'ALT_FAC_ID',
-                   'varchar2(12) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 85,
-                   'AC',
-                   'ALT_FAC_NAME',
-                   'varchar2(80) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 86,
-                   'AC',
-                   'ALT_FAC_MAIL_STREET_NUM',
-                   'varchar2(12) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 87,
-                   'AC',
-                   'ALT_FAC_MAIL_STREET_1',
-                   'varchar2(50)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 88,
-                   'AC',
-                   'ALT_FAC_MAIL_STREET_2',
-                   'varchar2(50)',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 89,
-                   'AC',
-                   'ALT_FAC_MAIL_CITY',
-                   'varchar2(25) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 90,
-                   'AC',
-                   'ALT_FAC_MAIL_STA',
-                   'char(2) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 91,
-                   'AC',
-                   'ALT_FAC_MAIL_ZIP',
-                   'varchar2(14) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 92,
-                   'AC',
-                   'ALT_FAC_LOC_STREET_NUM',
-                   'varchar2(12) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 93,
-                   'AC',
-                   'ALT_FAC_LOC_STREET_1',
-                   'varchar2(50) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 94,
-                   'AC',
-                   'ALT_FAC_LOC_STREET_2',
-                   'varchar2(50) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 95,
-                   'AC',
-                   'ALT_FAC_LOC_CITY',
-                   'varchar2(25) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 96,
-                   'AC',
-                   'ALT_FAC_LOC_STA',
-                   'char(2) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 97,
-                   'AC',
-                   'ALT_FAC_LOC_ZIP',
-                   'varchar2(14) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 98,
-                   'AC',
-                   'ALT_FAC_CONTACT_FIRST_NAME',
-                   'varchar2(38) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 99,
-                   'AC',
-                   'ALT_FAC_CONTACT_LAST_NAME',
-                   'varchar2(38) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 100,
-                   'AC',
-                   'ALT_FAC_CONTACT_COMPANY_NAME',
-                   'varchar2(80) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 101,
-                   'AC',
-                   'ALT_FAC_CONTACT_PHONE_NO',
-                   'varchar2(15) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 102,
-                   'AC',
-                   'ALT_FAC_CONTACT_PHONE_EXT',
-                   'varchar2(6) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 103,
-                   'AC',
-                   'ALT_FAC_CONTACT_EMAIL',
-                   'varchar2(80) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 104,
-                   'AC',
-                   'ALT_FAC_PRINTED_NAME',
-                   'varchar2(80) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 105,
-                   'AC',
-                   'ALT_FAC_SIGNATURE_DATE',
-                   'date null',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 106,
-                   'AC',
-                   'ALT_FAC_ESIG_FIRST_NAME',
-                   'varchar2(38) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 107,
-                   'AC',
-                   'ALT_FAC_ESIG_LAST_NAME',
-                   'varchar2(38) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 108,
-                   'AC',
-                   'ALT_FAC_ESIG_SIGNATURE_DATE',
-                   'date null',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 109,
-                   'AC',
-                   'ALT_FAC_REGISTERED',
-                   'char(1) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 110,
-                   'AC',
-                   'ALT_FAC_MODIFIED',
-                   'char(1) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 111,
-                   'AC',
-                   'EMERGENCY_PHONE_NUM',
-                   'varchar2(15) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 112,
-                   'AC',
-                   'EMERGENCY_PHONE_EXT',
-                   'varchar2(6) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 113,
-                   'AC',
-                   'ORIG_SUBM_TYPE',
-                   'varchar2(14) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 114, 'AC', 'COI_ONLY', 'char(1) NULL', 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 115,
-                   'AC',
-                   'BROKER_ID',
-                   'varchar2(15) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 116,
-                   'AC',
-                   'LAST_EM_UPDT_DATE',
-                   'date null',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 117, 'AC', 'COI_ONLY', 'char(1) NULL', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 118,
-                   'AC',
-                   'QNTY_ACUTE_KG',
-                   'decimal(14, 6) NULL',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 119,
-                   'AC',
-                   'QNTY_ACUTE_TONS',
-                   'decimal(14, 6) NULL',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 120,
-                   'AC',
-                   'QNTY_NON_ACUTE_KG',
-                   'decimal(14, 6) NULL',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 121,
-                   'AC',
-                   'QNTY_NON_ACUTE_TONS',
-                   'decimal(14, 6) NULL',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 122,
-                   'AC',
-                   'QNTY_TONS',
-                   'decimal(14, 6) NULL',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 124,
-                   'AC',
-                   'LOAD_TYPE_DESC',
-                   'varchar2(25) NULL',
-                   'RCRA_EM_WASTE_PCB'
-            from dual
-            union all
-            select 125,
-                   'AC',
-                   'BR_MIXED_RADIOACTIVE_WASTE',
-                   'char(1)',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 126, 'AC', 'QNTY_KG', 'decimal(14,6)', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 127,
-                   'RC',
-                   'ADD_INFO_CONSENT_NUM',
-                   'CNST_NUM',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 128, 'RC', 'EPA_WASTE_IND', 'EPA_WASTE', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 129,
-                   'RC',
-                   'DISC_COMMENTS',
-                   'DISCREPANCY_COMM',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 130,
-                   'RC',
-                   'QNT_CONT_TYPE_CODE',
-                   'CONTAINER_TYPE_CODE',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 131,
-                   'RC',
-                   'QNT_CONT_TYPE_DESC',
-                   'CONTAINER_TYPE_DESC',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 132, 'RC', 'DOT_ID_NUM', 'DOT_ID_NUM_DESC', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 133,
-                   'RC',
-                   'WASTES_DESC',
-                   'NON_HAZ_WASTE_DESC',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 134, 'RC', 'QNT_CONT_NUM', 'CONTAINER_NUM', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 135, 'RC', 'QNT_VAL', 'QNTY_VAL', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 136,
-                   'RC',
-                   'QNT_UOM_CODE',
-                   'QTY_UNIT_OF_MEAS_CODE',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 137,
-                   'RC',
-                   'QNT_UOM_DESC',
-                   'QTY_UNIT_OF_MEAS_DESC',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 138,
-                   'RC',
-                   'BR_FORM_DESC',
-                   'BR_FORM_CODE_DESC',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 139, 'RC', 'BR_SRC_DESC', 'BR_SRC_CODE_DESC', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 140, 'RC', 'BR_WM_CODE', 'BR_WASTE_MIN_CODE', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 141, 'RC', 'BR_WM_DESC', 'BR_WASTE_MIN_DESC', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 142, 'RC', 'PCB_IND', 'PCB', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 143,
-                   'RC',
-                   'DISC_RESIDUE_COMMENTS',
-                   'WASTE_RESIDUE_COMM',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 144,
-                   'RC',
-                   'DISC_WASTE_QTY_IND',
-                   'QNTY_DISCREPANCY',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 145,
-                   'RC',
-                   'DISC_WASTE_TYPE_IND',
-                   'WASTE_TYPE_DISCREPANCY',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 146,
-                   'RC',
-                   'MGMT_METHOD_CODE',
-                   'MANAGEMENT_METH_CODE',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 147,
-                   'RC',
-                   'MGMT_METHOD_DESC',
-                   'MANAGEMENT_METH_DESC',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 148,
-                   'RC',
-                   'ADD_INFO_HAND_INSTR',
-                   'HANDLING_INSTRUCTIONS',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 149,
-                   'RC',
-                   'COMMENT_LABEL',
-                   'CMNT_LABEL',
-                   'RCRA_EM_WASTE_COMMENT'
-            from dual
-            union all
-            select 150,
-                   'RC',
-                   'REJ_TRANS_ON_SITE_IND',
-                   'TRANSPORTER_ON_SITE',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 151,
-                   'RC',
-                   'IMP_GEN_NAME',
-                   'FOREIGN_GENERATOR_NAME',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 152,
-                   'RC',
-                   'IMP_GEN_ADDRESS',
-                   'FOREIGN_GENERATOR_STREET',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 153,
-                   'RC',
-                   'IMP_GEN_CITY',
-                   'FOREIGN_GENERATOR_CITY',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 154,
-                   'RC',
-                   'IMP_GEN_CNTRY_CODE',
-                   'FOREIGN_GENERATOR_CTRY_CODE',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 155,
-                   'RC',
-                   'IMP_GEN_POSTAL_CODE',
-                   'FOREIGN_GENERATOR_POST_CODE',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 156,
-                   'RC',
-                   'IMP_GEN_PROVINCE',
-                   'FOREIGN_GENERATOR_PROVINCE',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 157,
-                   'RC',
-                   'IMP_PORT_STATE_CODE',
-                   'PORT_OF_ENTRY_STA',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 158, 'RC', 'RESIDUE_IND', 'RESIDUE', 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 159, 'RC', 'IMP_IND', 'IMPORT', 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 160,
-                   'RC',
-                   'COMMENT_DESC',
-                   'CMNT_DESC',
-                   'RCRA_EM_EMANIFEST_COMMENT'
-            from dual
-            union all
-            select 161,
-                   'RC',
-                   'REJ_ALT_DES_FAC_TYPE',
-                   'ALTERNATE_DESIGNATED_FAC_TYPE',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 162, 'RC', 'DOT_HAZ_IND', 'DOT_HAZRD', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 163,
-                   'RC',
-                   'ADD_INFO_HAND_INSTR',
-                   'MANIFEST_HANDLING_INSTR',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 164, 'RC', 'REJ_TYPE', 'REJECTION_TYPE', 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 165,
-                   'RC',
-                   'IMP_GEN_CNTRY_NAME',
-                   'FOREIGN_GENERATOR_CTRY_NAME',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 166,
-                   'RC',
-                   'IMP_PORT_CITY',
-                   'PORT_OF_ENTRY_CITY',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 167,
-                   'RC',
-                   'COMMENT_LABEL',
-                   'CMNT_LABEL',
-                   'RCRA_EM_EMANIFEST_COMMENT'
-            from dual
-            union all
-            select 168,
-                   'RC',
-                   'DISC_RESIDUE_IND',
-                   'WASTE_RESIDUE',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 169,
-                   'MC',
-                   'CREATED_DATE',
-                   'date NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 170,
-                   'MC',
-                   'MAN_TRACKING_NUM',
-                   'varchar2(12) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 171, 'MC', 'STATUS', 'varchar2(17) NULL', 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 172,
-                   'MC',
-                   'ORIGIN_TYPE',
-                   'varchar2(7) NULL',
-                   'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 173, 'MC', 'REJ_IND', 'char(1) NULL', 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 174, 'MC', 'LINE_NUM', 'decimal(10, 0) NULL', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 175,
-                   'MC',
-                   'PCB_LOAD_TYPE_CODE',
-                   'varchar2(25)',
-                   'RCRA_EM_WASTE_PCB'
-            from dual
-            union all
-            select 176,
-                   'MC',
-                   'PCB_WASTE_TYPE',
-                   'varchar2(150)',
-                   'RCRA_EM_WASTE_PCB'
-            from dual
-            union all
-            select 177, 'MC', 'DOT_ID_NUM_DESC', 'varchar2(6)', 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 178,
-                   'MC',
-                   'CONTAINER_TYPE_CODE',
-                   'char(2) NULL',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 179,
-                   'MC',
-                   'CONTAINER_TYPE_DESC',
-                   'varchar2(50) NULL',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 180,
-                   'MC',
-                   'WASTE_RESIDUE_COMM',
-                   'varchar2(257)',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 181,
-                   'MC',
-                   'DISCREPANCY_COMM',
-                   'varchar2(257)',
-                   'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 182,
-                   'MC',
-                   'WASTE_CODE_TEXT',
-                   'varchar2(4000)',
-                   'RCRA_HD_EPISODIC_WASTE_CODE'
-            from dual
-            union all
-            select 183,
-                   'CV',
-                   'ETL_EM_EMANIFEST_VW',
-                   'select WH.EM_EMANIFEST_ID WH_EM_EMANIFEST_ID,
-        NODE.*
-        from NODE_RCRA_EM_EMANIFEST NODE
-        left join RCRA_EM_EMANIFEST WH on WH.MAN_TRACKING_NUM = NODE.MAN_TRACKING_NUM',
-                   null
-            from dual
-            union all
-            select 184,
-                   'CV',
-                   'ETL_EM_WASTE_VW',
-                   'select WH.EM_WASTE_ID WH_EM_WASTE_ID,
-        ETL.WH_EM_EMANIFEST_ID,
-        ETL.EM_SUBM_ID,
-        NODE.*
-        from NODE_RCRA_EM_WASTE NODE
-        join ETL_EM_EMANIFEST_VW ETL on ETL.EM_EMANIFEST_ID = NODE.EM_EMANIFEST_ID
-        left join RCRA_EM_WASTE WH
-        on WH.EM_EMANIFEST_ID = ETL.WH_EM_EMANIFEST_ID
-        and WH.LINE_NUM = NODE.LINE_NUM',
-                   null
-            from dual
-            union all
-            select 185,
-                   'CV',
-                   'ETL_EM_WASTE_COMMENT_VW',
-                   'select ETL.WH_EM_WASTE_ID,
-        ETL.WH_EM_EMANIFEST_ID,
-        ETL.EM_SUBM_ID,
-        NODE.*
-        from NODE_RCRA_EM_WASTE_COMMENT NODE
-        join ETL_EM_WASTE_VW ETL on ETL.EM_WASTE_ID = NODE.EM_WASTE_ID',
-                   null
-            from dual
-            union all
-            select 186,
-                   'CV',
-                   'ETL_EM_WASTE_PCB_VW',
-                   'select ETL.WH_EM_WASTE_ID,
-        ETL.WH_EM_EMANIFEST_ID,
-        ETL.EM_SUBM_ID,
-        NODE.*
-        from NODE_RCRA_EM_WASTE_PCB NODE
-        join ETL_EM_WASTE_VW ETL on ETL.EM_WASTE_ID = NODE.EM_WASTE_ID',
-                   null
-            from dual
-            union all
-            select 187,
-                   'CV',
-                   'ETL_EM_EMANIFEST_COMMENT_VW',
-                   'select ETL.WH_EM_EMANIFEST_ID,
-        ETL.EM_SUBM_ID,
-        NODE.*
-        from NODE_RCRA_EM_EMANIFEST_COMMENT NODE
-        join ETL_EM_EMANIFEST_VW ETL on ETL.EM_EMANIFEST_ID = NODE.EM_EMANIFEST_ID',
-                   null
-            from dual
-            union all
-            select 188,
-                   'CV',
-                   'ETL_EM_TRANSPORTER_VW',
-                   'select ETL.WH_EM_EMANIFEST_ID,
-        ETL.EM_SUBM_ID,
-        NODE.*
-        from NODE_RCRA_EM_TRANSPORTER NODE
-        join ETL_EM_EMANIFEST_VW ETL on ETL.EM_EMANIFEST_ID = NODE.EM_EMANIFEST_ID',
-                   null
-            from dual
-            union all
-            select 189,
-                   'CV',
-                   'ETL_EM_WASTE_CD_TRANS_VW',
-                   'select ETL.WH_EM_WASTE_ID,
-        ETL.WH_EM_EMANIFEST_ID,
-        ETL.EM_SUBM_ID,
-        NODE.*
-        from NODE_RCRA_EM_WASTE_CD_TRANS NODE
-        join ETL_EM_WASTE_VW ETL on ETL.EM_WASTE_ID = NODE.EM_WASTE_ID',
-                   null
-            from dual
-            union all
-            select 190,
-                   'CV',
-                   'ETL_EM_FED_WASTE_CODE_DESC_VW',
-                   'select ETL.WH_EM_WASTE_ID,
-        ETL.WH_EM_EMANIFEST_ID,
-        ETL.EM_SUBM_ID,
-        NODE.*
-        from NODE_RCRA_EM_FED_WASTE_CODE NODE
-        join ETL_EM_WASTE_VW ETL on ETL.EM_WASTE_ID = NODE.EM_WASTE_ID',
-                   null
-            from dual
-            union all
-            select 191,
-                   'CV',
-                   'ETL_EM_STATE_WASTE_CODE_VW',
-                   'select ETL.WH_EM_WASTE_ID,
-        ETL.WH_EM_EMANIFEST_ID,
-        ETL.EM_SUBM_ID,
-        NODE.*
-        from NODE_RCRA_EM_STATE_WASTE_CODE NODE
-        join ETL_EM_WASTE_VW ETL on ETL.EM_WASTE_ID = NODE.EM_WASTE_ID',
-                   null
-            from dual
-            union all
-            select 192, 'DV', 'ETL_EM_TR_NUM_ORIG_VW', null, null
-            from dual
-            union all
-            select 193, 'DV', 'ETL_EM_TR_NUM_RESIDUE_NEW_VW', null, null
-            from dual
-            union all
-            select 194, 'DV', 'ETL_EM_TR_NUM_REJ_VW', null, null
-            from dual
-            union all
-            select 195, 'DV', 'ETL_EM_TR_NUM_WASTE_VW', null, null
-            from dual
-            union all
-            select 196, 'DV', 'ETL_EM_WASTE_CD_FED_VW', null, null
-            from dual
-            union all
-            select 197, 'DV', 'ETL_EM_WASTE_CD_GEN_VW', null, null
-            from dual
-            union all
-            select 198, 'DV', 'ETL_EM_WASTE_CD_TSDF_VW', null, null
-            from dual
-            union all
-            select 199, 'DV', 'ETL_EM_HANDLER_VW', null, null
-            from dual
-            union all
-            select 200, 'CQ', 'SEQ_RCRA_EM_TRANSPORTER', null, null
-            from dual
-            union all
-            select 201, 'CQ', 'SEQ_EM_FED_WASTE_CODE_DESC_ID', null, null
-            from dual
-            union all
-            select 202, 'CQ', 'SEQ_EM_STATE_WASTE_CODE_DESC', null, null
-            from dual
-            union all
-            select 203, 'DQ', 'SEQ_RCRA_EM_HANDLER', null, null
-            from dual
-            union all
-            select 204, 'DQ', 'SEQ_RCRA_EM_TR_NUM_ORIG', null, null
-            from dual
-            union all
-            select 205, 'DQ', 'SEQ_RCRA_EM_TR_NUM_REJ', null, null
-            from dual
-            union all
-            select 206, 'DQ', 'SEQ_RCRA_EM_TR_NUM_RESIDUE_NEW', null, null
-            from dual
-            union all
-            select 207, 'DQ', 'SEQ_RCRA_EM_TR_NUM_WASTE', null, null
-            from dual
-            union all
-            select 208, 'DQ', 'SEQ_RCRA_EM_WASTE_CD_FED', null, null
-            from dual
-            union all
-            select 209, 'DQ', 'SEQ_RCRA_EM_WASTE_CD_TSDF', null, null
-            from dual
-            union all
-            select 210,
-                   'RC',
-                   'COMMENT_DESC',
-                   'CMNT_DESC',
-                   'RCRA_EM_WASTE_COMMENT'
-            from dual)
-        select t.type_code, t.obj_name, t.obj_def, t.target_name
-        from t
-        order by t.sort_order
-    ;
-begin
-    open x;
-    loop
-        fetch x into type_code, obj_name, obj_def, target_name;
-        exit when x%notfound;
-        dbms_output.put_line('type_code=' || type_code || ', obj_name=' || obj_name || ', obj_def=' || obj_def
-            || ', target_name=' || target_name);
-        handle_db_action(
-                type_code => type_code,
-                obj_name => obj_name,
-                obj_def => obj_def,
-                target_name => target_name
-            );
-    end loop;
-    close x;
+create sequence SEQ_RCRA_CA_REL_PERMIT_UNIT
+/
 
-    dbms_output.put_line('Deleting manifests with a null tracking number');
-    delete
-    from RCRA_EM_EMANIFEST
-    where MAN_TRACKING_NUM is null;
-    dbms_output.put_line('Count of manifests deleted with a null tracking number: ' || sql%rowcount);
+create sequence SEQ_RCRA_CA_STATUTORY_CITATION
+/
 
-    select count(*)
-    into exists_ind
-    from ALL_TAB_COLS x
-    where x.OWNER = source_db
-      and x.TABLE_NAME = 'RCRA_EM_EMANIFEST'
-      and x.COLUMN_NAME = 'CORR_VERSION_NUM';
+create sequence SEQ_RCRA_CME_CITATION
+/
 
-    if exists_ind = 1
-    then
-        query := 'delete
-        from RCRA_EM_EMANIFEST
-        where EM_EMANIFEST_ID in (
-            with t as (
-                select m.EM_EMANIFEST_ID,
-                       row_number() over (partition by m.MAN_TRACKING_NUM order by m.CORR_VERSION_NUM desc) as RN
-                from RCRA_EM_EMANIFEST m
-            )
-            select t.EM_EMANIFEST_ID
-            from t
-            where t.RN > 1)';
-        execute immediate query;
-        dbms_output.put_line('Count of non-current manifests deleted: ' || sql%rowcount);
-    else
-        dbms_output.put_line('Skipped deleting non-current manifest records because RCRA_EM_EMANIFEST.CORR_VERSION_NUM column does not exist');
-    end if;
+create sequence SEQ_RCRA_CME_CSNY_DATE
+/
 
-    select count(*)
-    into exists_ind
-    from ALL_TABLES x
-    where x.OWNER = source_db
-      and x.TABLE_NAME = 'RCRA_EM_HANDLER';
+create sequence SEQ_RCRA_CME_ENFRC_ACT
+/
 
-    if exists_ind = 1
-    then
-        query := 'merge into RCRA_EM_EMANIFEST d
-        using (select m.EM_EMANIFEST_ID,
-                      gen.EPA_SITE_ID           as GEN_EPA_SITE_ID,
-                      gen.MANIFEST_NAME         as GEN_MANIFEST_NAME,
-                      gen.REG_IND               as GEN_REG_IND,
-                      gen.MOD_IND               as GEN_MOD_IND,
-                      gen.MAIL_STREET_NUM       as GEN_MAIL_STREET_NUM,
-                      gen.MAIL_STREET1          as GEN_MAIL_STREET1,
-                      gen.MAIL_STREET2          as GEN_MAIL_STREET2,
-                      gen.MAIL_CITY             as GEN_MAIL_CITY,
-                      gen.MAIL_ZIP              as GEN_MAIL_ZIP,
-                      gen.MAIL_STATE_CODE       as GEN_MAIL_STATE_CODE,
-                      gen.SITE_STREET_NUM       as GEN_SITE_STREET_NUM,
-                      gen.SITE_STREET1          as GEN_SITE_STREET1,
-                      gen.SITE_STREET2          as GEN_SITE_STREET2,
-                      gen.SITE_CITY             as GEN_SITE_CITY,
-                      gen.SITE_STATE_CODE       as GEN_SITE_STATE_CODE,
-                      gen.SITE_ZIP              as GEN_SITE_ZIP,
-                      gen.CONTACT_FIRST_NAME    as GEN_CONTACT_FIRST_NAME,
-                      gen.CONTACT_LAST_NAME     as GEN_CONTACT_LAST_NAME,
-                      gen.CONTACT_EMAIL         as GEN_CONTACT_EMAIL,
-                      gen.CONTACT_COMPANY_NAME  as GEN_CONTACT_COMPANY_NAME,
-                      gen.CONTACT_PHONE_NUM     as GEN_CONTACT_PHONE_NUM,
-                      gen.CONTACT_PHONE_EXT     as GEN_CONTACT_PHONE_EXT,
-                      gen.PS_NAME               as GEN_PS_NAME,
-                      gen.PS_DATE               as GEN_PS_DATE,
-                      gen.ES_SIGN_DATE          as GEN_ES_SIGN_DATE,
-                      gen.ES_SIGNER_FIRST_NAME  as GEN_ES_SIGNER_FIRST_NAME,
-                      gen.ES_SIGNER_LAST_NAME   as GEN_ES_SIGNER_LAST_NAME,
-                      gen.EMERG_PHONE_NUM       as GEN_EMERG_PHONE_NUM,
-                      gen.EMERG_PHONE_EXT       as GEN_EMERG_PHONE_EXT,
-                      tsdf.EPA_SITE_ID          as TSDF_EPA_SITE_ID,
-                      tsdf.MANIFEST_NAME        as TSDF_MANIFEST_NAME,
-                      tsdf.REG_IND              as TSDF_REG_IND,
-                      tsdf.MOD_IND              as TSDF_MOD_IND,
-                      tsdf.MAIL_STREET_NUM      as TSDF_MAIL_STREET_NUM,
-                      tsdf.MAIL_STREET1         as TSDF_MAIL_STREET1,
-                      tsdf.MAIL_STREET2         as TSDF_MAIL_STREET2,
-                      tsdf.MAIL_CITY            as TSDF_MAIL_CITY,
-                      tsdf.MAIL_ZIP             as TSDF_MAIL_ZIP,
-                      tsdf.MAIL_STATE_CODE      as TSDF_MAIL_STATE_CODE,
-                      tsdf.SITE_STREET_NUM      as TSDF_SITE_STREET_NUM,
-                      tsdf.SITE_STREET1         as TSDF_SITE_STREET1,
-                      tsdf.SITE_STREET2         as TSDF_SITE_STREET2,
-                      tsdf.SITE_CITY            as TSDF_SITE_CITY,
-                      tsdf.SITE_STATE_CODE      as TSDF_SITE_STATE_CODE,
-                      tsdf.SITE_ZIP             as TSDF_SITE_ZIP,
-                      tsdf.CONTACT_FIRST_NAME   as TSDF_CONTACT_FIRST_NAME,
-                      tsdf.CONTACT_LAST_NAME    as TSDF_CONTACT_LAST_NAME,
-                      tsdf.CONTACT_EMAIL        as TSDF_CONTACT_EMAIL,
-                      tsdf.CONTACT_COMPANY_NAME as TSDF_CONTACT_COMPANY_NAME,
-                      tsdf.CONTACT_PHONE_NUM    as TSDF_CONTACT_PHONE_NUM,
-                      tsdf.CONTACT_PHONE_EXT    as TSDF_CONTACT_PHONE_EXT,
-                      tsdf.PS_NAME              as TSDF_PS_NAME,
-                      tsdf.PS_DATE              as TSDF_PS_DATE,
-                      tsdf.ES_SIGN_DATE         as TSDF_ES_SIGN_DATE,
-                      tsdf.ES_SIGNER_FIRST_NAME as TSDF_ES_SIGNER_FIRST_NAME,
-                      tsdf.ES_SIGNER_LAST_NAME  as TSDF_ES_SIGNER_LAST_NAME,
-                      tsdf.EMERG_PHONE_NUM      as TSDF_EMERG_PHONE_NUM,
-                      tsdf.EMERG_PHONE_EXT      as TSDF_EMERG_PHONE_EXT,
-                      alt.EPA_SITE_ID           as ALT_EPA_SITE_ID,
-                      alt.MANIFEST_NAME         as ALT_MANIFEST_NAME,
-                      alt.REG_IND               as ALT_REG_IND,
-                      alt.MOD_IND               as ALT_MOD_IND,
-                      alt.MAIL_STREET_NUM       as ALT_MAIL_STREET_NUM,
-                      alt.MAIL_STREET1          as ALT_MAIL_STREET1,
-                      alt.MAIL_STREET2          as ALT_MAIL_STREET2,
-                      alt.MAIL_CITY             as ALT_MAIL_CITY,
-                      alt.MAIL_ZIP              as ALT_MAIL_ZIP,
-                      alt.MAIL_STATE_CODE       as ALT_MAIL_STATE_CODE,
-                      alt.SITE_STREET_NUM       as ALT_SITE_STREET_NUM,
-                      alt.SITE_STREET1          as ALT_SITE_STREET1,
-                      alt.SITE_STREET2          as ALT_SITE_STREET2,
-                      alt.SITE_CITY             as ALT_SITE_CITY,
-                      alt.SITE_STATE_CODE       as ALT_SITE_STATE_CODE,
-                      alt.SITE_ZIP              as ALT_SITE_ZIP,
-                      alt.CONTACT_FIRST_NAME    as ALT_CONTACT_FIRST_NAME,
-                      alt.CONTACT_LAST_NAME     as ALT_CONTACT_LAST_NAME,
-                      alt.CONTACT_EMAIL         as ALT_CONTACT_EMAIL,
-                      alt.CONTACT_COMPANY_NAME  as ALT_CONTACT_COMPANY_NAME,
-                      alt.CONTACT_PHONE_NUM     as ALT_CONTACT_PHONE_NUM,
-                      alt.CONTACT_PHONE_EXT     as ALT_CONTACT_PHONE_EXT,
-                      alt.PS_NAME               as ALT_PS_NAME,
-                      alt.PS_DATE               as ALT_PS_DATE,
-                      alt.ES_SIGN_DATE          as ALT_ES_SIGN_DATE,
-                      alt.ES_SIGNER_FIRST_NAME  as ALT_ES_SIGNER_FIRST_NAME,
-                      alt.ES_SIGNER_LAST_NAME   as ALT_ES_SIGNER_LAST_NAME,
-                      alt.EMERG_PHONE_NUM       as ALT_EMERG_PHONE_NUM,
-                      alt.EMERG_PHONE_EXT       as ALT_EMERG_PHONE_EXT
-               from RCRA_EM_EMANIFEST m
-                        left join RCRA_EM_HANDLER gen
-                                  on m.EM_EMANIFEST_ID = gen.EM_EMANIFEST_ID and gen.MANIFEST_HANDLER_TYPE = ''Generator''
-                        left join RCRA_EM_HANDLER tsdf
-                                  on m.EM_EMANIFEST_ID = gen.EM_EMANIFEST_ID and
-                                     tsdf.MANIFEST_HANDLER_TYPE = ''DesignatedFacility''
-                        left join RCRA_EM_HANDLER alt on m.EM_EMANIFEST_ID = alt.EM_EMANIFEST_ID and
-                                                         alt.MANIFEST_HANDLER_TYPE = ''AlternateDesignateFacility'') s
-        on (d.EM_EMANIFEST_ID = s.EM_EMANIFEST_ID)
-        when matched then
-            update
-            set -- generator
-                d.GENERATOR_ID                   = s.GEN_EPA_SITE_ID,
-                d.GENERATOR_NAME                 = s.GEN_MANIFEST_NAME,
-                d.GENERATOR_REGISTERED           = s.GEN_REG_IND,
-                d.GENERATOR_MODIFIED             = s.GEN_MOD_IND,
-                d.GENERATOR_MAIL_STREET_NUM      = s.GEN_MAIL_STREET_NUM,
-                d.GENERATOR_MAIL_STREET_1        = s.GEN_MAIL_STREET1,
-                d.GENERATOR_MAIL_STREET_2        = s.GEN_MAIL_STREET2,
-                d.GENERATOR_MAIL_CITY            = s.GEN_MAIL_CITY,
-                d.GENERATOR_MAIL_ZIP             = s.GEN_MAIL_ZIP,
-                d.GENERATOR_MAIL_STA             = s.GEN_MAIL_STATE_CODE,
-                d.GENERATOR_LOC_STREET_NUM       = s.GEN_SITE_STREET_NUM,
-                d.GENERATOR_LOC_STREET_1         = s.GEN_SITE_STREET1,
-                d.GENERATOR_LOC_STREET_2         = s.GEN_SITE_STREET2,
-                d.GENERATOR_LOC_CITY             = s.GEN_SITE_CITY,
-                d.GENERATOR_LOC_STA              = s.GEN_SITE_STATE_CODE,
-                d.GENERATOR_LOC_ZIP              = s.GEN_SITE_ZIP,
-                d.GENERATOR_CONTACT_FIRST_NAME   = s.GEN_CONTACT_FIRST_NAME,
-                d.GENERATOR_CONTACT_LAST_NAME    = s.GEN_CONTACT_LAST_NAME,
-                d.GENERATOR_CONTACT_EMAIL        = s.GEN_CONTACT_EMAIL,
-                d.GENERATOR_CONTACT_COMPANY_NAME = s.GEN_CONTACT_COMPANY_NAME,
-                d.GENERATOR_CONTACT_PHONE_NUM    = s.GEN_CONTACT_PHONE_NUM,
-                d.GENERATOR_CONTACT_PHONE_EXT    = s.GEN_CONTACT_PHONE_EXT,
-                d.GENERATOR_PRINTED_NAME         = s.GEN_PS_NAME,
-                d.GENERATOR_SIGNATURE_DATE       = s.GEN_PS_DATE,
-                d.GENERATOR_ESIG_SIGNATURE_DATE  = s.GEN_ES_SIGN_DATE,
-                d.GENERATOR_ESIG_FIRST_NAME      = s.GEN_ES_SIGNER_FIRST_NAME,
-                d.GENERATOR_ESIG_LAST_NAME       = s.GEN_ES_SIGNER_LAST_NAME,
-                --- TSDF
-                d.DES_FAC_ID                     = s.TSDF_EPA_SITE_ID,
-                d.DES_FAC_NAME                   = s.TSDF_MANIFEST_NAME,
-                d.DES_FAC_REGISTERED             = s.TSDF_REG_IND,
-                d.DES_FAC_MODIFIED               = s.TSDF_MOD_IND,
-                d.DES_FAC_MAIL_STREET_NUM        = s.TSDF_MAIL_STREET_NUM,
-                d.DES_FAC_MAIL_STREET_1          = s.TSDF_MAIL_STREET1,
-                d.DES_FAC_MAIL_STREET_2          = s.TSDF_MAIL_STREET2,
-                d.DES_FAC_MAIL_CITY              = s.TSDF_MAIL_CITY,
-                d.DES_FAC_MAIL_ZIP               = s.TSDF_MAIL_ZIP,
-                d.DES_FAC_MAIL_STA               = s.TSDF_MAIL_STATE_CODE,
-                d.DES_FAC_LOC_STREET_NUM         = s.TSDF_SITE_STREET_NUM,
-                d.DES_FAC_LOC_STREET_1           = s.TSDF_SITE_STREET1,
-                d.DES_FAC_LOC_STREET_2           = s.TSDF_SITE_STREET2,
-                d.DES_FAC_LOC_CITY               = s.TSDF_SITE_CITY,
-                d.DES_FAC_LOC_STA                = s.TSDF_SITE_STATE_CODE,
-                d.DES_FAC_LOC_ZIP                = s.TSDF_SITE_ZIP,
-                d.DES_FAC_CONTACT_FIRST_NAME     = s.TSDF_CONTACT_FIRST_NAME,
-                d.DES_FAC_CONTACT_LAST_NAME      = s.TSDF_CONTACT_LAST_NAME,
-                d.DES_FAC_CONTACT_EMAIL          = s.TSDF_CONTACT_EMAIL,
-                d.DES_FAC_CONTACT_COMPANY_NAME   = s.TSDF_CONTACT_COMPANY_NAME,
-                d.DES_FAC_CONTACT_PHONE_NUM      = s.TSDF_CONTACT_PHONE_NUM,
-                d.DES_FAC_CONTACT_PHONE_EXT      = s.TSDF_CONTACT_PHONE_EXT,
-                d.DES_FAC_PRINTED_NAME           = s.TSDF_PS_NAME,
-                d.DES_FAC_SIGNATURE_DATE         = s.TSDF_PS_DATE,
-                d.DES_FAC_ESIG_SIGNATURE_DATE    = s.TSDF_ES_SIGN_DATE,
-                d.DES_FAC_ESIG_FIRST_NAME        = s.TSDF_ES_SIGNER_FIRST_NAME,
-                d.DES_FAC_ESIG_LAST_NAME         = s.TSDF_ES_SIGNER_LAST_NAME,
-                --- alt TSDF
-                d.ALT_FAC_ID                     = s.ALT_EPA_SITE_ID,
-                d.ALT_FAC_NAME                   = s.ALT_MANIFEST_NAME,
-                d.ALT_FAC_REGISTERED             = s.ALT_REG_IND,
-                d.ALT_FAC_MODIFIED               = s.ALT_MOD_IND,
-                d.ALT_FAC_MAIL_STREET_NUM        = s.ALT_MAIL_STREET_NUM,
-                d.ALT_FAC_MAIL_STREET_1          = s.ALT_MAIL_STREET1,
-                d.ALT_FAC_MAIL_STREET_2          = s.ALT_MAIL_STREET2,
-                d.ALT_FAC_MAIL_CITY              = s.ALT_MAIL_CITY,
-                d.ALT_FAC_MAIL_ZIP               = s.ALT_MAIL_ZIP,
-                d.ALT_FAC_MAIL_STA               = s.ALT_MAIL_STATE_CODE,
-                d.ALT_FAC_LOC_STREET_NUM         = s.ALT_SITE_STREET_NUM,
-                d.ALT_FAC_LOC_STREET_1           = s.ALT_SITE_STREET1,
-                d.ALT_FAC_LOC_STREET_2           = s.ALT_SITE_STREET2,
-                d.ALT_FAC_LOC_CITY               = s.ALT_SITE_CITY,
-                d.ALT_FAC_LOC_STA                = s.ALT_SITE_STATE_CODE,
-                d.ALT_FAC_LOC_ZIP                = s.ALT_SITE_ZIP,
-                d.ALT_FAC_CONTACT_FIRST_NAME     = s.ALT_CONTACT_FIRST_NAME,
-                d.ALT_FAC_CONTACT_LAST_NAME      = s.ALT_CONTACT_LAST_NAME,
-                d.ALT_FAC_CONTACT_EMAIL          = s.ALT_CONTACT_EMAIL,
-                d.ALT_FAC_CONTACT_COMPANY_NAME   = s.ALT_CONTACT_COMPANY_NAME,
-                d.ALT_FAC_CONTACT_PHONE_NO       = s.ALT_CONTACT_PHONE_NUM,
-                d.ALT_FAC_CONTACT_PHONE_EXT      = s.ALT_CONTACT_PHONE_EXT,
-                d.ALT_FAC_PRINTED_NAME           = s.ALT_PS_NAME,
-                d.ALT_FAC_SIGNATURE_DATE         = s.ALT_PS_DATE,
-                d.ALT_FAC_ESIG_SIGNATURE_DATE    = s.ALT_ES_SIGN_DATE,
-                d.ALT_FAC_ESIG_FIRST_NAME        = s.ALT_ES_SIGNER_FIRST_NAME,
-                d.ALT_FAC_ESIG_LAST_NAME         = s.ALT_ES_SIGNER_LAST_NAME,
-                d.EMERGENCY_PHONE_NUM            = coalesce(s.ALT_EMERG_PHONE_NUM, s.TSDF_EMERG_PHONE_NUM,
-                                                            s.GEN_EMERG_PHONE_NUM),
-                d.EMERGENCY_PHONE_EXT            = coalesce(s.ALT_EMERG_PHONE_EXT, s.TSDF_EMERG_PHONE_EXT,
-                                                            s.GEN_EMERG_PHONE_EXT)';
-        execute immediate query;
-        dbms_output.put_line('Count of manifests updated: ' || sql%rowcount);
-    else
-        dbms_output.put_line('Skipped updating manifest records because the RCRA_EM_HANDLER table does not exist');
-    end if;
+create sequence SEQ_RCRA_CME_EVAL
+/
 
-    -- populate the transporter table
-    select count(*)
-    into exists_ind
-    from ALL_TABLES x
-    where x.OWNER = source_db
-      and x.TABLE_NAME = 'RCRA_EM_HANDLER';
-    if exists_ind = 1
-    then
-        query := 'insert into RCRA_EM_TRANSPORTER (EM_TRANSPORTER_ID, EM_EMANIFEST_ID, TRANSPORTER_ID, TRANSPORTER_NAME,
-                                         TRANSPORTER_PRINTED_NAME,
-                                         TRANSPORTER_SIGNATURE_DATE, TRANSPORTER_ESIG_FIRST_NAME,
-                                         TRANSPORTER_ESIG_LAST_NAME, TRANS_ESIG_SIGNATURE_DATE,
-                                         TRANSPORTER_LINE_NUM,
-                                         TRANSPORTER_REGISTERED)
-        select SEQ_RCRA_EM_TRANSPORTER.nextval,
-               h.EM_EMANIFEST_ID,
-               h.EPA_SITE_ID,
-               h.MANIFEST_NAME,
-               h.PS_NAME,
-               h.PS_DATE,
-               h.ES_SIGNER_FIRST_NAME,
-               h.ES_SIGNER_LAST_NAME,
-               h.ES_SIGN_DATE,
-               h.ORDER_NUM,
-               h.REG_IND
-        from RCRA_EM_HANDLER h
-        where h.MANIFEST_HANDLER_TYPE = ''Transporter''
-          and not exists(
-                select 1
-                from RCRA_EM_TRANSPORTER t
-                where t.EM_EMANIFEST_ID = h.EM_EMANIFEST_ID
-                  and t.TRANSPORTER_LINE_NUM = h.ORDER_NUM
-            )';
-        execute immediate query;
-        dbms_output.put_line('Count of transporters inserted: ' || sql%rowcount);
-    else
-        dbms_output.put_line('Skipped inserting transporters because the RCRA_EM_HANDLER table does not exist');
-    end if;
+create sequence SEQ_RCRA_CME_EVAL_COMMIT
+/
 
-    -- populate the RCRA_EM_FED_WASTE_CODE_DESC table
-    select count(*)
-    into exists_ind
-    from ALL_TABLES x
-    where x.OWNER = source_db
-      and x.TABLE_NAME = 'RCRA_EM_WASTE_CD_FED';
+create sequence SEQ_RCRA_CME_EVAL_VIOL
+/
 
-    if exists_ind = 1
-    then
-        query := 'insert into RCRA_EM_FED_WASTE_CODE_DESC (EM_WASTE_ID, FED_MANIFEST_WASTE_CODE, MANIFEST_WASTE_DESC, COI_IND)
-        select f.EM_WASTE_ID, f.WASTE_CODE, f.WASTE_DESC, null
-        from RCRA_EM_WASTE_CD_FED f
-        where not exists(
-                select 1
-                from RCRA_EM_FED_WASTE_CODE_DESC fw
-                where fw.EM_WASTE_ID = f.EM_WASTE_ID
-                  and fw.FED_MANIFEST_WASTE_CODE = f.WASTE_CODE
-            )';
-        execute immediate query;
-        dbms_output.put_line('Count of RCRA_EM_FED_WASTE_CODE_DESC rows inserted: ' || sql%rowcount);
-    else
-        dbms_output.put_line('Skipped inserting RCRA_EM_FED_WASTE_CODE_DESC rows because the RCRA_EM_WASTE_CD_FED table does not exist');
-    end if;
+create sequence SEQ_RCRA_CME_FAC_SUBM
+/
 
-    -- populate the RCRA_EM_STATE_WASTE_CODE_DESC table
-    select count(*)
-    into exists_ind
-    from ALL_TABLES x
-    where x.OWNER = source_db
-      and x.TABLE_NAME in ('RCRA_EM_WASTE_CD_GEN', 'RCRA_EM_WASTE_CD_TSDF');
-    if exists_ind = 2
-    then
-        query := 'insert
-        into RCRA_EM_STATE_WASTE_CODE_DESC (EM_WASTE_ID, STA_MANIFEST_WASTE_CODE, MANIFEST_WASTE_DESC)
-        with x(WASTE_ID, WASTE_CODE, WASTE_DESC) as ( --
-            select t.EM_WASTE_ID, t.WASTE_CODE, t.WASTE_DESC
-            from RCRA_EM_WASTE_CD_TSDF t
-            union all
-            select g.EM_WASTE_ID, g.WASTE_CODE, g.WASTE_DESC
-            from RCRA_EM_WASTE_CD_GEN g --
-        )
-        select WASTE_ID, WASTE_CODE, WASTE_DESC
-        from x
-        where not exists(
-                select 1
-                from RCRA_EM_STATE_WASTE_CODE_DESC sw
-                where sw.EM_WASTE_ID = x.WASTE_ID
-                  and sw.STA_MANIFEST_WASTE_CODE = x.WASTE_CODE
-            )';
-        execute immediate query;
-        dbms_output.put_line('Count of RCRA_EM_STATE_WASTE_CODE_DESC rows inserted: ' || sql%rowcount);
-    else
-        dbms_output.put_line('Skipped inserting RCRA_EM_STATE_WASTE_CODE_DESC rows because the RCRA_EM_WASTE_CD_TSDF or RCRA_EM_WASTE_CD_GEN table does not exist');
-    end if;
+create sequence SEQ_RCRA_CME_MEDIA
+/
 
-    select coalesce(max(m.EM_EMANIFEST_ID), 0)
-    into max_val
-    from RCRA_EM_EMANIFEST m;
+create sequence SEQ_RCRA_CME_MILESTONE
+/
 
-    select SEQ_RCRA_EM_EMANIFEST.nextval
-    into next_val
-    from dual;
+create sequence SEQ_RCRA_CME_PNLTY
+/
 
-    dbms_output.put_line('Max RCRA_EM_EMANIFEST.EM_EMANIFEST_ID = ' || max_val ||
-                         '; select SEQ_RCRA_EM_EMANIFEST.nextval = ' || next_val);
+create sequence SEQ_RCRA_CME_PYMT
+/
 
-    if max_val > next_val then
-        query := 'alter sequence SEQ_RCRA_EM_EMANIFEST increment by ' || (max_val - next_val + 1);
-        dbms_output.put_line('Executing: ' || query);
-        execute immediate query;
-        select SEQ_RCRA_EM_EMANIFEST.nextval
-        into next_val
-        from dual;
-        query := 'alter sequence SEQ_RCRA_EM_EMANIFEST increment by 1';
-        execute immediate query;
-    else
-        dbms_output.put_line('Not updating the nextval of the SEQ_RCRA_EM_EMANIFEST sequence since it is bigger ' ||
-                             'than the max value in the RCRA_EM_EMANIFEST.EM_EMANIFEST_ID column');
-    end if;
-end;
+create sequence SEQ_RCRA_CME_RQST
+/
 
-declare
-    type_code   varchar2(2);
-    obj_name    varchar2(100);
-    obj_def     varchar2(4000);
-    target_name varchar2(100);
-    cursor x is
-        with t( --
-               sort_order, type_code, obj_name, obj_def, target_name) as ( --
-            select 1, 'DT', 'RCRA_EM_WASTE_CD_TSDF', null, null
-            from dual
-            union all
-            select 2, 'DT', 'RCRA_EM_WASTE_CD_GEN', null, null
-            from dual
-            union all
-            select 3, 'DT', 'RCRA_EM_WASTE_CD_FED', null, null
-            from dual
-            union all
-            select 4, 'DT', 'RCRA_EM_TR_NUM_WASTE', null, null
-            from dual
-            union all
-            select 5, 'DT', 'RCRA_EM_TR_NUM_REJ', null, null
-            from dual
-            union all
-            select 6, 'DT', 'RCRA_EM_TR_NUM_ORIG', null, null
-            from dual
-            union all
-            select 7, 'DT', 'RCRA_EM_TR_NUM_RESIDUE_NEW', null, null
-            from dual
-            union all
-            select 8, 'DT', 'RCRA_EM_HANDLER', null, null
-            from dual
-            union all
-            -- drop columns
-            select 9, 'DC', 'BR_IND', null, 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 10, 'DC', 'DISCREPANCY_IND', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 11, 'DC', 'CERT_BY_USER_ID', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 12, 'DC', 'REJ_COMMENTS', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 13, 'DC', 'REJ_GEN_ES_SIGNER_USER_ID', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 14, 'DC', 'REJ_GEN_ES_DOC_NAME', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 15, 'DC', 'REJ_GEN_ES_DOC_SIZE', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 16, 'DC', 'IMP_PORT_STATE_NAME', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 17, 'DC', 'PRINTED_DOC_NAME', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 18, 'DC', 'PRINTED_DOC_SIZE', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 19, 'DC', 'FORM_DOC_NAME', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 20, 'DC', 'FORM_DOC_SIZE', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 21, 'DC', 'ADD_INFO_NEW_MAN_DEST', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 22, 'DC', 'CORR_VERSION_NUM', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 23, 'DC', 'CORR_ES_SIGNER_USER_ID', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 24, 'DC', 'CORR_ES_DOC_NAME', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 25, 'DC', 'CORR_ES_DOC_SIZE', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 26, 'DC', 'HANDLER_ID', null, 'RCRA_EM_EMANIFEST_COMMENT'
-            from dual
-            union all
-            select 27, 'DC', 'ADD_INFO_NEW_MAN_DEST', null, 'RCRA_EM_WASTE'
-            from dual
-            union all
-            select 28, 'DC', 'HANDLER_ID', null, 'RCRA_EM_WASTE_COMMENT'
-            from dual
-            union all
-            select 29, 'DC', 'ADD_INFO_CONSENT_NUM', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 30, 'DC', 'CERT_BY_FIRST_NAME', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 31, 'DC', 'CERT_BY_LAST_NAME', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 32, 'DC', 'CONT_PREV_REJ_RES_IND', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 33, 'DC', 'CORR_ACTIVE_IND', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 34, 'DC', 'CORR_EPA_SITE_ID', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 35, 'DC', 'CORR_ES_CROMERR_ACT_ID', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 36, 'DC', 'CORR_ES_CROMERR_DOC_ID', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 37, 'DC', 'CORR_ES_DOC_MIME_TYPE', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 38, 'DC', 'CORR_ES_SIGN_DATE', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 39, 'DC', 'CORR_ES_SIGNER_FIRST_NAME', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 40, 'DC', 'CORR_ES_SIGNER_LAST_NAME', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 41, 'DC', 'FORM_DOC_MIME_TYPE', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 42, 'DC', 'PRINTED_DOC_MIME_TYPE', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 43, 'DC', 'PUBLIC_IND', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 44, 'DC', 'REJ_GEN_ES_CROMERR_ACT_ID', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 45, 'DC', 'REJ_GEN_ES_CROMERR_DOC_ID', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 46, 'DC', 'REJ_GEN_ES_DOC_MIME_TYPE', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 47, 'DC', 'REJ_GEN_ES_SIGN_DATE', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 48, 'DC', 'REJ_GEN_ES_SIGNER_FIRST_NAME', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 49, 'DC', 'REJ_GEN_ES_SIGNER_LAST_NAME', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 50, 'DC', 'REJ_GEN_PS_DATE', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 51, 'DC', 'REJ_GEN_PS_NAME', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            union all
-            select 52, 'DC', 'SIGN_STATUS_IND', null, 'RCRA_EM_EMANIFEST'
-            from dual
-            --
-        )
-        select t.type_code, t.obj_name, t.obj_def, t.target_name
-        from t
-        order by t.sort_order
-    ;
-begin
-    open x;
-    loop
-        fetch x into type_code, obj_name, obj_def, target_name;
-        exit when x%notfound;
-        dbms_output.put_line('type_code=' || type_code || ', obj_name=' || obj_name || ', obj_def=' || obj_def
-            || ', target_name=' || target_name);
-        handle_db_action(
-                type_code => type_code,
-                obj_name => obj_name,
-                obj_def => obj_def,
-                target_name => target_name
-            );
-    end loop;
-    close x;
-end;
+create sequence SEQ_RCRA_CME_SUPP_ENVR_PRJT
+/
 
--- recreate the RCRAINFO_ETL package
+create sequence SEQ_RCRA_CME_VIOL
+/
 
-create or replace PACKAGE RCRAINFO_ETL AS
+create sequence SEQ_RCRA_CME_VIOL_ENFRC
+/
+
+create sequence SEQ_RCRA_FA_COST_EST
+/
+
+create sequence SEQ_RCRA_FA_COST_EST_REL_MECH
+/
+
+create sequence SEQ_RCRA_FA_FAC_SUBM
+/
+
+create sequence SEQ_RCRA_FA_MECHANISM
+/
+
+create sequence SEQ_RCRA_FA_MECHANISM_DETAIL
+/
+
+create sequence SEQ_RCRA_GIS_FAC_SUBM
+/
+
+create sequence SEQ_RCRA_GIS_GEO_INFORMATION
+/
+
+create sequence SEQ_RCRA_HD_CERTIFICATION
+/
+
+create sequence SEQ_RCRA_HD_ENV_PERMIT
+/
+
+create sequence SEQ_RCRA_HD_HANDLER
+/
+
+create sequence SEQ_RCRA_HD_HBASIC
+/
+
+create sequence SEQ_RCRA_HD_NAICS
+/
+
+create sequence SEQ_RCRA_HD_OTHER_ID
+/
+
+create sequence SEQ_RCRA_HD_OWNEROP
+/
+
+create sequence SEQ_RCRA_HD_SEC_MATERIAL_ACT
+/
+
+create sequence SEQ_RCRA_HD_SEC_WASTE_CODE
+/
+
+create sequence SEQ_RCRA_HD_STATE_ACTIVITY
+/
+
+create sequence SEQ_RCRA_HD_UNIVERSAL_WASTE
+/
+
+create sequence SEQ_RCRA_HD_WASTE_CODE
+/
+
+create sequence SEQ_RCRA_PRM_EVENT
+/
+
+create sequence SEQ_RCRA_PRM_EVENT_COMMITMENT
+/
+
+create sequence SEQ_RCRA_PRM_FAC_SUBM
+/
+
+create sequence SEQ_RCRA_PRM_RELATED_EVENT
+/
+
+create sequence SEQ_RCRA_PRM_SERIES
+/
+
+create sequence SEQ_RCRA_PRM_UNIT
+/
+
+create sequence SEQ_RCRA_PRM_UNIT_DETAIL
+/
+
+create sequence SEQ_RCRA_PRM_WASTE_CODE
+/
+
+create sequence SEQ_RCRA_SUBMISSIONHISTORY
+/
+
+create sequence SEQ_RCRA_RU_REPORT_UNIV
+/
+
+create sequence SEQ_RCRA_HD_LQG_CLOSURE
+/
+
+create sequence SEQ_RCRA_HD_LQG_CONSOLIDATION
+/
+
+create sequence SEQ_RCRA_HD_EPISODIC_EVENT
+/
+
+create sequence SEQ_RCRA_HD_EPISODIC_WASTE
+/
+
+create sequence SEQ_RCRA_HD_EPISODIC_WASTE_CD
+/
+
+create sequence SEQ_ETL_RUN
+/
+
+create sequence SEQ_RCRA_EM_SUBM
+/
+
+create sequence SEQ_RCRA_EM_EMANIFEST
+/
+
+create sequence SEQ_RCRA_EM_EMANIFEST_COMMENT
+/
+
+create sequence SEQ_RCRA_EM_WASTE
+/
+
+create sequence SEQ_RCRA_EM_WASTE_CD_GEN
+/
+
+create sequence SEQ_RCRA_EM_WASTE_CD_TRANS
+/
+
+create sequence SEQ_RCRA_EM_WASTE_COMMENT
+/
+
+create sequence SEQ_RCRA_EM_WASTE_PCB
+/
+
+create sequence SEQ_RCRA_PRM_MOD_EVENT
+/
+
+create sequence SEQ_RCRA_HD_EPISODIC_PRJT
+/
+
+create sequence SEQ_RCRA_EM_TRANSPORTER
+/
+
+create sequence SEQ_EM_FED_WASTE_CODE_DESC_ID
+/
+
+create sequence SEQ_EM_STATE_WASTE_CODE_DESC
+/
+
+create table RCRA_CA_FAC_SUBM
+(
+    CA_FAC_SUBM_ID NUMBER(10)   not null
+        constraint PK_CA_FAC_SUBM
+            primary key,
+    HANDLER_ID     VARCHAR2(12) not null
+)
+/
+
+comment on table RCRA_CA_FAC_SUBM is 'Schema element: CorrectiveActionFacilitySubmissionDataType'
+/
+
+comment on column RCRA_CA_FAC_SUBM.CA_FAC_SUBM_ID is 'Parent: Supplies all of the relevant Corrective Action Data for a given Handler (_PK)'
+/
+
+comment on column RCRA_CA_FAC_SUBM.HANDLER_ID is 'Code that uniquely identifies the handler. (HandlerID)'
+/
+
+create table RCRA_CA_AREA
+(
+    CA_AREA_ID                     NUMBER(10) not null
+        constraint PK_CA_AREA
+            primary key,
+    CA_FAC_SUBM_ID                 NUMBER(10) not null
+        constraint FK_CA_ARA_CA_FC_SB
+            references RCRA_CA_FAC_SUBM
+                on delete cascade,
+    TRANS_CODE                     CHAR,
+    AREA_SEQ_NUM                   NUMBER(10) not null,
+    FAC_WIDE_IND                   CHAR,
+    AREA_NAME                      VARCHAR2(40),
+    AIR_REL_IND                    CHAR,
+    GROUNDWATER_REL_IND            CHAR,
+    SOIL_REL_IND                   CHAR,
+    SURFACE_WATER_REL_IND          CHAR,
+    REGULATED_UNIT_IND             CHAR,
+    EPA_RESP_PERSON_DATA_OWNER_CDE CHAR(2),
+    EPA_RESP_PERSON_ID             VARCHAR2(5),
+    STA_RESP_PERSON_DATA_OWNER_CDE CHAR(2),
+    STA_RESP_PERSON_ID             VARCHAR2(5),
+    SUPP_INFO_TXT                  VARCHAR2(2000),
+    CREATED_BY_USERID              VARCHAR2(255),
+    A_CREATED_DATE                 TIMESTAMP(6),
+    DATA_ORIG                      CHAR(2),
+    LAST_UPDT_BY                   VARCHAR2(255),
+    LAST_UPDT_DATE                 DATE
+)
+/
+
+comment on table RCRA_CA_AREA is 'Schema element: CorrectiveActionAreaDataType'
+/
+
+comment on column RCRA_CA_AREA.CA_AREA_ID is 'Parent: A list of Correction Action Areas for a particluar Handler (_PK)'
+/
+
+comment on column RCRA_CA_AREA.CA_FAC_SUBM_ID is 'Parent: A list of Correction Action Areas for a particluar Handler (_FK)'
+/
+
+comment on column RCRA_CA_AREA.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CA_AREA.AREA_SEQ_NUM is 'Code used for administrative purposes to uniquely designate a group of units (or a single unit) with a common history and projection of corrective action requirements. (AreaSequenceNumber)'
+/
+
+comment on column RCRA_CA_AREA.FAC_WIDE_IND is 'Indicates that the corrective action applies to the entire facility. (FacilityWideIndicator)'
+/
+
+comment on column RCRA_CA_AREA.AREA_NAME is 'The name of the Corrective Action area. (AreaName)'
+/
+
+comment on column RCRA_CA_AREA.AIR_REL_IND is 'Indicates that there has been a release to air (either within or beyond the facility boundary) from the unit/area. This may include releases of subsurface gas. (AirReleaseIndicator)'
+/
+
+comment on column RCRA_CA_AREA.GROUNDWATER_REL_IND is 'Indicates that there has been a release to groundwater from the unit/area. (GroundwaterReleaseIndicator)'
+/
+
+comment on column RCRA_CA_AREA.SOIL_REL_IND is 'Indicates that there has been a release to soil (either within or beyond the facility boundary) from the unit/area. This may include subsoil contamination beneath the unit/area. (SoilReleaseIndicator)'
+/
+
+comment on column RCRA_CA_AREA.SURFACE_WATER_REL_IND is 'Indicates that there has been a release to surface water (either within or beyond the facility boundary) from the unit/area. (SurfaceWaterReleaseIndicator)'
+/
+
+comment on column RCRA_CA_AREA.REGULATED_UNIT_IND is 'Indicates that the corrective action applies to a regulated unit. (RegulatedUnitIndicator)'
+/
+
+comment on column RCRA_CA_AREA.EPA_RESP_PERSON_DATA_OWNER_CDE is 'Indicates the agency that defines the person identifier. (EPAResponsiblePersonDataOwnerCode)'
+/
+
+comment on column RCRA_CA_AREA.EPA_RESP_PERSON_ID is 'The person currently responsible for the permit at the EPA level. (EPAResponsiblePersonID)'
+/
+
+comment on column RCRA_CA_AREA.STA_RESP_PERSON_DATA_OWNER_CDE is 'Indicates the agency that defines the person identifier. (StateResponsiblePersonDataOwnerCode)'
+/
+
+comment on column RCRA_CA_AREA.STA_RESP_PERSON_ID is 'The state person currently responsible for overseeing the corrective action area. (StateResponsiblePersonID)'
+/
+
+comment on column RCRA_CA_AREA.SUPP_INFO_TXT is 'Notes providing more information. (SupplementalInformationText)'
+/
+
+comment on column RCRA_CA_AREA.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_CA_AREA.A_CREATED_DATE is 'Creation Date (ACreatedDate)'
+/
+
+comment on column RCRA_CA_AREA.DATA_ORIG is 'Indicates data origination information (DataOrig)'
+/
+
+create index IX_CA_AR_CA_FC_SB
+    on RCRA_CA_AREA (CA_FAC_SUBM_ID)
+/
+
+create table RCRA_CA_AREA_REL_EVENT
+(
+    CA_AREA_REL_EVENT_ID           NUMBER(10)  not null
+        constraint PK_CA_AREA_RL_EVNT
+            primary key,
+    CA_AREA_ID                     NUMBER(10)  not null
+        constraint FK_CA_AR_RL_EV_CA
+            references RCRA_CA_AREA
+                on delete cascade,
+    TRANS_CODE                     CHAR,
+    ACT_LOC_CODE                   CHAR(2)     not null,
+    CORCT_ACT_EVENT_DATA_OWNER_CDE CHAR(2)     not null,
+    CORCT_ACT_EVENT_CODE           VARCHAR2(7) not null,
+    EVENT_AGN_CODE                 CHAR        not null,
+    EVENT_SEQ_NUM                  NUMBER(10)  not null
+)
+/
+
+comment on table RCRA_CA_AREA_REL_EVENT is 'Schema element: CorrectiveActionAreaRelatedEventDataType'
+/
+
+comment on column RCRA_CA_AREA_REL_EVENT.CA_AREA_REL_EVENT_ID is 'Parent: Linking Data for Corrective Action Areas and Events or Authorities and Events (_PK)'
+/
+
+comment on column RCRA_CA_AREA_REL_EVENT.CA_AREA_ID is 'Parent: Linking Data for Corrective Action Areas and Events or Authorities and Events (_FK)'
+/
+
+comment on column RCRA_CA_AREA_REL_EVENT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CA_AREA_REL_EVENT.ACT_LOC_CODE is 'Indicates the location of the agency regulating the handler. (ActivityLocationCode)'
+/
+
+comment on column RCRA_CA_AREA_REL_EVENT.CORCT_ACT_EVENT_DATA_OWNER_CDE is 'Indicates the agency that defines the corrective action event. (CorrectiveActionEventDataOwnerCode)'
+/
+
+comment on column RCRA_CA_AREA_REL_EVENT.CORCT_ACT_EVENT_CODE is 'A code which corresponds to a specific event or event type. The first two characters indicate the event category and the last three characters the numeric event number. (CorrectiveActionEventCode)'
+/
+
+comment on column RCRA_CA_AREA_REL_EVENT.EVENT_AGN_CODE is 'Agency responsible for the event. (EventAgencyCode)'
+/
+
+comment on column RCRA_CA_AREA_REL_EVENT.EVENT_SEQ_NUM is 'System-generated value used to uniquely identify multiple occurrences of a corrective action event. (EventSequenceNumber)'
+/
+
+create index IX_CA_AR_RL_EV_CA
+    on RCRA_CA_AREA_REL_EVENT (CA_AREA_ID)
+/
+
+create table RCRA_CA_AUTHORITY
+(
+    CA_AUTHORITY_ID                NUMBER(10) not null
+        constraint PK_CA_AUTHORITY
+            primary key,
+    CA_FAC_SUBM_ID                 NUMBER(10) not null
+        constraint FK_CA_ATH_CA_FC_SB
+            references RCRA_CA_FAC_SUBM
+                on delete cascade,
+    TRANS_CODE                     CHAR,
+    ACT_LOC_CODE                   CHAR(2)    not null,
+    AUTHORITY_DATA_OWNER_CODE      CHAR(2)    not null,
+    AUTHORITY_TYPE_CODE            CHAR       not null,
+    AUTHORITY_AGN_CODE             CHAR       not null,
+    AUTHORITY_EFFC_DATE            DATE       not null,
+    ISSUE_DATE                     DATE,
+    END_DATE                       DATE,
+    ESTABLISHED_REPOSITORY_CODE    CHAR,
+    RESP_LEAD_PROG_IDEN            CHAR,
+    AUTHORITY_SUBORG_DATA_OWNR_CDE CHAR(2),
+    AUTHORITY_SUBORG_CODE          VARCHAR2(10),
+    RESP_PERSON_DATA_OWNER_CODE    CHAR(2),
+    RESP_PERSON_ID                 VARCHAR2(5),
+    SUPP_INFO_TXT                  VARCHAR2(2000),
+    CREATED_BY_USERID              VARCHAR2(255),
+    A_CREATED_DATE                 TIMESTAMP(6),
+    DATA_ORIG                      CHAR(2),
+    LAST_UPDT_BY                   VARCHAR2(255),
+    LAST_UPDT_DATE                 DATE
+)
+/
+
+comment on table RCRA_CA_AUTHORITY is 'Schema element: CorrectiveActionAuthorityDataType'
+/
+
+comment on column RCRA_CA_AUTHORITY.CA_AUTHORITY_ID is 'Parent: A list of Correction Action Authorities for a particluar Handler (_PK)'
+/
+
+comment on column RCRA_CA_AUTHORITY.CA_FAC_SUBM_ID is 'Parent: A list of Correction Action Authorities for a particluar Handler (_FK)'
+/
+
+comment on column RCRA_CA_AUTHORITY.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CA_AUTHORITY.ACT_LOC_CODE is 'Indicates the location of the agency regulating the handler. (ActivityLocationCode)'
+/
+
+comment on column RCRA_CA_AUTHORITY.AUTHORITY_DATA_OWNER_CODE is 'Indicates the agency that defines the authority. (AuthorityDataOwnerCode)'
+/
+
+comment on column RCRA_CA_AUTHORITY.AUTHORITY_TYPE_CODE is 'A code used to indicate whether a permit, administrative order, or other authority has been issued to implement the corrective action process. (AuthorityTypeCode)'
+/
+
+comment on column RCRA_CA_AUTHORITY.AUTHORITY_AGN_CODE is 'Agency responsible for the Authority. (AuthorityAgencyCode)'
+/
+
+comment on column RCRA_CA_AUTHORITY.AUTHORITY_EFFC_DATE is 'Date that the authority became effective. (AuthorityEffectiveDate)'
+/
+
+comment on column RCRA_CA_AUTHORITY.ISSUE_DATE is 'Date the authorized agency official signs the order, permit, or permit modification. (IssueDate)'
+/
+
+comment on column RCRA_CA_AUTHORITY.END_DATE is 'The date when the corrective action authority is revoked or ended. (EndDate)'
+/
+
+comment on column RCRA_CA_AUTHORITY.ESTABLISHED_REPOSITORY_CODE is 'The action by which the Director requires the owner/operator to establish and maintain an information repository at a location near the facility for the purpose of making accessible to interested parties documents, reports, and other public information relevant to public understanding of the activities, findings, and plans for such corrective action initiatives. (EstablishedRepositoryCode)'
+/
+
+comment on column RCRA_CA_AUTHORITY.RESP_LEAD_PROG_IDEN is 'Code indicating the program in which the organization establishes the applicable guidance that the authority should be issued. (ResponsibleLeadProgramIdentifier)'
+/
+
+comment on column RCRA_CA_AUTHORITY.AUTHORITY_SUBORG_DATA_OWNR_CDE is 'Authority responsible suborganization owner. (AuthoritySuborganizationDataOwnerCode)'
+/
+
+comment on column RCRA_CA_AUTHORITY.AUTHORITY_SUBORG_CODE is 'Authority responsible suborganization. (AuthoritySuborganizationCode)'
+/
+
+comment on column RCRA_CA_AUTHORITY.RESP_PERSON_DATA_OWNER_CODE is 'Indicates the agency that defines the person identifier. (ResponsiblePersonDataOwnerCode)'
+/
+
+comment on column RCRA_CA_AUTHORITY.RESP_PERSON_ID is 'Code indicating the person within the agency responsible for conducting the evaluation or who is the responsible Authority. (ResponsiblePersonID)'
+/
+
+comment on column RCRA_CA_AUTHORITY.SUPP_INFO_TXT is 'Notes providing more information. (SupplementalInformationText)'
+/
+
+comment on column RCRA_CA_AUTHORITY.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_CA_AUTHORITY.A_CREATED_DATE is 'Creation Date (ACreatedDate)'
+/
+
+comment on column RCRA_CA_AUTHORITY.DATA_ORIG is 'Indicates data origination information (DataOrig)'
+/
+
+create index IX_CA_AT_CA_FC_SB
+    on RCRA_CA_AUTHORITY (CA_FAC_SUBM_ID)
+/
+
+create table RCRA_CA_AUTH_REL_EVENT
+(
+    CA_AUTH_REL_EVENT_ID           NUMBER(10)  not null
+        constraint PK_CA_AUTH_RL_EVNT
+            primary key,
+    CA_AUTHORITY_ID                NUMBER(10)  not null
+        constraint FK_CA_AT_RL_EV_CA
+            references RCRA_CA_AUTHORITY
+                on delete cascade,
+    TRANS_CODE                     CHAR,
+    ACT_LOC_CODE                   CHAR(2)     not null,
+    CORCT_ACT_EVENT_DATA_OWNER_CDE CHAR(2)     not null,
+    CORCT_ACT_EVENT_CODE           VARCHAR2(7) not null,
+    EVENT_AGN_CODE                 CHAR        not null,
+    EVENT_SEQ_NUM                  NUMBER(10)  not null
+)
+/
+
+comment on table RCRA_CA_AUTH_REL_EVENT is 'Schema element: CorrectiveActionAuthorityRelatedEventDataType'
+/
+
+comment on column RCRA_CA_AUTH_REL_EVENT.CA_AUTH_REL_EVENT_ID is 'Parent: Linking Data for Corrective Action Areas and Events or Authorities and Events (_PK)'
+/
+
+comment on column RCRA_CA_AUTH_REL_EVENT.CA_AUTHORITY_ID is 'Parent: Linking Data for Corrective Action Areas and Events or Authorities and Events (_FK)'
+/
+
+comment on column RCRA_CA_AUTH_REL_EVENT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CA_AUTH_REL_EVENT.ACT_LOC_CODE is 'Indicates the location of the agency regulating the handler. (ActivityLocationCode)'
+/
+
+comment on column RCRA_CA_AUTH_REL_EVENT.CORCT_ACT_EVENT_DATA_OWNER_CDE is 'Indicates the agency that defines the corrective action event. (CorrectiveActionEventDataOwnerCode)'
+/
+
+comment on column RCRA_CA_AUTH_REL_EVENT.CORCT_ACT_EVENT_CODE is 'A code which corresponds to a specific event or event type. The first two characters indicate the event category and the last three characters the numeric event number. (CorrectiveActionEventCode)'
+/
+
+comment on column RCRA_CA_AUTH_REL_EVENT.EVENT_AGN_CODE is 'Agency responsible for the event. (EventAgencyCode)'
+/
+
+comment on column RCRA_CA_AUTH_REL_EVENT.EVENT_SEQ_NUM is 'System-generated value used to uniquely identify multiple occurrences of a corrective action event. (EventSequenceNumber)'
+/
+
+create index IX_CA_AT_RL_EV_CA
+    on RCRA_CA_AUTH_REL_EVENT (CA_AUTHORITY_ID)
+/
+
+create table RCRA_CA_EVENT
+(
+    CA_EVENT_ID                    NUMBER(10)  not null
+        constraint PK_CA_EVENT
+            primary key,
+    CA_FAC_SUBM_ID                 NUMBER(10)  not null
+        constraint FK_CA_EVN_CA_FC_SB
+            references RCRA_CA_FAC_SUBM
+                on delete cascade,
+    TRANS_CODE                     CHAR,
+    ACT_LOC_CODE                   CHAR(2)     not null,
+    CORCT_ACT_EVENT_DATA_OWNER_CDE CHAR(2)     not null,
+    CORCT_ACT_EVENT_CODE           VARCHAR2(7) not null,
+    EVENT_AGN_CODE                 CHAR        not null,
+    EVENT_SEQ_NUM                  NUMBER(10)  not null,
+    ACTL_DATE                      DATE,
+    ORIGINAL_SCHEDULE_DATE         DATE,
+    NEW_SCHEDULE_DATE              DATE,
+    EVENT_SUBORG_DATA_OWNER_CODE   CHAR(2),
+    EVENT_SUBORG_CODE              VARCHAR2(10),
+    RESP_PERSON_DATA_OWNER_CODE    CHAR(2),
+    RESP_PERSON_ID                 VARCHAR2(5),
+    SUPP_INFO_TXT                  VARCHAR2(2000),
+    PUBLIC_SUPP_INFO_TXT           VARCHAR2(4000),
+    CREATED_BY_USERID              VARCHAR2(255),
+    A_CREATED_DATE                 TIMESTAMP(6),
+    DATA_ORIG                      CHAR(2),
+    LAST_UPDT_BY                   VARCHAR2(255),
+    LAST_UPDT_DATE                 DATE
+)
+/
+
+comment on table RCRA_CA_EVENT is 'Schema element: CorrectiveActionEventDataType'
+/
+
+comment on column RCRA_CA_EVENT.CA_EVENT_ID is 'Parent: A list of Correction Action Events for a particluar Handler (_PK)'
+/
+
+comment on column RCRA_CA_EVENT.CA_FAC_SUBM_ID is 'Parent: A list of Correction Action Events for a particluar Handler (_FK)'
+/
+
+comment on column RCRA_CA_EVENT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CA_EVENT.ACT_LOC_CODE is 'Indicates the location of the agency regulating the handler. (ActivityLocationCode)'
+/
+
+comment on column RCRA_CA_EVENT.CORCT_ACT_EVENT_DATA_OWNER_CDE is 'Indicates the agency that defines the corrective action event. (CorrectiveActionEventDataOwnerCode)'
+/
+
+comment on column RCRA_CA_EVENT.CORCT_ACT_EVENT_CODE is 'A code which corresponds to a specific event or event type. The first two characters indicate the event category and the last three characters the numeric event number. (CorrectiveActionEventCode)'
+/
+
+comment on column RCRA_CA_EVENT.EVENT_AGN_CODE is 'Agency responsible for the event. (EventAgencyCode)'
+/
+
+comment on column RCRA_CA_EVENT.EVENT_SEQ_NUM is 'System-generated value used to uniquely identify multiple occurrences of a corrective action event. (EventSequenceNumber)'
+/
+
+comment on column RCRA_CA_EVENT.ACTL_DATE is 'Date on which actual completion of an event occurs. (ActualDate)'
+/
+
+comment on column RCRA_CA_EVENT.ORIGINAL_SCHEDULE_DATE is 'The original scheduled completion date for an event. This date cannot be changed once entered. Slippage of the scheduled completion date is recorded in the NewScheduleDate Data Element. (OriginalScheduleDate)'
+/
+
+comment on column RCRA_CA_EVENT.NEW_SCHEDULE_DATE is 'Revised scheduled completion date of the event. This date is used in conjunction with the Original Scheduled Event Date to allow tracking scheduled date slippage. As the scheduled date changes, this field is updated with the new date and the Original Scheduled Event Date is not changed. (NewScheduleDate)'
+/
+
+comment on column RCRA_CA_EVENT.EVENT_SUBORG_DATA_OWNER_CODE is 'Event responsible suborganization owner. (EventSuborganizationDataOwnerCode)'
+/
+
+comment on column RCRA_CA_EVENT.EVENT_SUBORG_CODE is 'Event responsible suborganization. (EventSuborganizationCode)'
+/
+
+comment on column RCRA_CA_EVENT.RESP_PERSON_DATA_OWNER_CODE is 'Indicates the agency that defines the person identifier. (ResponsiblePersonDataOwnerCode)'
+/
+
+comment on column RCRA_CA_EVENT.RESP_PERSON_ID is 'Code indicating the person within the agency responsible for conducting the evaluation or who is the responsible Authority. (ResponsiblePersonID)'
+/
+
+comment on column RCRA_CA_EVENT.SUPP_INFO_TXT is 'Notes providing more information. (SupplementalInformationText)'
+/
+
+comment on column RCRA_CA_EVENT.PUBLIC_SUPP_INFO_TXT is 'Public notes providing more information (PublicSupplementalInformationText)'
+/
+
+comment on column RCRA_CA_EVENT.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_CA_EVENT.A_CREATED_DATE is 'Creation Date (ACreatedDate)'
+/
+
+comment on column RCRA_CA_EVENT.DATA_ORIG is 'Indicates data origination information (DataOrig)'
+/
+
+create index IX_CA_EV_CA_FC_SB
+    on RCRA_CA_EVENT (CA_FAC_SUBM_ID)
+/
+
+create table RCRA_CA_EVENT_COMMITMENT
+(
+    CA_EVENT_COMMITMENT_ID NUMBER(10) not null
+        constraint PK_CA_EVNT_CMMTMNT
+            primary key,
+    CA_EVENT_ID            NUMBER(10) not null
+        constraint FK_CA_EVN_CM_CA_EV
+            references RCRA_CA_EVENT
+                on delete cascade,
+    TRANS_CODE             CHAR,
+    COMMIT_LEAD            CHAR(2)    not null,
+    COMMIT_SEQ_NUM         NUMBER(10) not null
+)
+/
+
+comment on table RCRA_CA_EVENT_COMMITMENT is 'Schema element: EventEventCommitmentDataType'
+/
+
+comment on column RCRA_CA_EVENT_COMMITMENT.CA_EVENT_COMMITMENT_ID is 'Parent: Linking Data for Commitment/Initiative and Corrective Action or Permitting Events. (_PK)'
+/
+
+comment on column RCRA_CA_EVENT_COMMITMENT.CA_EVENT_ID is 'Parent: Linking Data for Commitment/Initiative and Corrective Action or Permitting Events. (_FK)'
+/
+
+comment on column RCRA_CA_EVENT_COMMITMENT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CA_EVENT_COMMITMENT.COMMIT_LEAD is 'Parent: Linking Data for Commitment/Initiative and Corrective Action or Permitting Events. (CommitmentLead)'
+/
+
+comment on column RCRA_CA_EVENT_COMMITMENT.COMMIT_SEQ_NUM is 'Parent: Linking Data for Commitment/Initiative and Corrective Action or Permitting Events. (CommitmentSequenceNumber)'
+/
+
+create index IX_CA_EV_CM_CA_EV
+    on RCRA_CA_EVENT_COMMITMENT (CA_EVENT_ID)
+/
+
+create table RCRA_CA_REL_PERMIT_UNIT
+(
+    CA_REL_PERMIT_UNIT_ID NUMBER(10) not null
+        constraint PK_CA_RL_PRMIT_UNT
+            primary key,
+    CA_AREA_ID            NUMBER(10) not null
+        constraint FK_CA_RL_PR_UN_CA
+            references RCRA_CA_AREA
+                on delete cascade,
+    TRANS_CODE            CHAR,
+    PERMIT_UNIT_SEQ_NUM   NUMBER(10) not null
+)
+/
+
+comment on table RCRA_CA_REL_PERMIT_UNIT is 'Schema element: CorrectiveActionRelatedPermitUnitDataType'
+/
+
+comment on column RCRA_CA_REL_PERMIT_UNIT.CA_REL_PERMIT_UNIT_ID is 'Parent: A permitted unit related to a corrective action area. (_PK)'
+/
+
+comment on column RCRA_CA_REL_PERMIT_UNIT.CA_AREA_ID is 'Parent: A permitted unit related to a corrective action area. (_FK)'
+/
+
+comment on column RCRA_CA_REL_PERMIT_UNIT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CA_REL_PERMIT_UNIT.PERMIT_UNIT_SEQ_NUM is 'System-generated value used to uniquely identify a process unit. (PermitUnitSequenceNumber)'
+/
+
+create index IX_CA_RL_PR_UN_CA
+    on RCRA_CA_REL_PERMIT_UNIT (CA_AREA_ID)
+/
+
+create table RCRA_CA_STATUTORY_CITATION
+(
+    CA_STATUTORY_CITATION_ID       NUMBER(10) not null
+        constraint PK_CA_STTTRY_CTTON
+            primary key,
+    CA_AUTHORITY_ID                NUMBER(10) not null
+        constraint FK_CA_STT_CT_CA_AT
+            references RCRA_CA_AUTHORITY
+                on delete cascade,
+    TRANS_CODE                     CHAR,
+    STATUTORY_CITTION_DTA_OWNR_CDE CHAR(2)    not null,
+    STATUTORY_CITATION_IDEN        CHAR       not null
+)
+/
+
+comment on table RCRA_CA_STATUTORY_CITATION is 'Schema element: CorrectiveActionStatutoryCitationDataType'
+/
+
+comment on column RCRA_CA_STATUTORY_CITATION.CA_STATUTORY_CITATION_ID is 'Parent: Linking Data for Corrective Action Authorities and Statutory Citations (_PK)'
+/
+
+comment on column RCRA_CA_STATUTORY_CITATION.CA_AUTHORITY_ID is 'Parent: Linking Data for Corrective Action Authorities and Statutory Citations (_FK)'
+/
+
+comment on column RCRA_CA_STATUTORY_CITATION.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CA_STATUTORY_CITATION.STATUTORY_CITTION_DTA_OWNR_CDE is 'Orgnaization responsible for the Statutory Citation (use two-digit postal code) (StatutoryCitationDataOwnerCode)'
+/
+
+comment on column RCRA_CA_STATUTORY_CITATION.STATUTORY_CITATION_IDEN is 'Identifier that identifies the statutory authority under which the corrective action event occured (StatutoryCitationIdentifier)'
+/
+
+create index IX_CA_ST_CT_CA_AT
+    on RCRA_CA_STATUTORY_CITATION (CA_AUTHORITY_ID)
+/
+
+create table RCRA_CME_FAC_SUBM
+(
+    CME_FAC_SUBM_ID NUMBER(10) not null
+        constraint PK_CME_FAC_SUBM
+            primary key,
+    EPA_HDLR_ID     CHAR(12)   not null
+)
+/
+
+comment on table RCRA_CME_FAC_SUBM is 'Schema element: CMEFacilitySubmissionDataType'
+/
+
+comment on column RCRA_CME_FAC_SUBM.CME_FAC_SUBM_ID is 'Parent: This contains Hbasic Data (_PK)'
+/
+
+comment on column RCRA_CME_FAC_SUBM.EPA_HDLR_ID is 'Number that uniquely identifies the EPA handler. (EPAHandlerID)'
+/
+
+create table RCRA_CME_ENFRC_ACT
+(
+    CME_ENFRC_ACT_ID              NUMBER(10)  not null
+        constraint PK_CME_ENFRC_ACT
+            primary key,
+    CME_FAC_SUBM_ID               NUMBER(10)  not null
+        constraint FK_CM_EN_AC_CM_FC
+            references RCRA_CME_FAC_SUBM
+                on delete cascade,
+    TRANS_CODE                    CHAR,
+    ENFRC_AGN_LOC_NAME            CHAR(2)     not null,
+    ENFRC_ACT_IDEN                VARCHAR2(3) not null,
+    ENFRC_ACT_DATE                DATE        not null,
+    ENFRC_AGN_NAME                CHAR        not null,
+    ENFRC_DOCKET_NUM              VARCHAR2(15),
+    ENFRC_ATTRY                   VARCHAR2(5),
+    CORCT_ACT_COMPT               CHAR,
+    CNST_AGMT_FINAL_ORDER_SEQ_NUM NUMBER(10),
+    APPEAL_INIT_DATE              DATE,
+    APPEAL_RSLN_DATE              DATE,
+    DISP_STAT_DATE                DATE,
+    DISP_STAT_OWNER               CHAR(2),
+    DISP_STAT                     CHAR(2),
+    ENFRC_OWNER                   CHAR(2),
+    ENFRC_TYPE                    CHAR(3),
+    ENFRC_RESP_PERSON_OWNER       CHAR(2),
+    ENFRC_RESP_PERSON_IDEN        VARCHAR2(5),
+    ENFRC_RESP_SUBORG_OWNER       CHAR(2),
+    ENFRC_RESP_SUBORG             VARCHAR2(10),
+    NOTES                         VARCHAR2(4000),
+    FA_REQUIRED                   CHAR,
+    CREATED_BY_USERID             VARCHAR2(255),
+    C_CREATED_DATE                TIMESTAMP(6),
+    DATA_ORIG                     CHAR(2),
+    LAST_UPDT_BY                  VARCHAR2(255),
+    LAST_UPDT_DATE                DATE
+)
+/
+
+comment on table RCRA_CME_ENFRC_ACT is 'Schema element: EnforcementActionDataType'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.CME_ENFRC_ACT_ID is 'Parent: Compliance Monitoring and Enforcement Data (_PK)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.CME_FAC_SUBM_ID is 'Parent: Compliance Monitoring and Enforcement Data (_FK)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.ENFRC_AGN_LOC_NAME is 'The U.S.Postal Service alphabetic code that represents the U.S.State or territory in which a state or local government enforcement agency operates. (EnforcementAgencyLocationName)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.ENFRC_ACT_IDEN is 'The unique alphanumeric identifier used in the applicable database to identify a specific enforcement action pertaining to a regulated entity or facility. (EnforcementActionIdentifier)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.ENFRC_ACT_DATE is 'The calendar date the enforcement action was issued or filed. (EnforcementActionDate)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.ENFRC_AGN_NAME is 'The full name of the agency, department, or organization that submitted the enforcement action data to EPA. (EnforcementAgencyName)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.ENFRC_DOCKET_NUM is 'Notes the relevant docket number which enforcement staff have assigned for tracking of enforcement actions. (EnforcementDocketNumber)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.ENFRC_ATTRY is 'Identifies the attorney within the agency responsible for issuing the enforcement action. (EnforcementAttorney)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.CORCT_ACT_COMPT is 'Parent: Compliance Monitoring and Enforcement Data (CorrectiveActionComponent)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.CNST_AGMT_FINAL_ORDER_SEQ_NUM is 'Parent: Compliance Monitoring and Enforcement Data (ConsentAgreementFinalOrderSequenceNumber)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.APPEAL_INIT_DATE is 'Parent: Compliance Monitoring and Enforcement Data (AppealInitiatedDate)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.APPEAL_RSLN_DATE is 'Parent: Compliance Monitoring and Enforcement Data (AppealResolutionDate)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.DISP_STAT_DATE is 'Parent: Compliance Monitoring and Enforcement Data (DispositionStatusDate)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.DISP_STAT_OWNER is 'Parent: Compliance Monitoring and Enforcement Data (DispositionStatusOwner)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.DISP_STAT is 'Parent: Compliance Monitoring and Enforcement Data (DispositionStatus)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.ENFRC_OWNER is 'State Postal Code (EnforcementOwner)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.ENFRC_TYPE is 'A code that identifies the type of action being taken against a handler. (EnforcementType)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.ENFRC_RESP_PERSON_OWNER is 'Indicates the agency that defines the person identifier. (EnforcementResponsiblePersonOwner)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.ENFRC_RESP_PERSON_IDEN is 'Code indicating the person within the agency responsible for conducting the enforcement. (EnforcementResponsiblePersonIdentifier)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.ENFRC_RESP_SUBORG_OWNER is 'Parent: Compliance Monitoring and Enforcement Data (EnforcementResponsibleSuborganizationOwner)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.ENFRC_RESP_SUBORG is 'Parent: Compliance Monitoring and Enforcement Data (EnforcementResponsibleSuborganization)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.NOTES is 'Parent: Compliance Monitoring and Enforcement Data (Notes)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.FA_REQUIRED is 'Whether financial responsibility is required. (FinancialAssuranceReqD)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.C_CREATED_DATE is 'Creation Date (CCreatedDate)'
+/
+
+comment on column RCRA_CME_ENFRC_ACT.DATA_ORIG is 'Indicates data origination information (DataOrig)'
+/
+
+create index IX_CM_EN_AC_CM_FC
+    on RCRA_CME_ENFRC_ACT (CME_FAC_SUBM_ID)
+/
+
+create table RCRA_CME_CSNY_DATE
+(
+    CME_CSNY_DATE_ID NUMBER(10) not null
+        constraint PK_CME_CSNY_DATE
+            primary key,
+    CME_ENFRC_ACT_ID NUMBER(10) not null
+        constraint FK_CM_CS_DT_CM_EN
+            references RCRA_CME_ENFRC_ACT
+                on delete cascade,
+    TRANS_CODE       CHAR,
+    SNY_DATE         DATE       not null
+)
+/
+
+comment on table RCRA_CME_CSNY_DATE is 'Schema element: CSNYDateDataType'
+/
+
+comment on column RCRA_CME_CSNY_DATE.CME_CSNY_DATE_ID is 'Parent: Compliance Monitoring and Enforcement Significant Non-Complier Date Data (_PK)'
+/
+
+comment on column RCRA_CME_CSNY_DATE.CME_ENFRC_ACT_ID is 'Parent: Compliance Monitoring and Enforcement Significant Non-Complier Date Data (_FK)'
+/
+
+comment on column RCRA_CME_CSNY_DATE.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_CSNY_DATE.SNY_DATE is 'Date of the SNY that the Action is Addressing (SNYDate)'
+/
+
+create index IX_CM_CS_DT_CM_EN
+    on RCRA_CME_CSNY_DATE (CME_ENFRC_ACT_ID)
+/
+
+create table RCRA_CME_EVAL
+(
+    CME_EVAL_ID                 NUMBER(10)  not null
+        constraint PK_CME_EVAL
+            primary key,
+    CME_FAC_SUBM_ID             NUMBER(10)  not null
+        constraint FK_CME_EV_CM_FC_SB
+            references RCRA_CME_FAC_SUBM
+                on delete cascade,
+    TRANS_CODE                  CHAR,
+    EVAL_ACT_LOC                CHAR(2)     not null,
+    EVAL_IDEN                   VARCHAR2(3) not null,
+    EVAL_START_DATE             DATE        not null,
+    EVAL_RESP_AGN               CHAR        not null,
+    DAY_ZERO                    DATE,
+    FOUND_VIOL                  CHAR,
+    CTZN_CPLT_IND               CHAR,
+    MULTIMEDIA_IND              CHAR,
+    SAMPL_IND                   CHAR,
+    NOT_SUBTL_C_IND             CHAR,
+    EVAL_TYPE_OWNER             CHAR(2),
+    EVAL_TYPE                   VARCHAR2(3),
+    FOCUS_AREA_OWNER            CHAR(2),
+    FOCUS_AREA                  VARCHAR2(3),
+    EVAL_RESP_PERSON_IDEN_OWNER CHAR(2),
+    EVAL_RESP_PERSON_IDEN       VARCHAR2(5),
+    EVAL_RESP_SUBORG_OWNER      CHAR(2),
+    EVAL_RESP_SUBORG            VARCHAR2(10),
+    NOTES                       VARCHAR2(4000),
+    NOC_DATE                    DATE,
+    CREATED_BY_USERID           VARCHAR2(255),
+    C_CREATED_DATE              TIMESTAMP(6),
+    DATA_ORIG                   CHAR(2),
+    LAST_UPDT_BY                VARCHAR2(255),
+    LAST_UPDT_DATE              DATE
+)
+/
+
+comment on table RCRA_CME_EVAL is 'Schema element: EvaluationDataType'
+/
+
+comment on column RCRA_CME_EVAL.CME_EVAL_ID is 'Parent: Compliance Monitoring and Enforcement Evaluation Data (_PK)'
+/
+
+comment on column RCRA_CME_EVAL.CME_FAC_SUBM_ID is 'Parent: Compliance Monitoring and Enforcement Evaluation Data (_FK)'
+/
+
+comment on column RCRA_CME_EVAL.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_EVAL.EVAL_ACT_LOC is 'Indicates the location of the agency regulating the EPA handler. (EvaluationActivityLocation)'
+/
+
+comment on column RCRA_CME_EVAL.EVAL_IDEN is 'Name or number assigned by the implementing agency to identify an evaluation. (EvaluationIdentifier)'
+/
+
+comment on column RCRA_CME_EVAL.EVAL_START_DATE is 'The first day of the inspection or record review regardless of the duration of the inspection. (EvaluationStartDate)'
+/
+
+comment on column RCRA_CME_EVAL.EVAL_RESP_AGN is 'Code indicating the agency responsible for conducting the evaluation. (EvaluationResponsibleAgency)'
+/
+
+comment on column RCRA_CME_EVAL.DAY_ZERO is 'Date fo the Last Non-Followup Evaluation (Applies to SNY/SNN Evaluations Only) (DayZero)'
+/
+
+comment on column RCRA_CME_EVAL.FOUND_VIOL is 'Flag indicating if a violation was found. (FoundViolation)'
+/
+
+comment on column RCRA_CME_EVAL.CTZN_CPLT_IND is 'The inspection or record review was initiated because of a tip/complaint (CitizenComplaintIndicator)'
+/
+
+comment on column RCRA_CME_EVAL.MULTIMEDIA_IND is 'Parent: Compliance Monitoring and Enforcement Evaluation Data (MultimediaIndicator)'
+/
+
+comment on column RCRA_CME_EVAL.SAMPL_IND is 'Parent: Compliance Monitoring and Enforcement Evaluation Data (SamplingIndicator)'
+/
+
+comment on column RCRA_CME_EVAL.NOT_SUBTL_C_IND is 'The inspection conducted pursuant to RCRA 3007 or State equivalent; determiniation made: sit is Non-Hazardous Waste. (NotSubtitleCIndicator)'
+/
+
+comment on column RCRA_CME_EVAL.EVAL_TYPE_OWNER is 'Indicates the agency that defines the type of evaluation. (EvaluationTypeOwner)'
+/
+
+comment on column RCRA_CME_EVAL.EVAL_TYPE is 'Code to report the type of evaluation conducted at the handler. (EvaluationType)'
+/
+
+comment on column RCRA_CME_EVAL.FOCUS_AREA_OWNER is 'Parent: Compliance Monitoring and Enforcement Evaluation Data (FocusAreaOwner)'
+/
+
+comment on column RCRA_CME_EVAL.FOCUS_AREA is 'Parent: Compliance Monitoring and Enforcement Evaluation Data (FocusArea)'
+/
+
+comment on column RCRA_CME_EVAL.EVAL_RESP_PERSON_IDEN_OWNER is 'Indicates the agency that defines the person identifier. (EvaluationResponsiblePersonIdentifierOwner)'
+/
+
+comment on column RCRA_CME_EVAL.EVAL_RESP_PERSON_IDEN is 'Code indicating the person within the agency responsible for conducting the evaluation. (EvaluationResponsiblePersonIdentifier)'
+/
+
+comment on column RCRA_CME_EVAL.EVAL_RESP_SUBORG_OWNER is 'Indicates the agency that defines the suborganization identifier. (EvaluationResponsibleSuborganizationOwner)'
+/
+
+comment on column RCRA_CME_EVAL.EVAL_RESP_SUBORG is 'Code indicating the branch/district within the agency responsible for conducting the evaluation. (EvaluationResponsibleSuborganization)'
+/
+
+comment on column RCRA_CME_EVAL.NOTES is 'Parent: Compliance Monitoring and Enforcement Evaluation Data (Notes)'
+/
+
+comment on column RCRA_CME_EVAL.NOC_DATE is 'NOC Date. (NOCDate)'
+/
+
+comment on column RCRA_CME_EVAL.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_CME_EVAL.C_CREATED_DATE is 'Creation Date (CCreatedDate)'
+/
+
+comment on column RCRA_CME_EVAL.DATA_ORIG is 'Indicates data origination information (DataOrig)'
+/
+
+create index IX_CM_EV_CM_FC_SB
+    on RCRA_CME_EVAL (CME_FAC_SUBM_ID)
+/
+
+create table RCRA_CME_EVAL_COMMIT
+(
+    CME_EVAL_COMMIT_ID NUMBER(10) not null
+        constraint PK_CME_EVAL_COMMIT
+            primary key,
+    CME_EVAL_ID        NUMBER(10) not null
+        constraint FK_CME_EV_CM_CM_EV
+            references RCRA_CME_EVAL
+                on delete cascade,
+    TRANS_CODE         CHAR,
+    COMMIT_LEAD        CHAR(2)    not null,
+    COMMIT_SEQ_NUM     NUMBER(10) not null
+)
+/
+
+comment on table RCRA_CME_EVAL_COMMIT is 'Schema element: EvaluationCommitmentDataType'
+/
+
+comment on column RCRA_CME_EVAL_COMMIT.CME_EVAL_COMMIT_ID is 'Parent: Linking Data for Commitment/Initiative and Evaluation. (_PK)'
+/
+
+comment on column RCRA_CME_EVAL_COMMIT.CME_EVAL_ID is 'Parent: Linking Data for Commitment/Initiative and Evaluation. (_FK)'
+/
+
+comment on column RCRA_CME_EVAL_COMMIT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_EVAL_COMMIT.COMMIT_LEAD is 'Parent: Linking Data for Commitment/Initiative and Evaluation. (CommitmentLead)'
+/
+
+comment on column RCRA_CME_EVAL_COMMIT.COMMIT_SEQ_NUM is 'Parent: Linking Data for Commitment/Initiative and Evaluation. (CommitmentSequenceNumber)'
+/
+
+create index IX_CM_EV_CM_CM_EV
+    on RCRA_CME_EVAL_COMMIT (CME_EVAL_ID)
+/
+
+create table RCRA_CME_EVAL_VIOL
+(
+    CME_EVAL_VIOL_ID    NUMBER(10) not null
+        constraint PK_CME_EVAL_VIOL
+            primary key,
+    CME_EVAL_ID         NUMBER(10) not null
+        constraint FK_CME_EV_VL_CM_EV
+            references RCRA_CME_EVAL
+                on delete cascade,
+    TRANS_CODE          CHAR,
+    VIOL_ACT_LOC        CHAR(2)    not null,
+    VIOL_SEQ_NUM        NUMBER(10) not null,
+    AGN_WHICH_DTRM_VIOL CHAR       not null
+)
+/
+
+comment on table RCRA_CME_EVAL_VIOL is 'Schema element: EvaluationViolationDataType'
+/
+
+comment on column RCRA_CME_EVAL_VIOL.CME_EVAL_VIOL_ID is 'Parent: Linking Data for Evaluation and Violation (_PK)'
+/
+
+comment on column RCRA_CME_EVAL_VIOL.CME_EVAL_ID is 'Parent: Linking Data for Evaluation and Violation (_FK)'
+/
+
+comment on column RCRA_CME_EVAL_VIOL.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_EVAL_VIOL.VIOL_ACT_LOC is 'Parent: Linking Data for Evaluation and Violation (ViolationActivityLocation)'
+/
+
+comment on column RCRA_CME_EVAL_VIOL.VIOL_SEQ_NUM is 'Parent: Linking Data for Evaluation and Violation (ViolationSequenceNumber)'
+/
+
+comment on column RCRA_CME_EVAL_VIOL.AGN_WHICH_DTRM_VIOL is 'Parent: Linking Data for Evaluation and Violation (AgencyWhichDeterminedViolation)'
+/
+
+create index IX_CM_EV_VL_CM_EV
+    on RCRA_CME_EVAL_VIOL (CME_EVAL_ID)
+/
+
+create table RCRA_CME_MEDIA
+(
+    CME_MEDIA_ID          NUMBER(10)  not null
+        constraint PK_CME_MEDIA
+            primary key,
+    CME_ENFRC_ACT_ID      NUMBER(10)  not null
+        constraint FK_CME_MD_CM_EN_AC
+            references RCRA_CME_ENFRC_ACT
+                on delete cascade,
+    TRANS_CODE            CHAR,
+    MULTIMEDIA_CODE_OWNER CHAR(2)     not null,
+    MULTIMEDIA_CODE       VARCHAR2(3) not null,
+    NOTES                 VARCHAR2(4000)
+)
+/
+
+comment on table RCRA_CME_MEDIA is 'Schema element: MediaDataType'
+/
+
+comment on column RCRA_CME_MEDIA.CME_MEDIA_ID is 'Parent: Compliance Monitoring and Enfocement Multimedia Data (_PK)'
+/
+
+comment on column RCRA_CME_MEDIA.CME_ENFRC_ACT_ID is 'Parent: Compliance Monitoring and Enfocement Multimedia Data (_FK)'
+/
+
+comment on column RCRA_CME_MEDIA.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_MEDIA.MULTIMEDIA_CODE_OWNER is 'Indicates the agency that defines the multimedia code. (MultimediaCodeOwner)'
+/
+
+comment on column RCRA_CME_MEDIA.MULTIMEDIA_CODE is 'Code which indicates the medium or program other than RCRA participating in the enforcement action. (MultimediaCode)'
+/
+
+comment on column RCRA_CME_MEDIA.NOTES is 'Parent: Compliance Monitoring and Enfocement Multimedia Data (Notes)'
+/
+
+create index IX_CM_MD_CM_EN_AC
+    on RCRA_CME_MEDIA (CME_ENFRC_ACT_ID)
+/
+
+create table RCRA_CME_MILESTONE
+(
+    CME_MILESTONE_ID         NUMBER(10) not null
+        constraint PK_CME_MILESTONE
+            primary key,
+    CME_ENFRC_ACT_ID         NUMBER(10) not null
+        constraint FK_CME_ML_CM_EN_AC
+            references RCRA_CME_ENFRC_ACT
+                on delete cascade,
+    TRANS_CODE               CHAR,
+    MILESTONE_SEQ_NUM        NUMBER(10) not null,
+    TECH_RQMT_IDEN           VARCHAR2(50),
+    TECH_RQMT_DESC           VARCHAR2(200),
+    MILESTONE_SCHD_COMP_DATE DATE,
+    MILESTONE_ACTL_COMP_DATE DATE,
+    MILESTONE_DFLT_DATE      DATE,
+    NOTES                    VARCHAR2(4000)
+)
+/
+
+comment on table RCRA_CME_MILESTONE is 'Schema element: MilestoneDataType'
+/
+
+comment on column RCRA_CME_MILESTONE.CME_MILESTONE_ID is 'Parent: Compliance Monitoring and Enforcement Milestone Data (_PK)'
+/
+
+comment on column RCRA_CME_MILESTONE.CME_ENFRC_ACT_ID is 'Parent: Compliance Monitoring and Enforcement Milestone Data (_FK)'
+/
+
+comment on column RCRA_CME_MILESTONE.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_MILESTONE.MILESTONE_SEQ_NUM is 'Parent: Compliance Monitoring and Enforcement Milestone Data (MilestoneSequenceNumber)'
+/
+
+comment on column RCRA_CME_MILESTONE.TECH_RQMT_IDEN is 'Parent: Compliance Monitoring and Enforcement Milestone Data (TechnicalRequirementIdentifier)'
+/
+
+comment on column RCRA_CME_MILESTONE.TECH_RQMT_DESC is 'Parent: Compliance Monitoring and Enforcement Milestone Data (TechnicalRequirementDescription)'
+/
+
+comment on column RCRA_CME_MILESTONE.MILESTONE_SCHD_COMP_DATE is 'Parent: Compliance Monitoring and Enforcement Milestone Data (MilestoneScheduledCompletionDate)'
+/
+
+comment on column RCRA_CME_MILESTONE.MILESTONE_ACTL_COMP_DATE is 'Parent: Compliance Monitoring and Enforcement Milestone Data (MilestoneActualCompletionDate)'
+/
+
+comment on column RCRA_CME_MILESTONE.MILESTONE_DFLT_DATE is 'Parent: Compliance Monitoring and Enforcement Milestone Data (MilestoneDefaultedDate)'
+/
+
+comment on column RCRA_CME_MILESTONE.NOTES is 'Parent: Compliance Monitoring and Enforcement Milestone Data (Notes)'
+/
+
+create index IX_CM_ML_CM_EN_AC
+    on RCRA_CME_MILESTONE (CME_ENFRC_ACT_ID)
+/
+
+create table RCRA_CME_PNLTY
+(
+    CME_PNLTY_ID                   NUMBER(10)  not null
+        constraint PK_CME_PNLTY
+            primary key,
+    CME_ENFRC_ACT_ID               NUMBER(10)  not null
+        constraint FK_CME_PN_CM_EN_AC
+            references RCRA_CME_ENFRC_ACT
+                on delete cascade,
+    TRANS_CODE                     CHAR,
+    PNLTY_TYPE_OWNER               CHAR(2)     not null,
+    PNLTY_TYPE                     VARCHAR2(3) not null,
+    CASH_CIVIL_PNLTY_SOUGHT_AMOUNT NUMBER(13, 2),
+    NOTES                          VARCHAR2(4000)
+)
+/
+
+comment on table RCRA_CME_PNLTY is 'Schema element: PenaltyDataType'
+/
+
+comment on column RCRA_CME_PNLTY.CME_PNLTY_ID is 'Parent: Compliance Monitoring and Enforcement Penalty Data (_PK)'
+/
+
+comment on column RCRA_CME_PNLTY.CME_ENFRC_ACT_ID is 'Parent: Compliance Monitoring and Enforcement Penalty Data (_FK)'
+/
+
+comment on column RCRA_CME_PNLTY.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_PNLTY.PNLTY_TYPE_OWNER is 'Indicates the agency that defines the penalty type (PenaltyTypeOwner)'
+/
+
+comment on column RCRA_CME_PNLTY.PNLTY_TYPE is 'Code which indicates the type of penalty associated with the penalty amount. (PenaltyType)'
+/
+
+comment on column RCRA_CME_PNLTY.CASH_CIVIL_PNLTY_SOUGHT_AMOUNT is 'The dollar amount of any proposed cash civil penalty set forth in a Complaint/Proposed Order. (CashCivilPenaltySoughtAmount)'
+/
+
+comment on column RCRA_CME_PNLTY.NOTES is 'Parent: Compliance Monitoring and Enforcement Penalty Data (Notes)'
+/
+
+create index IX_CM_PN_CM_EN_AC
+    on RCRA_CME_PNLTY (CME_ENFRC_ACT_ID)
+/
+
+create table RCRA_CME_PYMT
+(
+    CME_PYMT_ID      NUMBER(10) not null
+        constraint PK_CME_PYMT
+            primary key,
+    CME_PNLTY_ID     NUMBER(10) not null
+        constraint FK_CME_PYM_CME_PNL
+            references RCRA_CME_PNLTY
+                on delete cascade,
+    TRANS_CODE       CHAR,
+    PYMT_SEQ_NUM     NUMBER(10) not null,
+    PYMT_DFLT_DATE   DATE,
+    SCHD_PYMT_DATE   DATE,
+    SCHD_PYMT_AMOUNT NUMBER(13, 2),
+    ACTL_PYMT_DATE   DATE,
+    ACTL_PAID_AMOUNT NUMBER(13, 2),
+    NOTES            VARCHAR2(4000)
+)
+/
+
+comment on table RCRA_CME_PYMT is 'Schema element: PaymentDataType'
+/
+
+comment on column RCRA_CME_PYMT.CME_PYMT_ID is 'Parent: Compliance Monitoring and Enforcement Payment Data (_PK)'
+/
+
+comment on column RCRA_CME_PYMT.CME_PNLTY_ID is 'Parent: Compliance Monitoring and Enforcement Payment Data (_FK)'
+/
+
+comment on column RCRA_CME_PYMT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_PYMT.PYMT_SEQ_NUM is 'Parent: Compliance Monitoring and Enforcement Payment Data (PaymentSequenceNumber)'
+/
+
+comment on column RCRA_CME_PYMT.PYMT_DFLT_DATE is 'Parent: Compliance Monitoring and Enforcement Payment Data (PaymentDefaultedDate)'
+/
+
+comment on column RCRA_CME_PYMT.SCHD_PYMT_DATE is 'Parent: Compliance Monitoring and Enforcement Payment Data (ScheduledPaymentDate)'
+/
+
+comment on column RCRA_CME_PYMT.SCHD_PYMT_AMOUNT is 'Parent: Compliance Monitoring and Enforcement Payment Data (ScheduledPaymentAmount)'
+/
+
+comment on column RCRA_CME_PYMT.ACTL_PYMT_DATE is 'Parent: Compliance Monitoring and Enforcement Payment Data (ActualPaymentDate)'
+/
+
+comment on column RCRA_CME_PYMT.ACTL_PAID_AMOUNT is 'The dollar amount of any cost recovery required to be paid pursuant to a Final Order. (ActualPaidAmount)'
+/
+
+comment on column RCRA_CME_PYMT.NOTES is 'Parent: Compliance Monitoring and Enforcement Payment Data (Notes)'
+/
+
+create index IX_CME_PY_CM_PN_ID
+    on RCRA_CME_PYMT (CME_PNLTY_ID)
+/
+
+create table RCRA_CME_RQST
+(
+    CME_RQST_ID    NUMBER(10) not null
+        constraint PK_CME_RQST
+            primary key,
+    CME_EVAL_ID    NUMBER(10) not null
+        constraint FK_CME_RQS_CME_EVL
+            references RCRA_CME_EVAL
+                on delete cascade,
+    TRANS_CODE     CHAR,
+    RQST_SEQ_NUM   NUMBER(10) not null,
+    DATE_OF_RQST   DATE,
+    DATE_RESP_RCVD DATE,
+    RQST_AGN       CHAR,
+    NOTES          VARCHAR2(4000)
+)
+/
+
+comment on table RCRA_CME_RQST is 'Schema element: RequestDataType'
+/
+
+comment on column RCRA_CME_RQST.CME_RQST_ID is 'Parent: Compliance Monitoring and Enforcement Request Data (_PK)'
+/
+
+comment on column RCRA_CME_RQST.CME_EVAL_ID is 'Parent: Compliance Monitoring and Enforcement Request Data (_FK)'
+/
+
+comment on column RCRA_CME_RQST.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_RQST.RQST_SEQ_NUM is 'Parent: Compliance Monitoring and Enforcement Request Data (RequestSequenceNumber)'
+/
+
+comment on column RCRA_CME_RQST.DATE_OF_RQST is 'Parent: Compliance Monitoring and Enforcement Request Data (DateOfRequest)'
+/
+
+comment on column RCRA_CME_RQST.DATE_RESP_RCVD is 'Parent: Compliance Monitoring and Enforcement Request Data (DateResponseReceived)'
+/
+
+comment on column RCRA_CME_RQST.RQST_AGN is 'Parent: Compliance Monitoring and Enforcement Request Data (RequestAgency)'
+/
+
+comment on column RCRA_CME_RQST.NOTES is 'Parent: Compliance Monitoring and Enforcement Request Data (Notes)'
+/
+
+create index IX_CME_RQ_CM_EV_ID
+    on RCRA_CME_RQST (CME_EVAL_ID)
+/
+
+create table RCRA_CME_SUPP_ENVR_PRJT
+(
+    CME_SUPP_ENVR_PRJT_ID NUMBER(10) not null
+        constraint PK_CME_SPP_ENV_PRJ
+            primary key,
+    CME_ENFRC_ACT_ID      NUMBER(10) not null
+        constraint FK_CM_SP_EN_PR_CM
+            references RCRA_CME_ENFRC_ACT
+                on delete cascade,
+    TRANS_CODE            CHAR,
+    SEP_SEQ_NUM           NUMBER(10) not null,
+    SEP_EXPND_AMOUNT      NUMBER(13, 2),
+    SEP_SCHD_COMP_DATE    DATE,
+    SEP_ACTL_DATE         DATE,
+    SEP_DFLT_DATE         DATE,
+    SEP_CODE_OWNER        CHAR(2),
+    SEP_DESC_TXT          VARCHAR2(3),
+    NOTES                 VARCHAR2(4000)
+)
+/
+
+comment on table RCRA_CME_SUPP_ENVR_PRJT is 'Schema element: SupplementalEnvironmentalProjectDataType'
+/
+
+comment on column RCRA_CME_SUPP_ENVR_PRJT.CME_SUPP_ENVR_PRJT_ID is 'Parent: Compliance Monitoring and Enforcement Supplemental Environmental Project Data (_PK)'
+/
+
+comment on column RCRA_CME_SUPP_ENVR_PRJT.CME_ENFRC_ACT_ID is 'Parent: Compliance Monitoring and Enforcement Supplemental Environmental Project Data (_FK)'
+/
+
+comment on column RCRA_CME_SUPP_ENVR_PRJT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_SUPP_ENVR_PRJT.SEP_SEQ_NUM is 'SEP Sequence Number allowed value 01-99 (SEPSequenceNumber)'
+/
+
+comment on column RCRA_CME_SUPP_ENVR_PRJT.SEP_EXPND_AMOUNT is 'Expenditure Amount (SEPExpenditureAmount)'
+/
+
+comment on column RCRA_CME_SUPP_ENVR_PRJT.SEP_SCHD_COMP_DATE is 'Valid date greater than or equal to the Date of Enforcement Action. (SEPScheduledCompletionDate)'
+/
+
+comment on column RCRA_CME_SUPP_ENVR_PRJT.SEP_ACTL_DATE is 'SEP actual completion date (SEPActualDate)'
+/
+
+comment on column RCRA_CME_SUPP_ENVR_PRJT.SEP_DFLT_DATE is 'Date the SEP defaulted (SEPDefaultedDate)'
+/
+
+comment on column RCRA_CME_SUPP_ENVR_PRJT.SEP_CODE_OWNER is 'State postal code (SEPCodeOwner)'
+/
+
+comment on column RCRA_CME_SUPP_ENVR_PRJT.SEP_DESC_TXT is 'The narrative text describing any Supplemental Environmental Projects required to be performed pursuant to a Final Order. (SEPDescriptionText)'
+/
+
+comment on column RCRA_CME_SUPP_ENVR_PRJT.NOTES is 'Parent: Compliance Monitoring and Enforcement Supplemental Environmental Project Data (Notes)'
+/
+
+create index IX_CM_SP_EN_PR_CM
+    on RCRA_CME_SUPP_ENVR_PRJT (CME_ENFRC_ACT_ID)
+/
+
+create table RCRA_CME_VIOL
+(
+    CME_VIOL_ID          NUMBER(10) not null
+        constraint PK_CME_VIOL
+            primary key,
+    CME_FAC_SUBM_ID      NUMBER(10) not null
+        constraint FK_CME_VL_CM_FC_SB
+            references RCRA_CME_FAC_SUBM
+                on delete cascade,
+    TRANS_CODE           CHAR,
+    VIOL_ACT_LOC         CHAR(2)    not null,
+    VIOL_SEQ_NUM         NUMBER(10) not null,
+    AGN_WHICH_DTRM_VIOL  CHAR       not null,
+    VIOL_TYPE_OWNER      CHAR(2),
+    VIOL_TYPE            VARCHAR2(10),
+    FORMER_CITATION_NAME VARCHAR2(35),
+    VIOL_DTRM_DATE       DATE,
+    RTN_COMPL_ACTL_DATE  DATE,
+    RTN_TO_COMPL_QUAL    CHAR,
+    VIOL_RESP_AGN        CHAR,
+    NOTES                VARCHAR2(4000),
+    CREATED_BY_USERID    VARCHAR2(255),
+    C_CREATED_DATE       TIMESTAMP(6),
+    LAST_UPDT_BY         VARCHAR2(255),
+    LAST_UPDT_DATE       DATE
+)
+/
+
+comment on table RCRA_CME_VIOL is 'Schema element: ViolationDataType'
+/
+
+comment on column RCRA_CME_VIOL.CME_VIOL_ID is 'Parent: Compliance Monitoring and Enforcement Violation Data (_PK)'
+/
+
+comment on column RCRA_CME_VIOL.CME_FAC_SUBM_ID is 'Parent: Compliance Monitoring and Enforcement Violation Data (_FK)'
+/
+
+comment on column RCRA_CME_VIOL.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_VIOL.VIOL_ACT_LOC is 'Parent: Compliance Monitoring and Enforcement Violation Data (ViolationActivityLocation)'
+/
+
+comment on column RCRA_CME_VIOL.VIOL_SEQ_NUM is 'Parent: Compliance Monitoring and Enforcement Violation Data (ViolationSequenceNumber)'
+/
+
+comment on column RCRA_CME_VIOL.AGN_WHICH_DTRM_VIOL is 'Parent: Compliance Monitoring and Enforcement Violation Data (AgencyWhichDeterminedViolation)'
+/
+
+comment on column RCRA_CME_VIOL.VIOL_TYPE_OWNER is 'Allowed value HQ (ViolationTypeOwner)'
+/
+
+comment on column RCRA_CME_VIOL.VIOL_TYPE is 'Violation Type (ViolationType)'
+/
+
+comment on column RCRA_CME_VIOL.FORMER_CITATION_NAME is 'Parent: Compliance Monitoring and Enforcement Violation Data (FormerCitationName)'
+/
+
+comment on column RCRA_CME_VIOL.VIOL_DTRM_DATE is 'The calendar date the Responsible Authority determines that a regulated entity is in violation of a legally enforceable obligation. (ViolationDeterminedDate)'
+/
+
+comment on column RCRA_CME_VIOL.RTN_COMPL_ACTL_DATE is 'The calendar date, determined by the Responsible Authority, on which the regulated entity actually returned to compliance with respect to the legal obligation that is the subject of the Violation Determined Date. (ReturnComplianceActualDate)'
+/
+
+comment on column RCRA_CME_VIOL.RTN_TO_COMPL_QUAL is 'Parent: Compliance Monitoring and Enforcement Violation Data (ReturnToComplianceQualifier)'
+/
+
+comment on column RCRA_CME_VIOL.VIOL_RESP_AGN is 'Parent: Compliance Monitoring and Enforcement Violation Data (ViolationResponsibleAgency)'
+/
+
+comment on column RCRA_CME_VIOL.NOTES is 'Parent: Compliance Monitoring and Enforcement Violation Data (Notes)'
+/
+
+comment on column RCRA_CME_VIOL.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_CME_VIOL.C_CREATED_DATE is 'Creation Date (CCreatedDate)'
+/
+
+create index IX_CM_VL_CM_FC_SB
+    on RCRA_CME_VIOL (CME_FAC_SUBM_ID)
+/
+
+create table RCRA_CME_CITATION
+(
+    CME_CITATION_ID       NUMBER(10) not null
+        constraint PK_CME_CITATION
+            primary key,
+    CME_VIOL_ID           NUMBER(10) not null
+        constraint FK_CME_CTTN_CME_VL
+            references RCRA_CME_VIOL
+                on delete cascade,
+    TRANS_CODE            CHAR,
+    CITATION_NAME_SEQ_NUM NUMBER(10) not null,
+    CITATION_NAME         VARCHAR2(80),
+    CITATION_NAME_OWNER   CHAR(2),
+    CITATION_NAME_TYPE    CHAR(2),
+    NOTES                 VARCHAR2(4000)
+)
+/
+
+comment on table RCRA_CME_CITATION is 'Schema element: CitationDataType'
+/
+
+comment on column RCRA_CME_CITATION.CME_CITATION_ID is 'Parent: Compliance Monitoring and Enforcement Citation Data (_PK)'
+/
+
+comment on column RCRA_CME_CITATION.CME_VIOL_ID is 'Parent: Compliance Monitoring and Enforcement Citation Data (_FK)'
+/
+
+comment on column RCRA_CME_CITATION.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_CITATION.CITATION_NAME_SEQ_NUM is 'Parent: Compliance Monitoring and Enforcement Citation Data (CitationNameSequenceNumber)'
+/
+
+comment on column RCRA_CME_CITATION.CITATION_NAME is 'The citation(s) of the violations alleged (CME) or of the Authority used (CA). (CitationName)'
+/
+
+comment on column RCRA_CME_CITATION.CITATION_NAME_OWNER is 'State postal code (CitationNameOwner)'
+/
+
+comment on column RCRA_CME_CITATION.CITATION_NAME_TYPE is 'Existing nationally defined values: FR, FS, OC, PC,SR,SS,V3 (CitationNameType)'
+/
+
+comment on column RCRA_CME_CITATION.NOTES is 'Parent: Compliance Monitoring and Enforcement Citation Data (Notes)'
+/
+
+create index IX_CME_CT_CM_VL_ID
+    on RCRA_CME_CITATION (CME_VIOL_ID)
+/
+
+create table RCRA_CME_VIOL_ENFRC
+(
+    CME_VIOL_ENFRC_ID   NUMBER(10) not null
+        constraint PK_CME_VIOL_ENFRC
+            primary key,
+    CME_ENFRC_ACT_ID    NUMBER(10) not null
+        constraint FK_CM_VL_EN_CM_EN
+            references RCRA_CME_ENFRC_ACT
+                on delete cascade,
+    TRANS_CODE          CHAR,
+    VIOL_SEQ_NUM        NUMBER(10) not null,
+    AGN_WHICH_DTRM_VIOL CHAR       not null,
+    RTN_COMPL_SCHD_DATE DATE
+)
+/
+
+comment on table RCRA_CME_VIOL_ENFRC is 'Schema element: ViolationEnforcementDataType'
+/
+
+comment on column RCRA_CME_VIOL_ENFRC.CME_VIOL_ENFRC_ID is 'Parent: Linking Data for Violation and Enforcement (_PK)'
+/
+
+comment on column RCRA_CME_VIOL_ENFRC.CME_ENFRC_ACT_ID is 'Parent: Linking Data for Violation and Enforcement (_FK)'
+/
+
+comment on column RCRA_CME_VIOL_ENFRC.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_CME_VIOL_ENFRC.VIOL_SEQ_NUM is 'Parent: Linking Data for Violation and Enforcement (ViolationSequenceNumber)'
+/
+
+comment on column RCRA_CME_VIOL_ENFRC.AGN_WHICH_DTRM_VIOL is 'Parent: Linking Data for Violation and Enforcement (AgencyWhichDeterminedViolation)'
+/
+
+comment on column RCRA_CME_VIOL_ENFRC.RTN_COMPL_SCHD_DATE is 'The calendar date, specified in the Compliance Schedule (if any), on which the regulated entity is scheduled to return to compliance with respect to the legal obligation that is the subject of the Violation Determined Date. (ReturnComplianceScheduledDate)'
+/
+
+create index IX_CM_VL_EN_CM_EN
+    on RCRA_CME_VIOL_ENFRC (CME_ENFRC_ACT_ID)
+/
+
+create table RCRA_FA_FAC_SUBM
+(
+    FA_FAC_SUBM_ID NUMBER(10)   not null
+        constraint PK_FA_FAC_SUBM
+            primary key,
+    HANDLER_ID     VARCHAR2(12) not null
+)
+/
+
+comment on table RCRA_FA_FAC_SUBM is 'Schema element: FinancialAssuranceFacilitySubmissionDataType'
+/
+
+comment on column RCRA_FA_FAC_SUBM.FA_FAC_SUBM_ID is 'Parent: Supplies all of the relevant Financial Assurance Data for a given Handler (_PK)'
+/
+
+comment on column RCRA_FA_FAC_SUBM.HANDLER_ID is 'Code that uniquely identifies the handler. (HandlerID)'
+/
+
+create table RCRA_FA_COST_EST
+(
+    FA_COST_EST_ID              NUMBER(10) not null
+        constraint PK_FA_COST_EST
+            primary key,
+    FA_FAC_SUBM_ID              NUMBER(10) not null
+        constraint FK_FA_CS_ES_FA_FC
+            references RCRA_FA_FAC_SUBM
+                on delete cascade,
+    TRANS_CODE                  CHAR,
+    ACT_LOC_CODE                CHAR(2)    not null,
+    COST_ESTIMATE_TYPE_CODE     CHAR       not null,
+    COST_ESTIMATE_AGN_CODE      CHAR       not null,
+    COST_ESTIMATE_SEQ_NUM       NUMBER(10) not null,
+    RESP_PERSON_DATA_OWNER_CODE CHAR(2),
+    RESP_PERSON_ID              VARCHAR2(5),
+    COST_ESTIMATE_AMOUNT        NUMBER(13, 2),
+    COST_ESTIMATE_DATE          DATE,
+    COST_ESTIMATE_RSN_CODE      CHAR,
+    AREA_UNIT_NOTES_TXT         VARCHAR2(240),
+    SUPP_INFO_TXT               VARCHAR2(2000),
+    CREATED_BY_USERID           VARCHAR2(255),
+    F_CREATED_DATE              TIMESTAMP(6),
+    DATA_ORIG                   CHAR(2),
+    UPDATE_DUE_DATE             DATE,
+    CURRENT_COST_ESTIMATE_IND   CHAR,
+    LAST_UPDT_BY                VARCHAR2(255),
+    LAST_UPDT_DATE              DATE
+)
+/
+
+comment on table RCRA_FA_COST_EST is 'Schema element: CostEstimateDataType'
+/
+
+comment on column RCRA_FA_COST_EST.FA_COST_EST_ID is 'Parent: Estimates of the Financial liability costs associated with a given Handler. (_PK)'
+/
+
+comment on column RCRA_FA_COST_EST.FA_FAC_SUBM_ID is 'Parent: Estimates of the Financial liability costs associated with a given Handler. (_FK)'
+/
+
+comment on column RCRA_FA_COST_EST.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_FA_COST_EST.ACT_LOC_CODE is 'Indicates the location of the agency regulating the handler. (ActivityLocationCode)'
+/
+
+comment on column RCRA_FA_COST_EST.COST_ESTIMATE_TYPE_CODE is 'Indicates what type of Financial Assurance is Required. (CostEstimateTypeCode)'
+/
+
+comment on column RCRA_FA_COST_EST.COST_ESTIMATE_AGN_CODE is 'Code indicating the agency responsible for overseeing the review of the cost estimate. (CostEstimateAgencyCode)'
+/
+
+comment on column RCRA_FA_COST_EST.COST_ESTIMATE_SEQ_NUM is 'Unique number that identifies the cost estimate. (CostEstimateSequenceNumber)'
+/
+
+comment on column RCRA_FA_COST_EST.RESP_PERSON_DATA_OWNER_CODE is 'Indicates the agency that defines the person identifier. (ResponsiblePersonDataOwnerCode)'
+/
+
+comment on column RCRA_FA_COST_EST.RESP_PERSON_ID is 'Code indicating the person within the agency responsible for conducting the evaluation or who is the responsible Authority. (ResponsiblePersonID)'
+/
+
+comment on column RCRA_FA_COST_EST.COST_ESTIMATE_AMOUNT is 'The dollar amount of the cost estimate for a given financial assurance type. (CostEstimateAmount)'
+/
+
+comment on column RCRA_FA_COST_EST.COST_ESTIMATE_DATE is 'The date when the cost estimate for a given financial assurance type was submitted, adjusted, approved, or required to be in place. (CostEstimateDate)'
+/
+
+comment on column RCRA_FA_COST_EST.COST_ESTIMATE_RSN_CODE is 'The reason the cost estimate for a financial assurance type is being reported. (CostEstimateReasonCode)'
+/
+
+comment on column RCRA_FA_COST_EST.AREA_UNIT_NOTES_TXT is 'Notes regarding the corrective action area or permit unit that this cost estimate applies. (AreaUnitNotesText)'
+/
+
+comment on column RCRA_FA_COST_EST.SUPP_INFO_TXT is 'Notes providing more information. (SupplementalInformationText)'
+/
+
+comment on column RCRA_FA_COST_EST.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_FA_COST_EST.F_CREATED_DATE is 'Creation Date (FCreatedDate)'
+/
+
+comment on column RCRA_FA_COST_EST.DATA_ORIG is 'Indicates data origination information (DataOrig)'
+/
+
+create index IX_FA_CS_ES_FA_FC
+    on RCRA_FA_COST_EST (FA_FAC_SUBM_ID)
+/
+
+create table RCRA_FA_COST_EST_REL_MECHANISM
+(
+    FA_COST_EST_REL_MECHANISM_ID NUMBER(10) not null
+        constraint PK_FA_CST_ES_RL_MC
+            primary key,
+    FA_COST_EST_ID               NUMBER(10) not null
+        constraint FK_FA_CS_ES_RL_MC
+            references RCRA_FA_COST_EST
+                on delete cascade,
+    TRANS_CODE                   CHAR,
+    ACT_LOC_CODE                 CHAR(2)    not null,
+    MECHANISM_AGN_CODE           CHAR       not null,
+    MECHANISM_SEQ_NUM            NUMBER(10) not null,
+    MECHANISM_DETAIL_SEQ_NUM     NUMBER(10) not null
+)
+/
+
+comment on table RCRA_FA_COST_EST_REL_MECHANISM is 'Schema element: CostEstimateRelatedMechanismDataType'
+/
+
+comment on column RCRA_FA_COST_EST_REL_MECHANISM.FA_COST_EST_REL_MECHANISM_ID is 'Parent: Linking Data for Cost Estimates and Related Mechanisms (_PK)'
+/
+
+comment on column RCRA_FA_COST_EST_REL_MECHANISM.FA_COST_EST_ID is 'Parent: Linking Data for Cost Estimates and Related Mechanisms (_FK)'
+/
+
+comment on column RCRA_FA_COST_EST_REL_MECHANISM.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_FA_COST_EST_REL_MECHANISM.ACT_LOC_CODE is 'Indicates the location of the agency regulating the handler. (ActivityLocationCode)'
+/
+
+comment on column RCRA_FA_COST_EST_REL_MECHANISM.MECHANISM_AGN_CODE is 'The agency responsible for overseeing the review of the mechanism. (MechanismAgencyCode)'
+/
+
+comment on column RCRA_FA_COST_EST_REL_MECHANISM.MECHANISM_SEQ_NUM is 'Unique numerical identier for the mechanism. (MechanismSequenceNumber)'
+/
+
+comment on column RCRA_FA_COST_EST_REL_MECHANISM.MECHANISM_DETAIL_SEQ_NUM is 'Unique numerical code identifying the mechanism detail. (MechanismDetailSequenceNumber)'
+/
+
+create index IX_FA_CS_ES_RL_MC
+    on RCRA_FA_COST_EST_REL_MECHANISM (FA_COST_EST_ID)
+/
+
+create table RCRA_FA_MECHANISM
+(
+    FA_MECHANISM_ID                NUMBER(10) not null
+        constraint PK_FA_MECHANISM
+            primary key,
+    FA_FAC_SUBM_ID                 NUMBER(10) not null
+        constraint FK_FA_MCH_FA_FC_SB
+            references RCRA_FA_FAC_SUBM
+                on delete cascade,
+    TRANS_CODE                     CHAR,
+    ACT_LOC_CODE                   CHAR(2)    not null,
+    MECHANISM_AGN_CODE             CHAR       not null,
+    MECHANISM_SEQ_NUM              NUMBER(10) not null,
+    MECHANISM_TYPE_DATA_OWNER_CODE CHAR(2),
+    MECHANISM_TYPE_CODE            CHAR,
+    PROVIDER_TXT                   VARCHAR2(80),
+    PROVIDER_FULL_CONTACT_NAME     VARCHAR2(33),
+    TELE_NUM_TXT                   VARCHAR2(15),
+    SUPP_INFO_TXT                  VARCHAR2(2000),
+    CREATED_BY_USERID              VARCHAR2(255),
+    F_CREATED_DATE                 TIMESTAMP(6),
+    DATA_ORIG                      CHAR(2),
+    PROVIDER_CONTACT_EMAIL         VARCHAR2(80),
+    ACTIVE_MECHANISM_IND           CHAR,
+    LAST_UPDT_BY                   VARCHAR2(255),
+    LAST_UPDT_DATE                 DATE
+)
+/
+
+comment on table RCRA_FA_MECHANISM is 'Schema element: MechanismDataType'
+/
+
+comment on column RCRA_FA_MECHANISM.FA_MECHANISM_ID is 'Parent: Mechanisms used to address cost estimates of the Financial liability associated with a given Handler. (_PK)'
+/
+
+comment on column RCRA_FA_MECHANISM.FA_FAC_SUBM_ID is 'Parent: Mechanisms used to address cost estimates of the Financial liability associated with a given Handler. (_FK)'
+/
+
+comment on column RCRA_FA_MECHANISM.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_FA_MECHANISM.ACT_LOC_CODE is 'Indicates the location of the agency regulating the handler. (ActivityLocationCode)'
+/
+
+comment on column RCRA_FA_MECHANISM.MECHANISM_AGN_CODE is 'The agency responsible for overseeing the review of the mechanism. (MechanismAgencyCode)'
+/
+
+comment on column RCRA_FA_MECHANISM.MECHANISM_SEQ_NUM is 'Unique numerical identier for the mechanism. (MechanismSequenceNumber)'
+/
+
+comment on column RCRA_FA_MECHANISM.MECHANISM_TYPE_DATA_OWNER_CODE is 'Indicates the agency that defined the mechanism type. (MechanismTypeDataOwnerCode)'
+/
+
+comment on column RCRA_FA_MECHANISM.MECHANISM_TYPE_CODE is 'The type of mechanism that addresses the cost estimate. (MechanismTypeCode)'
+/
+
+comment on column RCRA_FA_MECHANISM.PROVIDER_TXT is 'The name of the financial institution with which the financial assurance mechanism is held, such as a bank (letter of credit) or a surety (surety bond); also identifies a facility (financial test), or a guarantor (corporate guarantee). (ProviderText)'
+/
+
+comment on column RCRA_FA_MECHANISM.PROVIDER_FULL_CONTACT_NAME is 'Contact Name of the provider. (ProviderFullContactName)'
+/
+
+comment on column RCRA_FA_MECHANISM.TELE_NUM_TXT is 'Telephone Number data (TelephoneNumberText)'
+/
+
+comment on column RCRA_FA_MECHANISM.SUPP_INFO_TXT is 'Notes providing more information. (SupplementalInformationText)'
+/
+
+comment on column RCRA_FA_MECHANISM.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_FA_MECHANISM.F_CREATED_DATE is 'Creation Date (FCreatedDate)'
+/
+
+comment on column RCRA_FA_MECHANISM.DATA_ORIG is 'Indicates data origination information (DataOrig)'
+/
+
+create index IX_FA_MC_FA_FC_SB
+    on RCRA_FA_MECHANISM (FA_FAC_SUBM_ID)
+/
+
+create table RCRA_FA_MECHANISM_DETAIL
+(
+    FA_MECHANISM_DETAIL_ID       NUMBER(10) not null
+        constraint PK_FA_MCHNISM_DTIL
+            primary key,
+    FA_MECHANISM_ID              NUMBER(10) not null
+        constraint FK_FA_MCH_DT_FA_MC
+            references RCRA_FA_MECHANISM
+                on delete cascade,
+    TRANS_CODE                   CHAR,
+    MECHANISM_DETAIL_SEQ_NUM     NUMBER(10) not null,
+    MECHANISM_IDEN_TXT           VARCHAR2(40),
+    FACE_VAL_AMOUNT              NUMBER(13, 2),
+    EFFC_DATE                    DATE,
+    EXPIRATION_DATE              DATE,
+    SUPP_INFO_TXT                VARCHAR2(2000),
+    CURRENT_MECHANISM_DETAIL_IND CHAR,
+    CREATED_BY_USERID            VARCHAR2(255),
+    F_CREATED_DATE               TIMESTAMP(6),
+    DATA_ORIG                    CHAR(2),
+    FAC_FACE_VAL_AMOUNT          NUMBER(14, 6),
+    ALT_IND                      CHAR,
+    LAST_UPDT_BY                 VARCHAR2(255),
+    LAST_UPDT_DATE               DATE
+)
+/
+
+comment on table RCRA_FA_MECHANISM_DETAIL is 'Schema element: MechanismDetailDataType'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.FA_MECHANISM_DETAIL_ID is 'Parent: Details of the mechanism used to address cost estimates of the Financial liability associated with a given Handler. (_PK)'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.FA_MECHANISM_ID is 'Parent: Details of the mechanism used to address cost estimates of the Financial liability associated with a given Handler. (_FK)'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.MECHANISM_DETAIL_SEQ_NUM is 'Unique numerical code identifying the mechanism detail. (MechanismDetailSequenceNumber)'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.MECHANISM_IDEN_TXT is 'The number assigned to the mechanism, such as a bond number or insurance policy number. (MechanismIdentificationText)'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.FACE_VAL_AMOUNT is 'The total dollar value of the financial assurance mechanism. (FaceValueAmount)'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.EFFC_DATE is 'The Effective Date of the action: 1. Hazardous Secondary Material notification in Handler, 2. Corrective Action Authority, 3. Financial Assurance Mechanism.  (EffectiveDate)'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.EXPIRATION_DATE is 'The date the instrument terminates, such as the end of the term of an insurance policy. (ExpirationDate)'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.SUPP_INFO_TXT is 'Notes providing more information. (SupplementalInformationText)'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.CURRENT_MECHANISM_DETAIL_IND is 'Indicates if the mechanism detail is current. Possible values are: Y/N (CurrentMechanismDetailIndicator)'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.F_CREATED_DATE is 'Creation Date (FCreatedDate)'
+/
+
+comment on column RCRA_FA_MECHANISM_DETAIL.DATA_ORIG is 'Indicates data origination information (DataOrig)'
+/
+
+create index IX_FA_MC_DT_FA_MC
+    on RCRA_FA_MECHANISM_DETAIL (FA_MECHANISM_ID)
+/
+
+create table RCRA_GIS_FAC_SUBM
+(
+    GIS_FAC_SUBM_ID NUMBER(10)   not null
+        constraint PK_GIS_FAC_SUBM
+            primary key,
+    HANDLER_ID      VARCHAR2(12) not null
+)
+/
+
+comment on table RCRA_GIS_FAC_SUBM is 'Schema element: GISFacilitySubmissionDataType'
+/
+
+comment on column RCRA_GIS_FAC_SUBM.GIS_FAC_SUBM_ID is 'Parent: Supplies all of the relevant GIS Data for a given Handler (_PK)'
+/
+
+comment on column RCRA_GIS_FAC_SUBM.HANDLER_ID is 'Code that uniquely identifies the handler. (HandlerID)'
+/
+
+create table RCRA_GIS_GEO_INFORMATION
+(
+    GIS_GEO_INFORMATION_ID         NUMBER(10) not null
+        constraint PK_GS_GO_INFORMTON
+            primary key,
+    GIS_FAC_SUBM_ID                NUMBER(10) not null
+        constraint FK_GS_GO_IN_GS_FC
+            references RCRA_GIS_FAC_SUBM
+                on delete cascade,
+    TRANS_CODE                     CHAR,
+    GEO_INFO_OWNER                 CHAR(2)    not null,
+    GEO_INFO_SEQ_NUM               NUMBER(10) not null,
+    PERMIT_UNIT_SEQ_NUM            NUMBER(10),
+    AREA_SEQ_NUM                   NUMBER(10),
+    LOC_COMM_TXT                   VARCHAR2(2000),
+    AREA_ACREAGE_MEAS              NUMBER(13, 2),
+    AREA_MEAS_SRC_DATA_OWNER_CODE  CHAR(2),
+    AREA_MEAS_SRC_CODE             VARCHAR2(4),
+    AREA_MEAS_DATE                 DATE,
+    DATA_COLL_DATE                 DATE       not null,
+    HORZ_ACC_MEAS                  NUMBER(10),
+    SRC_MAP_SCALE_NUM              NUMBER(10),
+    COORD_DATA_SRC_DATA_OWNER_CODE CHAR(2),
+    COORD_DATA_SRC_CODE            VARCHAR2(3),
+    GEO_REF_PT_DATA_OWNER_CODE     CHAR(2),
+    GEO_REF_PT_CODE                VARCHAR2(3),
+    GEOM_TYPE_DATA_OWNER_CODE      CHAR(2),
+    GEOM_TYPE_CODE                 VARCHAR2(3),
+    HORZ_COLL_METH_DATA_OWNER_CODE CHAR(2),
+    HORZ_COLL_METH_CODE            VARCHAR2(3),
+    HRZ_CRD_RF_SYS_DTM_DTA_OWN_CDE CHAR(2),
+    HORZ_COORD_REF_SYS_DATUM_CODE  VARCHAR2(3),
+    VERF_METH_DATA_OWNER_CODE      CHAR(2),
+    VERF_METH_CODE                 VARCHAR2(3),
+    LATITUDE                       NUMBER(19, 14),
+    LONGITUDE                      NUMBER(19, 14),
+    ELEVATION                      NUMBER(19, 14),
+    CREATED_BY_USERID              VARCHAR2(255),
+    G_CREATED_DATE                 TIMESTAMP(6),
+    DATA_ORIG                      CHAR(2),
+    LAST_UPDT_BY                   VARCHAR2(255),
+    LAST_UPDT_DATE                 DATE
+)
+/
+
+comment on table RCRA_GIS_GEO_INFORMATION is 'Schema element: GeographicInformationDataType'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.GIS_GEO_INFORMATION_ID is 'Parent: Used to define the geographic coordinates of the Handler. (_PK)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.GIS_FAC_SUBM_ID is 'Parent: Used to define the geographic coordinates of the Handler. (_FK)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.GEO_INFO_OWNER is 'Owner of Geographic Information.  Should match state code (i.e. KS). (GeographicInformationOwner)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.GEO_INFO_SEQ_NUM is 'Unique identifier for the geographic information. (GeographicInformationSequenceNumber)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.PERMIT_UNIT_SEQ_NUM is 'System-generated value used to uniquely identify a process unit. (PermitUnitSequenceNumber)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.AREA_SEQ_NUM is 'Code used for administrative purposes to uniquely designate a group of units (or a single unit) with a common history and projection of corrective action requirements. (AreaSequenceNumber)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.LOC_COMM_TXT is 'The text that provides additional informaiton about the geographic coordinates. (LocationCommentsText)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.AREA_ACREAGE_MEAS is 'The number of acres associated with the handler or area. (AreaAcreageMeasure)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.AREA_MEAS_SRC_DATA_OWNER_CODE is 'Indicates the agency that defined the AreaMeasureSource. (AreaMeasureSourceDataOwnerCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.AREA_MEAS_SRC_CODE is 'The source of information used to determine the number of acres associated with the handler or area. (AreaMeasureSourceCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.AREA_MEAS_DATE is 'The date acreage information for the handler or area was collected. (AreaMeasureDate)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.DATA_COLL_DATE is 'The calender date when data were collected (DataCollectionDate)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.HORZ_ACC_MEAS is 'The horizontal measure, in meters, of the relative accuracy of the latitude and longitude coordinates. (HorizontalAccuracyMeasure)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.SRC_MAP_SCALE_NUM is 'The number that represents the proportional distance on the ground for one unit of measure on the map or photo. (SourceMapScaleNumeric)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.COORD_DATA_SRC_DATA_OWNER_CODE is 'The owner of the code.  If provided, it should be HQ. (CoordinateDataSourceDataOwnerCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.COORD_DATA_SRC_CODE is 'The code that represents the party responsible for proiding the latitude and longitude coordinates. (CoordinateDataSourceCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.GEO_REF_PT_DATA_OWNER_CODE is 'The owner of the code.  If provided, it should be HQ. (GeographicReferencePointDataOwnerCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.GEO_REF_PT_CODE is 'The code that represents the place for which the geographic codes were established (GeographicReferencePointCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.GEOM_TYPE_DATA_OWNER_CODE is 'The owner of the code.  If provided, it should be HQ. (GeometricTypeDataOwnerCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.GEOM_TYPE_CODE is 'The code that represents the geometric entity represented by one point or a sequence of points (GeometricTypeCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.HORZ_COLL_METH_DATA_OWNER_CODE is 'The owner of the code.  If provided, it should be HQ. (HorizontalCollectionMethodDataOwnerCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.HORZ_COLL_METH_CODE is 'The code that represents the method used to deterimine the latitude and longitude coordinates for a point on the earth. (HorizontalCollectionMethodCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.HRZ_CRD_RF_SYS_DTM_DTA_OWN_CDE is 'The owner of the code.  If provided, it should be HQ. (HorizontalCoordinateReferenceSystemDatumDataOwnerCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.HORZ_COORD_REF_SYS_DATUM_CODE is 'The code that represents the datum used in determining latitude and longitude coordinates (HorizontalCoordinateReferenceSystemDatumCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.VERF_METH_DATA_OWNER_CODE is 'The owner of the code.  If provided, it should be HQ. (VerificationMethodDataOwnerCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.VERF_METH_CODE is 'The code that represents the process used to verify the latitude and longitude coordinates. (VerificationMethodCode)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.LATITUDE is 'Parent: Geometry property element of a GeoRSS GML instance (Latitude)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.LONGITUDE is 'Parent: Geometry property element of a GeoRSS GML instance (Longitude)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.ELEVATION is 'Parent: Geometry property element of a GeoRSS GML instance (Elevation)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.G_CREATED_DATE is 'Creation Date (GCreatedDate)'
+/
+
+comment on column RCRA_GIS_GEO_INFORMATION.DATA_ORIG is 'Indicates data origination information (DataOrig)'
+/
+
+create index IX_GS_GO_IN_GS_FC
+    on RCRA_GIS_GEO_INFORMATION (GIS_FAC_SUBM_ID)
+/
+
+create table RCRA_HD_HBASIC
+(
+    HD_HBASIC_ID        NUMBER(10)   not null
+        constraint PK_HD_HBASIC
+            primary key,
+    TRANSACTION_CODE    CHAR,
+    HANDLER_ID          VARCHAR2(12) not null,
+    EXTRACT_FLAG        CHAR,
+    FACILITY_IDENTIFIER VARCHAR2(12)
+)
+/
+
+comment on table RCRA_HD_HBASIC is 'Schema element: FacilitySubmissionDataType'
+/
+
+comment on column RCRA_HD_HBASIC.HD_HBASIC_ID is 'Parent: Details of facility submission. (_PK)'
+/
+
+comment on column RCRA_HD_HBASIC.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_HBASIC.HANDLER_ID is 'Code that uniquely identifies the handler. (HandlerID)'
+/
+
+comment on column RCRA_HD_HBASIC.EXTRACT_FLAG is 'Designates that data is available for extract for public use. (PublicUseExtractIndicator)'
+/
+
+comment on column RCRA_HD_HBASIC.FACILITY_IDENTIFIER is 'Computer-generated primary facility-level key in the EPA FINDS data system used as an identifier to cross-reference entities regulated under different environmental programs. The Agency Facility Identification Data Standard (FIDS) requires that program offices store this key in their data systems. (FacilityRegistryID)'
+/
+
+create table RCRA_HD_HANDLER
+(
+    HD_HANDLER_ID                  NUMBER(10) not null
+        constraint PK_HD_HANDLER
+            primary key,
+    HD_HBASIC_ID                   NUMBER(10) not null
+        constraint FK_HD_HAND_HD_HBAS
+            references RCRA_HD_HBASIC
+                on delete cascade,
+    TRANSACTION_CODE               CHAR,
+    ACTIVITY_LOCATION              CHAR(2)    not null,
+    SOURCE_TYPE                    CHAR       not null,
+    SEQ_NUMBER                     NUMBER(10) not null,
+    HANDLER_NAME                   VARCHAR2(80),
+    ACKNOWLEDGE_DATE               VARCHAR2(10),
+    NON_NOTIFIER                   CHAR,
+    TSD_DATE                       VARCHAR2(10),
+    OFF_SITE_RECEIPT               CHAR,
+    ACCESSIBILITY                  CHAR,
+    COUNTY_CODE_OWNER              CHAR(2),
+    COUNTY_CODE                    VARCHAR2(5),
+    NOTES                          VARCHAR2(4000),
+    ACKNOWLEDGE_FLAG               CHAR,
+    LOCATION_STREET1               VARCHAR2(50),
+    LOCATION_STREET2               VARCHAR2(50),
+    LOCATION_CITY                  VARCHAR2(25),
+    LOCATION_STATE                 CHAR(2),
+    LOCATION_COUNTRY               CHAR(2),
+    LOCATION_ZIP                   VARCHAR2(14),
+    MAIL_STREET1                   VARCHAR2(50),
+    MAIL_STREET2                   VARCHAR2(50),
+    MAIL_CITY                      VARCHAR2(25),
+    MAIL_STATE                     CHAR(2),
+    MAIL_COUNTRY                   CHAR(2),
+    MAIL_ZIP                       VARCHAR2(14),
+    CONTACT_FIRST_NAME             VARCHAR2(38),
+    CONTACT_MIDDLE_INITIAL         CHAR,
+    CONTACT_LAST_NAME              VARCHAR2(38),
+    CONTACT_ORG_NAME               VARCHAR2(80),
+    CONTACT_TITLE                  VARCHAR2(80),
+    CONTACT_EMAIL_ADDRESS          VARCHAR2(80),
+    CONTACT_PHONE                  VARCHAR2(15),
+    CONTACT_PHONE_EXT              VARCHAR2(6),
+    CONTACT_FAX                    VARCHAR2(15),
+    CONTACT_STREET_NUMBER          VARCHAR2(12),
+    CONTACT_STREET1                VARCHAR2(50),
+    CONTACT_STREET2                VARCHAR2(50),
+    CONTACT_CITY                   VARCHAR2(25),
+    CONTACT_STATE                  CHAR(2),
+    CONTACT_COUNTRY                CHAR(2),
+    CONTACT_ZIP                    VARCHAR2(14),
+    PCONTACT_FIRST_NAME            VARCHAR2(38),
+    PCONTACT_MIDDLE_NAME           CHAR,
+    PCONTACT_LAST_NAME             VARCHAR2(38),
+    PCONTACT_ORG_NAME              VARCHAR2(80),
+    PCONTACT_TITLE                 VARCHAR2(80),
+    PCONTACT_EMAIL_ADDRESS         VARCHAR2(80),
+    PCONTACT_PHONE                 VARCHAR2(15),
+    PCONTACT_PHONE_EXT             VARCHAR2(6),
+    PCONTACT_FAX                   VARCHAR2(15),
+    PCONTACT_STREET_NUMBER         VARCHAR2(12),
+    PCONTACT_STREET1               VARCHAR2(50),
+    PCONTACT_STREET2               VARCHAR2(50),
+    PCONTACT_CITY                  VARCHAR2(25),
+    PCONTACT_STATE                 CHAR(2),
+    PCONTACT_COUNTRY               CHAR(2),
+    PCONTACT_ZIP                   VARCHAR2(14),
+    USED_OIL_BURNER                CHAR,
+    USED_OIL_PROCESSOR             CHAR,
+    USED_OIL_REFINER               CHAR,
+    USED_OIL_MARKET_BURNER         CHAR,
+    USED_OIL_SPEC_MARKETER         CHAR,
+    USED_OIL_TRANSFER_FACILITY     CHAR,
+    USED_OIL_TRANSPORTER           CHAR,
+    LAND_TYPE                      CHAR,
+    STATE_DISTRICT_OWNER           CHAR(2),
+    STATE_DISTRICT                 VARCHAR2(10),
+    IMPORTER_ACTIVITY              CHAR,
+    MIXED_WASTE_GENERATOR          CHAR,
+    RECYCLER_ACTIVITY              CHAR,
+    TRANSPORTER_ACTIVITY           CHAR,
+    TSD_ACTIVITY                   CHAR,
+    UNDERGROUND_INJECTION_ACTIVITY CHAR,
+    UNIVERSAL_WASTE_DEST_FACILITY  CHAR,
+    ONSITE_BURNER_EXEMPTION        CHAR,
+    FURNACE_EXEMPTION              CHAR,
+    SHORT_TERM_GEN_IND             CHAR,
+    TRANSFER_FACILITY_IND          CHAR,
+    STATE_WASTE_GENERATOR_OWNER    CHAR(2),
+    STATE_WASTE_GENERATOR          CHAR,
+    FED_WASTE_GENERATOR_OWNER      CHAR(2),
+    FED_WASTE_GENERATOR            CHAR,
+    COLLEGE_IND                    CHAR,
+    HOSPITAL_IND                   CHAR,
+    NON_PROFIT_IND                 CHAR,
+    WITHDRAWAL_IND                 CHAR,
+    TRANS_CODE                     CHAR,
+    NOTIFICATION_RSN_CODE          CHAR,
+    EFFC_DATE                      TIMESTAMP(6),
+    FINANCIAL_ASSURANCE_IND        CHAR,
+    RECYCLING_IND                  CHAR,
+    MAIL_STREET_NUMBER             VARCHAR2(12),
+    LOCATION_STREET_NUMBER         VARCHAR2(12),
+    NON_NOTIFIER_TEXT              VARCHAR2(255),
+    ACCESSIBILITY_TEXT             VARCHAR2(255),
+    STATE_DISTRICT_TEXT            VARCHAR2(255),
+    INTRNL_NOTES                   VARCHAR2(4000),
+    SHORT_TERM_INTRNL_NOTES        VARCHAR2(4000),
+    NATURE_OF_BUSINESS_TEXT        VARCHAR2(4000),
+    RECOGNIZED_TRADER_IMPORTER_IND CHAR,
+    RECOGNIZED_TRADER_EXPORTER_IND CHAR,
+    SLAB_IMPORTER_IND              CHAR,
+    SLAB_EXPORTER_IND              CHAR,
+    RECYCLER_ACT_NONSTORAGE        CHAR,
+    MANIFEST_BROKER                CHAR,
+    ACKNOWLEDGE_FLAG_IND           CHAR,
+    INCLUDE_IN_NATIONAL_REPORT_IND CHAR,
+    LQHUW_IND                      CHAR,
+    HD_REPORT_CYCLE_YEAR           NUMBER,
+    HEALTHCARE_FAC                 CHAR,
+    REVERSE_DISTRIBUTOR            CHAR,
+    SUBPART_P_WITHDRAWAL           CHAR,
+    RECYCLER_IND                   CHAR,
+    RECEIVE_DATE                   VARCHAR2(10),
+    CURRENT_RECORD                 CHAR,
+    CREATED_BY_USERID              VARCHAR2(255),
+    H_CREATED_DATE                 TIMESTAMP(6),
+    DATA_ORIG                      CHAR(2),
+    LOCATION_LATITUDE              NUMBER(19, 14),
+    LOCATION_LONGITUDE             NUMBER(19, 14),
+    LOCATION_GIS_PRIM              CHAR,
+    LOCATION_GIS_ORIG              CHAR(2),
+    LAST_UPDT_BY                   VARCHAR2(255),
+    LAST_UPDT_DATE                 DATE,
+    BR_EXEMPT_IND                  CHAR
+)
+/
+
+comment on table RCRA_HD_HANDLER is 'Schema element: HandlerDataType'
+/
+
+comment on column RCRA_HD_HANDLER.HD_HANDLER_ID is 'Parent: Top level of all information about the handler. (_PK)'
+/
+
+comment on column RCRA_HD_HANDLER.HD_HBASIC_ID is 'Parent: Top level of all information about the handler. (_FK)'
+/
+
+comment on column RCRA_HD_HANDLER.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_HANDLER.ACTIVITY_LOCATION is 'Indicates the location of the agency regulating the handler. (ActivityLocationCode)'
+/
+
+comment on column RCRA_HD_HANDLER.SOURCE_TYPE is 'Code indicating the source of information for the associated data (activity, wastes, etc.). (SourceTypeCode)'
+/
+
+comment on column RCRA_HD_HANDLER.SEQ_NUMBER is 'Sequence number for each source record about a handler. (SourceRecordSequenceNumber)'
+/
+
+comment on column RCRA_HD_HANDLER.HANDLER_NAME is 'Name of the Handler (HandlerName)'
+/
+
+comment on column RCRA_HD_HANDLER.ACKNOWLEDGE_DATE is 'Date information was received for the handler. (AcknowledgeReceiptDate)'
+/
+
+comment on column RCRA_HD_HANDLER.NON_NOTIFIER is 'Flag indicating that the handler has been identified through a source other than Notification and is suspected of conducting RCRA-regulated activities without proper authority. (NonNotifierIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.TSD_DATE is 'The date that operation of the facility commenced, the date construction on the facility commenced, or the date that operation is expected to begin. (TreatmentStorageDisposalDate)'
+/
+
+comment on column RCRA_HD_HANDLER.OFF_SITE_RECEIPT is 'Code indicating that the handler, whether public or private, currently accepts hazardous waste from another site (site identified by a different EPA ID). If information is also available on the specific processes and wastes which are accepted, it is indicated by a flag at the process unit level (Process Unit Group Commercial Status). (OffsiteWasteReceiptCode)'
+/
+
+comment on column RCRA_HD_HANDLER.ACCESSIBILITY is 'Code indicating the reason why the handler is not accessible for normal RCRA tracking and processing (previously called Bankrupt Indicator). (AccessibilityCode)'
+/
+
+comment on column RCRA_HD_HANDLER.COUNTY_CODE_OWNER is 'Indicates the agency that defines the county code. (CountyCodeOwner)'
+/
+
+comment on column RCRA_HD_HANDLER.COUNTY_CODE is 'The Federal Information Processing Standard (FIPS) code for the county in which the facility is located (Ref: FIPS Publication, 6-3, "Counties and County Equivalents of the States of the United States"). (CountyCode)'
+/
+
+comment on column RCRA_HD_HANDLER.NOTES is 'Notes regarding the Handler. (HandlerSupplementalInformationText)'
+/
+
+comment on column RCRA_HD_HANDLER.ACKNOWLEDGE_FLAG is 'Parent: Top level of all information about the handler. (AcknowledgeFlag)'
+/
+
+comment on column RCRA_HD_HANDLER.LOCATION_STREET1 is 'Parent: Location address information. (LocationAddressText)'
+/
+
+comment on column RCRA_HD_HANDLER.LOCATION_STREET2 is 'Parent: Location address information. (SupplementalLocationText)'
+/
+
+comment on column RCRA_HD_HANDLER.LOCATION_CITY is 'Parent: Location address information. (LocalityName)'
+/
+
+comment on column RCRA_HD_HANDLER.LOCATION_STATE is 'Parent: Location address information. (StateUSPSCode)'
+/
+
+comment on column RCRA_HD_HANDLER.LOCATION_COUNTRY is 'Parent: Location address information. (CountryName)'
+/
+
+comment on column RCRA_HD_HANDLER.LOCATION_ZIP is 'Parent: Location address information. (LocationZIPCode)'
+/
+
+comment on column RCRA_HD_HANDLER.MAIL_STREET1 is 'Parent: Mailing address information. (MailingAddressText)'
+/
+
+comment on column RCRA_HD_HANDLER.MAIL_STREET2 is 'Parent: Mailing address information. (SupplementalAddressText)'
+/
+
+comment on column RCRA_HD_HANDLER.MAIL_CITY is 'Parent: Mailing address information. (MailingAddressCityName)'
+/
+
+comment on column RCRA_HD_HANDLER.MAIL_STATE is 'Parent: Mailing address information. (MailingAddressStateUSPSCode)'
+/
+
+comment on column RCRA_HD_HANDLER.MAIL_COUNTRY is 'Parent: Mailing address information. (MailingAddressCountryName)'
+/
+
+comment on column RCRA_HD_HANDLER.MAIL_ZIP is 'Parent: Mailing address information. (MailingAddressZIPCode)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_FIRST_NAME is 'Parent: Contact information. (FirstName)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_MIDDLE_INITIAL is 'Parent: Contact information. (MiddleInitial)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_LAST_NAME is 'Parent: Contact information. (LastName)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_ORG_NAME is 'Parent: Contact information. (OrganizationFormalName)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_TITLE is 'Title of the contact person or the title of the person who certified the handler information reported to the authorizing agency. (IndividualTitleText)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_EMAIL_ADDRESS is 'Email address data (EmailAddressText)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_PHONE is 'Telephone Number data (TelephoneNumberText)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_PHONE_EXT is 'Telephone number extension (PhoneExtensionText)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_FAX is 'Contact fax number (FaxNumberText)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_STREET_NUMBER is 'Contact Address Street Number'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_STREET1 is 'Parent: Mailing address information. (MailingAddressText)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_STREET2 is 'Parent: Mailing address information. (SupplementalAddressText)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_CITY is 'Parent: Mailing address information. (MailingAddressCityName)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_STATE is 'Parent: Mailing address information. (MailingAddressStateUSPSCode)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_COUNTRY is 'Parent: Mailing address information. (MailingAddressCountryName)'
+/
+
+comment on column RCRA_HD_HANDLER.CONTACT_ZIP is 'Parent: Mailing address information. (MailingAddressZIPCode)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_FIRST_NAME is 'Parent: Contact information. (FirstName)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_MIDDLE_NAME is 'Parent: Contact information. (MiddleInitial)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_LAST_NAME is 'Parent: Contact information. (LastName)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_ORG_NAME is 'Parent: Contact information. (OrganizationFormalName)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_TITLE is 'Title of the contact person or the title of the person who certified the handler information reported to the authorizing agency. (IndividualTitleText)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_EMAIL_ADDRESS is 'Email address data (EmailAddressText)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_PHONE is 'Telephone Number data (TelephoneNumberText)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_PHONE_EXT is 'Telephone number extension (PhoneExtensionText)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_FAX is 'Contact fax number (FaxNumberText)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_STREET_NUMBER is 'Permit Contact Address Street Number'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_STREET1 is 'Parent: Mailing address information. (MailingAddressText)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_STREET2 is 'Parent: Mailing address information. (SupplementalAddressText)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_CITY is 'Parent: Mailing address information. (MailingAddressCityName)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_STATE is 'Parent: Mailing address information. (MailingAddressStateUSPSCode)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_COUNTRY is 'Parent: Mailing address information. (MailingAddressCountryName)'
+/
+
+comment on column RCRA_HD_HANDLER.PCONTACT_ZIP is 'Parent: Mailing address information. (MailingAddressZIPCode)'
+/
+
+comment on column RCRA_HD_HANDLER.USED_OIL_BURNER is 'Code indicating that the handler is engaged in the burning of used oil fuel. (FuelBurnerCode)'
+/
+
+comment on column RCRA_HD_HANDLER.USED_OIL_PROCESSOR is 'Code indicating that the handler is engaged in processing used oil activities. (ProcessorCode)'
+/
+
+comment on column RCRA_HD_HANDLER.USED_OIL_REFINER is 'Code indicating that the handler is engaged in re-refining used oil activities. (RefinerCode)'
+/
+
+comment on column RCRA_HD_HANDLER.USED_OIL_MARKET_BURNER is 'Code indicating that the handler directs shipments of used oil to burners. (MarketBurnerCode)'
+/
+
+comment on column RCRA_HD_HANDLER.USED_OIL_SPEC_MARKETER is 'Code indicating that the handler is a marketer who first claims the used oil meets the specifications. (SpecificationMarketerCode)'
+/
+
+comment on column RCRA_HD_HANDLER.USED_OIL_TRANSFER_FACILITY is 'Code indicating that the handler owns or operates a used oil transfer facility. (TransferFacilityCode)'
+/
+
+comment on column RCRA_HD_HANDLER.USED_OIL_TRANSPORTER is 'Code indicating that the handler is engaged in used oil transportation and/or transfer facility activities. (TransporterCode)'
+/
+
+comment on column RCRA_HD_HANDLER.LAND_TYPE is 'Code indicating current ownership status of the land on which the facility is located. (LandTypeCode)'
+/
+
+comment on column RCRA_HD_HANDLER.STATE_DISTRICT_OWNER is 'Owner of the state district code.  Usually 2-digit postal code (i.e. KS). (StateDistrictOwnerName)'
+/
+
+comment on column RCRA_HD_HANDLER.STATE_DISTRICT is 'Code indicating the state-designated legislative district(s) in which the site is located. (StateDistrictCode)'
+/
+
+comment on column RCRA_HD_HANDLER.IMPORTER_ACTIVITY is 'Code indicating that the handler is engaged in importing hazardous waste into the United States. (ImporterActivityCode)'
+/
+
+comment on column RCRA_HD_HANDLER.MIXED_WASTE_GENERATOR is 'Code indicating that the handler is engaged in generating mixed waste (waste that is both hazardous and radioactive). (MixedWasteGeneratorCode)'
+/
+
+comment on column RCRA_HD_HANDLER.RECYCLER_ACTIVITY is 'Code indicating that the handler is engaged in recycling hazardous waste. (RecyclerActivityCode)'
+/
+
+comment on column RCRA_HD_HANDLER.TRANSPORTER_ACTIVITY is 'Code indicating that the handler is engaged in the transportation of hazardous waste. (TransporterActivityCode)'
+/
+
+comment on column RCRA_HD_HANDLER.TSD_ACTIVITY is 'Code indicating that the handler is engaged in the treatment, storage, or disposal of hazardous waste. (TreatmentStorageDisposalActivityCode)'
+/
+
+comment on column RCRA_HD_HANDLER.UNDERGROUND_INJECTION_ACTIVITY is 'Code indicating that the handler generates and or treats, stores, or disposes of hazardous waste and has an injection well located at the installation. (UndergroundInjectionActivityCode)'
+/
+
+comment on column RCRA_HD_HANDLER.UNIVERSAL_WASTE_DEST_FACILITY is 'Code indicating that the handler treats, disposes of, or recycles hazardous waste on site. (UniversalWasteDestinationFacilityIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.ONSITE_BURNER_EXEMPTION is 'Code indicating that the handler qualifies for the Small Quantity Onsite Burner Exemption. (OnsiteBurnerExemptionCode)'
+/
+
+comment on column RCRA_HD_HANDLER.FURNACE_EXEMPTION is 'Code indicating that the handler qualifies for the Smelting, Melting, and Refining Furnace Exemption. (FurnaceExemptionCode)'
+/
+
+comment on column RCRA_HD_HANDLER.SHORT_TERM_GEN_IND is 'Code indicating that the handler is engaged in short-term hazardous waste generation activities. (ShortTermGeneratorIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.TRANSFER_FACILITY_IND is 'Code indicating that the handler is a Hazardous Waste Transfer Facility (not to be confused with a used oil transfer facility). (TransferFacilityIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.STATE_WASTE_GENERATOR_OWNER is 'Indicates the agency that defines the generator status type. (WasteGeneratorOwnerName)'
+/
+
+comment on column RCRA_HD_HANDLER.STATE_WASTE_GENERATOR is 'Code indicating that the handler is engaged in the generation of hazardous waste. (WasteGeneratorStatusCode)'
+/
+
+comment on column RCRA_HD_HANDLER.FED_WASTE_GENERATOR_OWNER is 'Indicates the agency that defines the generator status type. (WasteGeneratorOwnerName)'
+/
+
+comment on column RCRA_HD_HANDLER.FED_WASTE_GENERATOR is 'Code indicating that the handler is engaged in the generation of hazardous waste. (WasteGeneratorStatusCode)'
+/
+
+comment on column RCRA_HD_HANDLER.COLLEGE_IND is 'Indicates whether or not the Handler is a College or University opting into SubPart K. (CollegeIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.HOSPITAL_IND is 'Indicates whether or not the Handler is a Hospital opting into SubPart K. (HospitalIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.NON_PROFIT_IND is 'Indicates whether or not the Handler is a Non-Profit opting into SubPart K. (NonProfitIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.WITHDRAWAL_IND is 'Indicates whether or not the Handler is withdrawing from SubPart K. (WithdrawalIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_HANDLER.NOTIFICATION_RSN_CODE is 'Indicates the reason for notifying Hazardous Secondary Material (NotificationReasonCode)'
+/
+
+comment on column RCRA_HD_HANDLER.EFFC_DATE is 'The Effective Date of the action: 1. Hazardous Secondary Material notification in Handler, 2. Corrective Action Authority, 3. Financial Assurance Mechanism.  (EffectiveDate)'
+/
+
+comment on column RCRA_HD_HANDLER.FINANCIAL_ASSURANCE_IND is 'Indicates whether or not the facility has provided Financial Assurance for the HSM Activities (FinancialAssuranceIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.RECYCLING_IND is 'Indicates the facility has a recycling process which the product has levels of hazardous constituents that are not comparable to or unable to be compared to a legitimate product or intermediate but that the recycling is still legitimate'
+/
+
+comment on column RCRA_HD_HANDLER.MAIL_STREET_NUMBER is 'Mailing Address Street Number'
+/
+
+comment on column RCRA_HD_HANDLER.LOCATION_STREET_NUMBER is 'Location Address Street Number'
+/
+
+comment on column RCRA_HD_HANDLER.NON_NOTIFIER_TEXT is 'Descriptive text describing Notification source (Data publishing only)'
+/
+
+comment on column RCRA_HD_HANDLER.ACCESSIBILITY_TEXT is 'Descriptive text describing reason facility is not accessible (Data publishing only)'
+/
+
+comment on column RCRA_HD_HANDLER.STATE_DISTRICT_TEXT is 'Descriptive text describing the code indicating the state-designated legislative district(s) in which the site is located (Data publishing only)'
+/
+
+comment on column RCRA_HD_HANDLER.INTRNL_NOTES is '(HandlerSupplementalInformationText)'
+/
+
+comment on column RCRA_HD_HANDLER.SHORT_TERM_INTRNL_NOTES is '(ShortTermSupplementalInformationText)'
+/
+
+comment on column RCRA_HD_HANDLER.NATURE_OF_BUSINESS_TEXT is 'Notes regarding Handler Part-A submissions. (NatureOfBusinessText)'
+/
+
+comment on column RCRA_HD_HANDLER.RECOGNIZED_TRADER_IMPORTER_IND is 'Indicates that the Handler is participating in Import Trading activity. (RecognizedTraderImporterIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.RECOGNIZED_TRADER_EXPORTER_IND is 'Indicates that the Handler is participating in Export Trading activity. (RecognizedTraderExporterIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.SLAB_IMPORTER_IND is 'Indicates that the Handler is participating in Slab Import activity. (SlabImporterIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.SLAB_EXPORTER_IND is 'Indicates that the Handler is participating in Slab Export activity. (SlabExporterIndicator)'
+/
+
+comment on column RCRA_HD_HANDLER.RECYCLER_ACT_NONSTORAGE is 'Identifies that Handler participates in Nonstorage Recycler Activity. (RecyclerActivityNonstorage)'
+/
+
+comment on column RCRA_HD_HANDLER.MANIFEST_BROKER is 'Identifies that Handler is ManifestBroker. (ManifestBroker)'
+/
+
+comment on column RCRA_HD_HANDLER.CURRENT_RECORD is 'Flag indicating if it is current record (CurrentRecord)'
+/
+
+comment on column RCRA_HD_HANDLER.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_HD_HANDLER.H_CREATED_DATE is 'Creation Date (HCreatedDate)'
+/
+
+comment on column RCRA_HD_HANDLER.DATA_ORIG is 'Indicates data origination information (DataOrig)'
+/
+
+create index IX_HD_HAN_HD_HB_ID
+    on RCRA_HD_HANDLER (HD_HBASIC_ID)
+/
+
+create table RCRA_HD_CERTIFICATION
+(
+    HD_CERTIFICATION_ID NUMBER(10) not null
+        constraint PK_HD_CERTIFICATIO
+            primary key,
+    HD_HANDLER_ID       NUMBER(10) not null
+        constraint FK_HD_CERT_HD_HAND
+            references RCRA_HD_HANDLER
+                on delete cascade,
+    TRANSACTION_CODE    CHAR,
+    CERT_SEQ            NUMBER(10) not null,
+    CERT_SIGNED_DATE    VARCHAR2(10),
+    CERT_TITLE          VARCHAR2(45),
+    CERT_FIRST_NAME     VARCHAR2(38),
+    CERT_MIDDLE_INITIAL CHAR,
+    CERT_LAST_NAME      VARCHAR2(38),
+    CERT_EMAIL_TEXT     VARCHAR2(80)
+)
+/
+
+comment on table RCRA_HD_CERTIFICATION is 'Schema element: CertificationDataType'
+/
+
+comment on column RCRA_HD_CERTIFICATION.HD_CERTIFICATION_ID is 'Parent: Certification information for the person who certified report to the authorizing agency. (_PK)'
+/
+
+comment on column RCRA_HD_CERTIFICATION.HD_HANDLER_ID is 'Parent: Certification information for the person who certified report to the authorizing agency. (_FK)'
+/
+
+comment on column RCRA_HD_CERTIFICATION.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_CERTIFICATION.CERT_SEQ is 'Sequence number for each certification for the handler. (CertificationSequenceNumber)'
+/
+
+comment on column RCRA_HD_CERTIFICATION.CERT_SIGNED_DATE is 'Date on which the handler information was certified by the reporting site. (SignedDate)'
+/
+
+comment on column RCRA_HD_CERTIFICATION.CERT_TITLE is 'Title of the contact person or the title of the person who certified the handler information reported to the authorizing agency. (IndividualTitleText)'
+/
+
+comment on column RCRA_HD_CERTIFICATION.CERT_FIRST_NAME is 'First name of a person. (FirstName)'
+/
+
+comment on column RCRA_HD_CERTIFICATION.CERT_MIDDLE_INITIAL is 'Middle initial of a person. (MiddleInitial)'
+/
+
+comment on column RCRA_HD_CERTIFICATION.CERT_LAST_NAME is 'Last name of a person. (LastName)'
+/
+
+create index IX_HD_CER_HD_HA_ID
+    on RCRA_HD_CERTIFICATION (HD_HANDLER_ID)
+/
+
+create table RCRA_HD_ENV_PERMIT
+(
+    HD_ENV_PERMIT_ID  NUMBER(10)   not null
+        constraint PK_HD_ENV_PERMIT
+            primary key,
+    HD_HANDLER_ID     NUMBER(10)   not null
+        constraint FK_HD_ENV_PE_HD_HA
+            references RCRA_HD_HANDLER
+                on delete cascade,
+    TRANSACTION_CODE  CHAR,
+    ENV_PERMIT_NUMBER VARCHAR2(13) not null,
+    ENV_PERMIT_OWNER  CHAR(2),
+    ENV_PERMIT_TYPE   CHAR,
+    ENV_PERMIT_DESC   VARCHAR2(80) not null
+)
+/
+
+comment on table RCRA_HD_ENV_PERMIT is 'Schema element: EnvironmentalPermitDataType'
+/
+
+comment on column RCRA_HD_ENV_PERMIT.HD_ENV_PERMIT_ID is 'Parent: Information about environmental permits issued to the handler. (_PK)'
+/
+
+comment on column RCRA_HD_ENV_PERMIT.HD_HANDLER_ID is 'Parent: Information about environmental permits issued to the handler. (_FK)'
+/
+
+comment on column RCRA_HD_ENV_PERMIT.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_ENV_PERMIT.ENV_PERMIT_NUMBER is 'Identification number of an effective environmental permit issued to the handler, or the number of a filed application for which an environmental permit has not yet been issued. (EnvironmentalPermitID)'
+/
+
+comment on column RCRA_HD_ENV_PERMIT.ENV_PERMIT_OWNER is 'Indicates the agency that defines the other permit type. (EnvironmentalPermitOwnerName)'
+/
+
+comment on column RCRA_HD_ENV_PERMIT.ENV_PERMIT_TYPE is 'Code indicating the environmental program and/or jurisdictional authority under which an environmental permit was issued to the facility, or under which an application has been filed for which a permit has not yet been issued. This data element is applicable to TSD facilities only. (EnvironmentalPermitTypeCode)'
+/
+
+comment on column RCRA_HD_ENV_PERMIT.ENV_PERMIT_DESC is 'Description of any permit type indicated as O (Other) in the Permit Type field. (EnvironmentalPermitDescription)'
+/
+
+create index IX_HD_EN_PE_HD_HA
+    on RCRA_HD_ENV_PERMIT (HD_HANDLER_ID)
+/
+
+create table RCRA_HD_NAICS
+(
+    HD_NAICS_ID      NUMBER(10)  not null
+        constraint PK_HD_NAICS
+            primary key,
+    HD_HANDLER_ID    NUMBER(10)  not null
+        constraint FK_HD_NAIC_HD_HAND
+            references RCRA_HD_HANDLER
+                on delete cascade,
+    TRANSACTION_CODE CHAR,
+    NAICS_SEQ        VARCHAR2(4) not null,
+    NAICS_OWNER      CHAR(2),
+    NAICS_CODE       VARCHAR2(6)
+)
+/
+
+comment on table RCRA_HD_NAICS is 'Schema element: NAICSIdentityDataType'
+/
+
+comment on column RCRA_HD_NAICS.HD_NAICS_ID is 'Parent: North American Industry Classification Status codes reported for the handler. (_PK)'
+/
+
+comment on column RCRA_HD_NAICS.HD_HANDLER_ID is 'Parent: North American Industry Classification Status codes reported for the handler. (_FK)'
+/
+
+comment on column RCRA_HD_NAICS.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_NAICS.NAICS_SEQ is 'Sequence number for each NAICS code for the handler. (NAICSSequenceNumber)'
+/
+
+comment on column RCRA_HD_NAICS.NAICS_OWNER is 'Indicates the agency that defines the NAICS Code. (NAICSOwnerCode)'
+/
+
+comment on column RCRA_HD_NAICS.NAICS_CODE is 'The North American Industry Classification System Code that identifies the business activities of the facility. (NAICSCode)'
+/
+
+create index IX_HD_NAI_HD_HA_ID
+    on RCRA_HD_NAICS (HD_HANDLER_ID)
+/
+
+create table RCRA_HD_OTHER_ID
+(
+    HD_OTHER_ID_ID     NUMBER(10)   not null
+        constraint PK_HD_OTHER_ID
+            primary key,
+    HD_HBASIC_ID       NUMBER(10)   not null
+        constraint FK_HD_OTH_ID_HD_HB
+            references RCRA_HD_HBASIC
+                on delete cascade,
+    TRANSACTION_CODE   CHAR,
+    OTHER_ID           VARCHAR2(12) not null,
+    RELATIONSHIP_OWNER CHAR(2),
+    RELATIONSHIP_TYPE  CHAR,
+    SAME_FACILITY      CHAR,
+    NOTES              VARCHAR2(4000)
+)
+/
+
+comment on table RCRA_HD_OTHER_ID is 'Schema element: OtherIDDataType'
+/
+
+comment on column RCRA_HD_OTHER_ID.HD_OTHER_ID_ID is 'Parent: Contains alternative identifiers for the facility. (_PK)'
+/
+
+comment on column RCRA_HD_OTHER_ID.HD_HBASIC_ID is 'Parent: Contains alternative identifiers for the facility. (_FK)'
+/
+
+comment on column RCRA_HD_OTHER_ID.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_OTHER_ID.OTHER_ID is 'Alternate facility identifier. (OtherHandlerID)'
+/
+
+comment on column RCRA_HD_OTHER_ID.RELATIONSHIP_OWNER is 'Indicates the agency that owns the Relationship. (RelationshipOwnerName)'
+/
+
+comment on column RCRA_HD_OTHER_ID.RELATIONSHIP_TYPE is 'Indicates the type of the relationship. (RelationshipTypeCode)'
+/
+
+comment on column RCRA_HD_OTHER_ID.SAME_FACILITY is 'Indicates whether the alternate Id references the same facility. (SameFacilityIndicator)'
+/
+
+comment on column RCRA_HD_OTHER_ID.NOTES is 'Notes regarding the alternative facility identifier. (OtherIDSupplementalInformationText)'
+/
+
+create index IX_HD_OT_ID_HD_HB
+    on RCRA_HD_OTHER_ID (HD_HBASIC_ID)
+/
+
+create table RCRA_HD_OWNEROP
+(
+    HD_OWNEROP_ID       NUMBER(10) not null
+        constraint PK_HD_OWNEROP
+            primary key,
+    HD_HANDLER_ID       NUMBER(10) not null
+        constraint FK_HD_OWNE_HD_HAND
+            references RCRA_HD_HANDLER
+                on delete cascade,
+    TRANSACTION_CODE    CHAR,
+    OWNER_OP_SEQ        NUMBER(10) not null,
+    OWNER_OP_IND        CHAR(2),
+    OWNER_OP_TYPE       CHAR,
+    DATE_BECAME_CURRENT VARCHAR2(10),
+    DATE_ENDED_CURRENT  VARCHAR2(10),
+    NOTES               VARCHAR2(4000),
+    FIRST_NAME          VARCHAR2(38),
+    MIDDLE_INITIAL      CHAR,
+    LAST_NAME           VARCHAR2(38),
+    ORG_NAME            VARCHAR2(80),
+    TITLE               VARCHAR2(80),
+    EMAIL_ADDRESS       VARCHAR2(80),
+    PHONE               VARCHAR2(15),
+    PHONE_EXT           VARCHAR2(6),
+    FAX                 VARCHAR2(15),
+    MAIL_ADDR_NUM_TXT   VARCHAR2(12),
+    STREET1             VARCHAR2(50),
+    STREET2             VARCHAR2(50),
+    CITY                VARCHAR2(25),
+    STATE               CHAR(2),
+    COUNTRY             CHAR(2),
+    ZIP                 VARCHAR2(14)
+)
+/
+
+comment on table RCRA_HD_OWNEROP is 'Schema element: FacilityOwnerOperatorDataType'
+/
+
+comment on column RCRA_HD_OWNEROP.HD_OWNEROP_ID is 'Parent: Handler owner and operator information. (_PK)'
+/
+
+comment on column RCRA_HD_OWNEROP.HD_HANDLER_ID is 'Parent: Handler owner and operator information. (_FK)'
+/
+
+comment on column RCRA_HD_OWNEROP.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_OWNEROP.OWNER_OP_SEQ is 'Sequential number used to order multiple occurrences of owners and operators. (OwnerOperatorSequenceNumber)'
+/
+
+comment on column RCRA_HD_OWNEROP.OWNER_OP_IND is 'Code indicating whether the data is associated with a current or previous owner or operator. The system will allow multiple current owners and operators. (OwnerOperatorIndicator)'
+/
+
+comment on column RCRA_HD_OWNEROP.OWNER_OP_TYPE is 'Code indicating the owner/operator type. (OwnerOperatorTypeCode)'
+/
+
+comment on column RCRA_HD_OWNEROP.DATE_BECAME_CURRENT is 'Date indicating when the owner/operator became current. (CurrentStartDate)'
+/
+
+comment on column RCRA_HD_OWNEROP.DATE_ENDED_CURRENT is 'Date indicating when the owner/operator changed to a different owner/operator. (CurrentEndDate)'
+/
+
+comment on column RCRA_HD_OWNEROP.NOTES is 'Notes for the facility Owner Operator. (OwnerOperatorSupplementalInformationText)'
+/
+
+comment on column RCRA_HD_OWNEROP.FIRST_NAME is 'Parent: Contact information. (FirstName)'
+/
+
+comment on column RCRA_HD_OWNEROP.MIDDLE_INITIAL is 'Parent: Contact information. (MiddleInitial)'
+/
+
+comment on column RCRA_HD_OWNEROP.LAST_NAME is 'Parent: Contact information. (LastName)'
+/
+
+comment on column RCRA_HD_OWNEROP.ORG_NAME is 'Parent: Contact information. (OrganizationFormalName)'
+/
+
+comment on column RCRA_HD_OWNEROP.TITLE is 'Title of the contact person or the title of the person who certified the handler information reported to the authorizing agency. (IndividualTitleText)'
+/
+
+comment on column RCRA_HD_OWNEROP.EMAIL_ADDRESS is 'Email address data (EmailAddressText)'
+/
+
+comment on column RCRA_HD_OWNEROP.PHONE is 'Telephone Number data (TelephoneNumberText)'
+/
+
+comment on column RCRA_HD_OWNEROP.PHONE_EXT is 'Telephone number extension (PhoneExtensionText)'
+/
+
+comment on column RCRA_HD_OWNEROP.FAX is 'Contact fax number (FaxNumberText)'
+/
+
+comment on column RCRA_HD_OWNEROP.MAIL_ADDR_NUM_TXT is 'Owner/Operator Address Street Number'
+/
+
+comment on column RCRA_HD_OWNEROP.STREET1 is 'Parent: Mailing address information. (MailingAddressText)'
+/
+
+comment on column RCRA_HD_OWNEROP.STREET2 is 'Parent: Mailing address information. (SupplementalAddressText)'
+/
+
+comment on column RCRA_HD_OWNEROP.CITY is 'Parent: Mailing address information. (MailingAddressCityName)'
+/
+
+comment on column RCRA_HD_OWNEROP.STATE is 'Parent: Mailing address information. (MailingAddressStateUSPSCode)'
+/
+
+comment on column RCRA_HD_OWNEROP.COUNTRY is 'Parent: Mailing address information. (MailingAddressCountryName)'
+/
+
+comment on column RCRA_HD_OWNEROP.ZIP is 'Parent: Mailing address information. (MailingAddressZIPCode)'
+/
+
+create index IX_HD_OWN_HD_HA_ID
+    on RCRA_HD_OWNEROP (HD_HANDLER_ID)
+/
+
+create table RCRA_HD_SEC_MATERIAL_ACTIVITY
+(
+    HD_SEC_MATERIAL_ACTIVITY_ID NUMBER(10)  not null
+        constraint PK_HD_SEC_MATE_ACT
+            primary key,
+    HD_HANDLER_ID               NUMBER(10)  not null
+        constraint FK_HD_SE_MA_AC_HD
+            references RCRA_HD_HANDLER
+                on delete cascade,
+    TRANS_CODE                  CHAR,
+    HSM_SEQ_NUM                 VARCHAR2(4) not null,
+    FAC_CODE_OWNER_NAME         CHAR(2),
+    FAC_TYPE_CODE               CHAR(2),
+    ESTIMATED_SHORT_TONS_QNTY   NUMBER(10),
+    ACTL_SHORT_TONS_QNTY        NUMBER(10),
+    LAND_BASED_UNIT_IND         CHAR(2),
+    LAND_BASED_UNIT_IND_TEXT    VARCHAR2(255)
+)
+/
+
+comment on table RCRA_HD_SEC_MATERIAL_ACTIVITY is 'Schema element: HazardousSecondaryMaterialActivityDataType'
+/
+
+comment on column RCRA_HD_SEC_MATERIAL_ACTIVITY.HD_SEC_MATERIAL_ACTIVITY_ID is 'Parent: Hazardous Secondary Material activity of the Handler (_PK)'
+/
+
+comment on column RCRA_HD_SEC_MATERIAL_ACTIVITY.HD_HANDLER_ID is 'Parent: Hazardous Secondary Material activity of the Handler (_FK)'
+/
+
+comment on column RCRA_HD_SEC_MATERIAL_ACTIVITY.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_SEC_MATERIAL_ACTIVITY.HSM_SEQ_NUM is 'Unique number identifying the HSM Activity for the Handler (HSMSequenceNumber)'
+/
+
+comment on column RCRA_HD_SEC_MATERIAL_ACTIVITY.FAC_CODE_OWNER_NAME is 'Owner of the Facility Code.  Shoule be HQ or the state code (i.e. KS) (FacilityCodeOwnerName)'
+/
+
+comment on column RCRA_HD_SEC_MATERIAL_ACTIVITY.FAC_TYPE_CODE is 'Type of facility generating Hazardous Secondary Material (FacilityTypeCode)'
+/
+
+comment on column RCRA_HD_SEC_MATERIAL_ACTIVITY.ESTIMATED_SHORT_TONS_QNTY is 'The estimated amount of HSM generated by the Handler (EstimatedShortTonsQuantity)'
+/
+
+comment on column RCRA_HD_SEC_MATERIAL_ACTIVITY.ACTL_SHORT_TONS_QNTY is 'The actual amount of HSM generated by the Handler (ActualShortTonsQuantity)'
+/
+
+comment on column RCRA_HD_SEC_MATERIAL_ACTIVITY.LAND_BASED_UNIT_IND is 'Code to indicate if the HSM is being managed in a Land Based Unit (LandBasedUnitIndicator)'
+/
+
+comment on column RCRA_HD_SEC_MATERIAL_ACTIVITY.LAND_BASED_UNIT_IND_TEXT is 'Descriptive text describing the code to indicate if the HSM is being managed in a Land Based Unit (Data publishing only)'
+/
+
+create index IX_HD_SE_MA_AC_HD
+    on RCRA_HD_SEC_MATERIAL_ACTIVITY (HD_HANDLER_ID)
+/
+
+create table RCRA_HD_SEC_WASTE_CODE
+(
+    HD_SEC_WASTE_CODE_ID        NUMBER(10) not null
+        constraint PK_HD_SEC_WAST_COD
+            primary key,
+    HD_SEC_MATERIAL_ACTIVITY_ID NUMBER(10) not null
+        constraint FK_HD_SE_WA_CO_HD
+            references RCRA_HD_SEC_MATERIAL_ACTIVITY
+                on delete cascade,
+    TRANSACTION_CODE            CHAR,
+    WASTE_CODE_OWNER            CHAR(2),
+    WASTE_CODE_TYPE             VARCHAR2(6)
+)
+/
+
+comment on table RCRA_HD_SEC_WASTE_CODE is 'Schema element: SecondaryHandlerWasteCodeDataType'
+/
+
+comment on column RCRA_HD_SEC_WASTE_CODE.HD_SEC_WASTE_CODE_ID is 'Parent: Hazardous waste codes describing the handler''s hazardous waste streams. (_PK)'
+/
+
+comment on column RCRA_HD_SEC_WASTE_CODE.HD_SEC_MATERIAL_ACTIVITY_ID is 'Parent: Hazardous waste codes describing the handler''s hazardous waste streams. (_FK)'
+/
+
+comment on column RCRA_HD_SEC_WASTE_CODE.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_SEC_WASTE_CODE.WASTE_CODE_OWNER is 'Indicates the agency that owns the data record. (WasteCodeOwnerName)'
+/
+
+comment on column RCRA_HD_SEC_WASTE_CODE.WASTE_CODE_TYPE is 'Code used to describe hazardous waste. (WasteCode)'
+/
+
+create index IX_HD_SE_WA_CO_HD
+    on RCRA_HD_SEC_WASTE_CODE (HD_SEC_MATERIAL_ACTIVITY_ID)
+/
+
+create table RCRA_HD_STATE_ACTIVITY
+(
+    HD_STATE_ACTIVITY_ID NUMBER(10)  not null
+        constraint PK_HD_STATE_ACTIVI
+            primary key,
+    HD_HANDLER_ID        NUMBER(10)  not null
+        constraint FK_HD_STA_AC_HD_HA
+            references RCRA_HD_HANDLER
+                on delete cascade,
+    TRANSACTION_CODE     CHAR,
+    STATE_ACTIVITY_OWNER CHAR(2)     not null,
+    STATE_ACTIVITY_TYPE  VARCHAR2(5) not null
+)
+/
+
+comment on table RCRA_HD_STATE_ACTIVITY is 'Schema element: StateActivityDataType'
+/
+
+comment on column RCRA_HD_STATE_ACTIVITY.HD_STATE_ACTIVITY_ID is 'Parent: State waste activity of the handler. (_PK)'
+/
+
+comment on column RCRA_HD_STATE_ACTIVITY.HD_HANDLER_ID is 'Parent: State waste activity of the handler. (_FK)'
+/
+
+comment on column RCRA_HD_STATE_ACTIVITY.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_STATE_ACTIVITY.STATE_ACTIVITY_OWNER is 'Indicates the agency that defines the state activity type. (StateActivityOwnerName)'
+/
+
+comment on column RCRA_HD_STATE_ACTIVITY.STATE_ACTIVITY_TYPE is 'Code indicating the type of state activity. (StateActivityTypeCode)'
+/
+
+create index IX_HD_ST_AC_HD_HA
+    on RCRA_HD_STATE_ACTIVITY (HD_HANDLER_ID)
+/
+
+create table RCRA_HD_UNIVERSAL_WASTE
+(
+    HD_UNIVERSAL_WASTE_ID NUMBER(10) not null
+        constraint PK_HD_UNIVER_WASTE
+            primary key,
+    HD_HANDLER_ID         NUMBER(10) not null
+        constraint FK_HD_UNI_WA_HD_HA
+            references RCRA_HD_HANDLER
+                on delete cascade,
+    TRANSACTION_CODE      CHAR,
+    UNIVERSAL_WASTE_OWNER CHAR(2),
+    UNIVERSAL_WASTE_TYPE  CHAR,
+    ACCUMULATED           CHAR,
+    GENERATED             CHAR
+)
+/
+
+comment on table RCRA_HD_UNIVERSAL_WASTE is 'Schema element: UniversalWasteActivityDataType'
+/
+
+comment on column RCRA_HD_UNIVERSAL_WASTE.HD_UNIVERSAL_WASTE_ID is 'Parent: Information about universal waste generated by the handler. (_PK)'
+/
+
+comment on column RCRA_HD_UNIVERSAL_WASTE.HD_HANDLER_ID is 'Parent: Information about universal waste generated by the handler. (_FK)'
+/
+
+comment on column RCRA_HD_UNIVERSAL_WASTE.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_UNIVERSAL_WASTE.UNIVERSAL_WASTE_OWNER is 'Indicates the agency that defines the universal waste type. (UniversalWasteOwnerName)'
+/
+
+comment on column RCRA_HD_UNIVERSAL_WASTE.UNIVERSAL_WASTE_TYPE is 'Code indicating the type of universal waste. (UniversalWasteTypeCode)'
+/
+
+comment on column RCRA_HD_UNIVERSAL_WASTE.ACCUMULATED is 'Code indicating that the handler is engaged in accumulating waste on site. (AccumulatedWasteCode)'
+/
+
+comment on column RCRA_HD_UNIVERSAL_WASTE.GENERATED is 'Code indicating that the handler is engaged in generating waste on site. (GeneratedHandlerCode)'
+/
+
+create index IX_HD_UN_WA_HD_HA
+    on RCRA_HD_UNIVERSAL_WASTE (HD_HANDLER_ID)
+/
+
+create table RCRA_HD_WASTE_CODE
+(
+    HD_WASTE_CODE_ID NUMBER(10) not null
+        constraint PK_HD_WASTE_CODE
+            primary key,
+    HD_HANDLER_ID    NUMBER(10) not null
+        constraint FK_HD_WAS_CO_HD_HA
+            references RCRA_HD_HANDLER
+                on delete cascade,
+    TRANSACTION_CODE CHAR,
+    WASTE_CODE_OWNER CHAR(2),
+    WASTE_CODE_TYPE  VARCHAR2(6)
+)
+/
+
+comment on table RCRA_HD_WASTE_CODE is 'Schema element: HandlerWasteCodeDataType'
+/
+
+comment on column RCRA_HD_WASTE_CODE.HD_WASTE_CODE_ID is 'Parent: Hazardous waste codes describing the handler''s hazardous waste streams. (_PK)'
+/
+
+comment on column RCRA_HD_WASTE_CODE.HD_HANDLER_ID is 'Parent: Hazardous waste codes describing the handler''s hazardous waste streams. (_FK)'
+/
+
+comment on column RCRA_HD_WASTE_CODE.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_WASTE_CODE.WASTE_CODE_OWNER is 'Indicates the agency that owns the data record. (WasteCodeOwnerName)'
+/
+
+comment on column RCRA_HD_WASTE_CODE.WASTE_CODE_TYPE is 'Code used to describe hazardous waste. (WasteCode)'
+/
+
+create index IX_HD_WA_CO_HD_HA
+    on RCRA_HD_WASTE_CODE (HD_HANDLER_ID)
+/
+
+create table RCRA_PRM_FAC_SUBM
+(
+    PRM_FAC_SUBM_ID NUMBER(10)   not null
+        constraint PK_PRM_FAC_SUBM
+            primary key,
+    HANDLER_ID      VARCHAR2(12) not null
+)
+/
+
+comment on table RCRA_PRM_FAC_SUBM is 'Schema element: PermitFacilitySubmissionDataType'
+/
+
+comment on column RCRA_PRM_FAC_SUBM.PRM_FAC_SUBM_ID is 'Parent:
+	This is the root element for this flow XML Schema.
+	 (_PK)'
+/
+
+comment on column RCRA_PRM_FAC_SUBM.HANDLER_ID is 'Code that uniquely identifies the handler. (HandlerID)'
+/
+
+create table RCRA_PRM_SERIES
+(
+    PRM_SERIES_ID               NUMBER(10) not null
+        constraint PK_PRM_SERIES
+            primary key,
+    PRM_FAC_SUBM_ID             NUMBER(10) not null
+        constraint FK_PRM_SR_PR_FC_SB
+            references RCRA_PRM_FAC_SUBM
+                on delete cascade,
+    TRANS_CODE                  CHAR,
+    PERMIT_SERIES_SEQ_NUM       NUMBER(10) not null,
+    PERMIT_SERIES_NAME          VARCHAR2(40),
+    RESP_PERSON_DATA_OWNER_CODE CHAR(2),
+    RESP_PERSON_ID              VARCHAR2(5),
+    SUPP_INFO_TXT               VARCHAR2(2000),
+    ACTIVE_SERIES_IND           CHAR,
+    CREATED_BY_USERID           VARCHAR2(255),
+    P_CREATED_DATE              TIMESTAMP(6),
+    LAST_UPDT_BY                VARCHAR2(255),
+    LAST_UPDT_DATE              DATE
+)
+/
+
+comment on table RCRA_PRM_SERIES is 'Schema element: PermitSeriesDataType'
+/
+
+comment on column RCRA_PRM_SERIES.PRM_SERIES_ID is 'Parent: Permit series Data (_PK)'
+/
+
+comment on column RCRA_PRM_SERIES.PRM_FAC_SUBM_ID is 'Parent: Permit series Data (_FK)'
+/
+
+comment on column RCRA_PRM_SERIES.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_PRM_SERIES.PERMIT_SERIES_SEQ_NUM is 'System-generated value used to uniquely identify a permit series. (PermitSeriesSequenceNumber)'
+/
+
+comment on column RCRA_PRM_SERIES.PERMIT_SERIES_NAME is 'Name or number assigned by the implementing agency. (PermitSeriesName)'
+/
+
+comment on column RCRA_PRM_SERIES.RESP_PERSON_DATA_OWNER_CODE is 'Indicates the agency that defines the person identifier. (ResponsiblePersonDataOwnerCode)'
+/
+
+comment on column RCRA_PRM_SERIES.RESP_PERSON_ID is 'Code indicating the person within the agency responsible for conducting the evaluation or who is the responsible Authority. (ResponsiblePersonID)'
+/
+
+comment on column RCRA_PRM_SERIES.SUPP_INFO_TXT is 'Notes providing more information. (SupplementalInformationText)'
+/
+
+comment on column RCRA_PRM_SERIES.ACTIVE_SERIES_IND is 'Indicates if the permit series is active. Possible values are: Y/N (ActiveSeriesIndicator)'
+/
+
+comment on column RCRA_PRM_SERIES.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_PRM_SERIES.P_CREATED_DATE is 'Creation date (PCreatedDate)'
+/
+
+create index IX_PR_SR_PR_FC_SB
+    on RCRA_PRM_SERIES (PRM_FAC_SUBM_ID)
+/
+
+create table RCRA_PRM_EVENT
+(
+    PRM_EVENT_ID                 NUMBER(10)  not null
+        constraint PK_PRM_EVENT
+            primary key,
+    PRM_SERIES_ID                NUMBER(10)  not null
+        constraint FK_PRM_EVN_PRM_SRS
+            references RCRA_PRM_SERIES
+                on delete cascade,
+    TRANS_CODE                   CHAR,
+    ACT_LOC_CODE                 CHAR(2)     not null,
+    PERMIT_EVENT_DATA_OWNER_CODE CHAR(2)     not null,
+    PERMIT_EVENT_CODE            VARCHAR2(7) not null,
+    EVENT_AGN_CODE               CHAR        not null,
+    EVENT_SEQ_NUM                NUMBER(10)  not null,
+    ACTL_DATE                    DATE,
+    ORIGINAL_SCHEDULE_DATE       DATE,
+    NEW_SCHEDULE_DATE            DATE,
+    RESP_PERSON_DATA_OWNER_CODE  CHAR(2),
+    RESP_PERSON_ID               VARCHAR2(5),
+    EVENT_SUBORG_DATA_OWNER_CODE CHAR(2),
+    EVENT_SUBORG_CODE            VARCHAR2(10),
+    SUPP_INFO_TXT                VARCHAR2(2000),
+    CREATED_BY_USERID            VARCHAR2(255),
+    P_CREATED_DATE               TIMESTAMP(6),
+    LAST_UPDT_BY                 VARCHAR2(255),
+    LAST_UPDT_DATE               DATE
+)
+/
+
+comment on table RCRA_PRM_EVENT is 'Schema element: PermitEventDataType'
+/
+
+comment on column RCRA_PRM_EVENT.PRM_EVENT_ID is 'Parent: Permit event Data (_PK)'
+/
+
+comment on column RCRA_PRM_EVENT.PRM_SERIES_ID is 'Parent: Permit event Data (_FK)'
+/
+
+comment on column RCRA_PRM_EVENT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_PRM_EVENT.ACT_LOC_CODE is 'Indicates the location of the agency regulating the handler. (ActivityLocationCode)'
+/
+
+comment on column RCRA_PRM_EVENT.PERMIT_EVENT_DATA_OWNER_CODE is 'Indicates the agency that defines the event. (PermitEventDataOwnerCode)'
+/
+
+comment on column RCRA_PRM_EVENT.PERMIT_EVENT_CODE is 'Code used to indicate a specific permitting/closure program event and status that has actually occurred or is scheduled to occur. (PermitEventCode)'
+/
+
+comment on column RCRA_PRM_EVENT.EVENT_AGN_CODE is 'Agency responsible for the event. (EventAgencyCode)'
+/
+
+comment on column RCRA_PRM_EVENT.EVENT_SEQ_NUM is 'System-generated value used to uniquely identify multiple occurrences of a corrective action event. (EventSequenceNumber)'
+/
+
+comment on column RCRA_PRM_EVENT.ACTL_DATE is 'Date on which actual completion of an event occurs. (ActualDate)'
+/
+
+comment on column RCRA_PRM_EVENT.ORIGINAL_SCHEDULE_DATE is 'The original scheduled completion date for an event. This date cannot be changed once entered. Slippage of the scheduled completion date is recorded in the NewScheduleDate Data Element. (OriginalScheduleDate)'
+/
+
+comment on column RCRA_PRM_EVENT.NEW_SCHEDULE_DATE is 'Revised scheduled completion date of the event. This date is used in conjunction with the Original Scheduled Event Date to allow tracking scheduled date slippage. As the scheduled date changes, this field is updated with the new date and the Original Scheduled Event Date is not changed. (NewScheduleDate)'
+/
+
+comment on column RCRA_PRM_EVENT.RESP_PERSON_DATA_OWNER_CODE is 'Indicates the agency that defines the person identifier. (ResponsiblePersonDataOwnerCode)'
+/
+
+comment on column RCRA_PRM_EVENT.RESP_PERSON_ID is 'Code indicating the person within the agency responsible for conducting the evaluation or who is the responsible Authority. (ResponsiblePersonID)'
+/
+
+comment on column RCRA_PRM_EVENT.EVENT_SUBORG_DATA_OWNER_CODE is 'Event responsible suborganization owner. (EventSuborganizationDataOwnerCode)'
+/
+
+comment on column RCRA_PRM_EVENT.EVENT_SUBORG_CODE is 'Event responsible suborganization. (EventSuborganizationCode)'
+/
+
+comment on column RCRA_PRM_EVENT.SUPP_INFO_TXT is 'Notes providing more information. (SupplementalInformationText)'
+/
+
+comment on column RCRA_PRM_EVENT.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_PRM_EVENT.P_CREATED_DATE is 'Creation date (PCreatedDate)'
+/
+
+create index IX_PRM_EV_PR_SR_ID
+    on RCRA_PRM_EVENT (PRM_SERIES_ID)
+/
+
+create table RCRA_PRM_EVENT_COMMITMENT
+(
+    PRM_EVENT_COMMITMENT_ID NUMBER(10) not null
+        constraint PK_PRM_EVNT_CMMTMN
+            primary key,
+    PRM_EVENT_ID            NUMBER(10) not null
+        constraint FK_PRM_EV_CM_PR_EV
+            references RCRA_PRM_EVENT
+                on delete cascade,
+    TRANS_CODE              CHAR,
+    COMMIT_LEAD             CHAR(2)    not null,
+    COMMIT_SEQ_NUM          NUMBER(10) not null
+)
+/
+
+comment on table RCRA_PRM_EVENT_COMMITMENT is 'Schema element: PermitEventCommitmentDataType'
+/
+
+comment on column RCRA_PRM_EVENT_COMMITMENT.PRM_EVENT_COMMITMENT_ID is 'Parent: Linking Data for Commitment/Initiative and Corrective Action or Permitting Events. (_PK)'
+/
+
+comment on column RCRA_PRM_EVENT_COMMITMENT.PRM_EVENT_ID is 'Parent: Linking Data for Commitment/Initiative and Corrective Action or Permitting Events. (_FK)'
+/
+
+comment on column RCRA_PRM_EVENT_COMMITMENT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_PRM_EVENT_COMMITMENT.COMMIT_LEAD is 'Parent: Linking Data for Commitment/Initiative and Corrective Action or Permitting Events. (CommitmentLead)'
+/
+
+comment on column RCRA_PRM_EVENT_COMMITMENT.COMMIT_SEQ_NUM is 'Parent: Linking Data for Commitment/Initiative and Corrective Action or Permitting Events. (CommitmentSequenceNumber)'
+/
+
+create index IX_PR_EV_CM_PR_EV
+    on RCRA_PRM_EVENT_COMMITMENT (PRM_EVENT_ID)
+/
+
+create table RCRA_PRM_UNIT
+(
+    PRM_UNIT_ID         NUMBER(10) not null
+        constraint PK_PRM_UNIT
+            primary key,
+    PRM_FAC_SUBM_ID     NUMBER(10) not null
+        constraint FK_PRM_UN_PR_FC_SB
+            references RCRA_PRM_FAC_SUBM
+                on delete cascade,
+    TRANS_CODE          CHAR,
+    PERMIT_UNIT_SEQ_NUM NUMBER(10) not null,
+    PERMIT_UNIT_NAME    VARCHAR2(40),
+    SUPP_INFO_TXT       VARCHAR2(2000),
+    ACTIVE_UNIT_IND     CHAR,
+    CREATED_BY_USERID   VARCHAR2(255),
+    P_CREATED_DATE      TIMESTAMP(6),
+    LAST_UPDT_BY        VARCHAR2(255),
+    LAST_UPDT_DATE      DATE
+)
+/
+
+comment on table RCRA_PRM_UNIT is 'Schema element: PermitUnitDataType'
+/
+
+comment on column RCRA_PRM_UNIT.PRM_UNIT_ID is 'Parent: Permit Unit Data (_PK)'
+/
+
+comment on column RCRA_PRM_UNIT.PRM_FAC_SUBM_ID is 'Parent: Permit Unit Data (_FK)'
+/
+
+comment on column RCRA_PRM_UNIT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_PRM_UNIT.PERMIT_UNIT_SEQ_NUM is 'System-generated value used to uniquely identify a process unit. (PermitUnitSequenceNumber)'
+/
+
+comment on column RCRA_PRM_UNIT.PERMIT_UNIT_NAME is 'Name or number assigned by the implementing agency to identify a process unit group. (PermitUnitName)'
+/
+
+comment on column RCRA_PRM_UNIT.SUPP_INFO_TXT is 'Notes providing more information. (SupplementalInformationText)'
+/
+
+comment on column RCRA_PRM_UNIT.ACTIVE_UNIT_IND is 'Indicates if the permit unit is active. Possible values are: Y/N (ActiveUnitIndicator)'
+/
+
+comment on column RCRA_PRM_UNIT.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_PRM_UNIT.P_CREATED_DATE is 'Creation date (PCreatedDate)'
+/
+
+create index IX_PR_UN_PR_FC_SB
+    on RCRA_PRM_UNIT (PRM_FAC_SUBM_ID)
+/
+
+create table RCRA_PRM_UNIT_DETAIL
+(
+    PRM_UNIT_DETAIL_ID             NUMBER(10) not null
+        constraint PK_PRM_UNIT_DETAIL
+            primary key,
+    PRM_UNIT_ID                    NUMBER(10) not null
+        constraint FK_PRM_UN_DT_PR_UN
+            references RCRA_PRM_UNIT
+                on delete cascade,
+    TRANS_CODE                     CHAR,
+    PERMIT_UNIT_DETAIL_SEQ_NUM     NUMBER(10) not null,
+    PROC_UNIT_DATA_OWNER_CODE      CHAR(2),
+    PROC_UNIT_CODE                 VARCHAR2(3),
+    PERMIT_STAT_EFFC_DATE          DATE,
+    PERMIT_UNIT_CAP_QNTY           NUMBER(14, 3),
+    CAP_TYPE_CODE                  CHAR,
+    COMMER_STAT_CODE               CHAR,
+    LEGAL_OPER_STAT_DATA_OWNER_CDE CHAR(2),
+    LEGAL_OPER_STAT_CODE           VARCHAR2(4),
+    MEASUREMENT_UNIT_DATA_OWNR_CDE CHAR(2),
+    MEASUREMENT_UNIT_CODE          CHAR,
+    NUM_OF_UNITS_COUNT             NUMBER(10),
+    STANDARD_PERMIT_IND            CHAR,
+    SUPP_INFO_TXT                  VARCHAR2(2000),
+    CURRENT_UNIT_DETAIL_IND        CHAR,
+    CREATED_BY_USERID              VARCHAR2(255),
+    P_CREATED_DATE                 TIMESTAMP(6),
+    LAST_UPDT_BY                   VARCHAR2(255),
+    LAST_UPDT_DATE                 DATE
+)
+/
+
+comment on table RCRA_PRM_UNIT_DETAIL is 'Schema element: PermitUnitDetailDataType'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.PRM_UNIT_DETAIL_ID is 'Parent: Permit Unit Detail Data (_PK)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.PRM_UNIT_ID is 'Parent: Permit Unit Detail Data (_FK)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.PERMIT_UNIT_DETAIL_SEQ_NUM is 'System-generated value used to uniquely identify a process unit detail. (PermitUnitDetailSequenceNumber)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.PROC_UNIT_DATA_OWNER_CODE is 'Indicates the agency that defines the process code. (ProcessUnitDataOwnerCode)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.PROC_UNIT_CODE is 'Code specifying the unit group''s current waste treatment, storage, or disposal process. (ProcessUnitCode)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.PERMIT_STAT_EFFC_DATE is 'Date specifying when the other information in the process detail data record (i.e., process, capacity, and operating and legal status) became effective. (PermitStatusEffectiveDate)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.PERMIT_UNIT_CAP_QNTY is 'Permitted capacity of the unit (PermitUnitCapacityQuantity)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.CAP_TYPE_CODE is 'Code indicating the type of capacity. (CapacityTypeCode)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.COMMER_STAT_CODE is 'Code indicating that the facility, whether public or private, accepts hazardous waste for the process unit group from a third party. (CommercialStatusCode)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.LEGAL_OPER_STAT_DATA_OWNER_CDE is 'Indicates the agency that defines the legal/operating status code. (LegalOperatingStatusDataOwnerCode)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.LEGAL_OPER_STAT_CODE is 'Code used to indicate programmatic (operating and legal status) conditions that reflect RCRA program activity requirements of a unit. (LegalOperatingStatusCode)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.MEASUREMENT_UNIT_DATA_OWNR_CDE is 'Indicates the agency that defines the unit of measure. (MeasurementUnitDataOwnerCode)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.MEASUREMENT_UNIT_CODE is 'Indicates the unit of measure. (MeasurementUnitCode)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.NUM_OF_UNITS_COUNT is 'Total number of units of the same process grouped together to form a single process unit group. (NumberOfUnitsCount)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.STANDARD_PERMIT_IND is 'Indicates whether or not the permit is a standardized permit. (StandardPermitIndicator)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.SUPP_INFO_TXT is 'Notes providing more information. (SupplementalInformationText)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.CURRENT_UNIT_DETAIL_IND is 'Indicates if the unit detail is current. Possible values are: Y/N (CurrentUnitDetailIndicator)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.CREATED_BY_USERID is 'User id of record creation (CreatedByUserid)'
+/
+
+comment on column RCRA_PRM_UNIT_DETAIL.P_CREATED_DATE is 'Creation date (PCreatedDate)'
+/
+
+create index IX_PR_UN_DT_PR_UN
+    on RCRA_PRM_UNIT_DETAIL (PRM_UNIT_ID)
+/
+
+create table RCRA_PRM_RELATED_EVENT
+(
+    PRM_RELATED_EVENT_ID         NUMBER(10)  not null
+        constraint PK_PRM_RELTED_EVNT
+            primary key,
+    PRM_UNIT_DETAIL_ID           NUMBER(10)  not null
+        constraint FK_PR_RL_EV_PR_UN
+            references RCRA_PRM_UNIT_DETAIL
+                on delete cascade,
+    TRANS_CODE                   CHAR,
+    ACT_LOC_CODE                 CHAR(2)     not null,
+    PERMIT_SERIES_SEQ_NUM        NUMBER(10)  not null,
+    PERMIT_EVENT_DATA_OWNER_CODE CHAR(2)     not null,
+    PERMIT_EVENT_CODE            VARCHAR2(7) not null,
+    EVENT_AGN_CODE               CHAR        not null,
+    EVENT_SEQ_NUM                NUMBER(10)  not null
+)
+/
+
+comment on table RCRA_PRM_RELATED_EVENT is 'Schema element: PermitRelatedEventDataType'
+/
+
+comment on column RCRA_PRM_RELATED_EVENT.PRM_RELATED_EVENT_ID is 'Parent: Linking Data for Permitted Units and Permitting Events (_PK)'
+/
+
+comment on column RCRA_PRM_RELATED_EVENT.PRM_UNIT_DETAIL_ID is 'Parent: Linking Data for Permitted Units and Permitting Events (_FK)'
+/
+
+comment on column RCRA_PRM_RELATED_EVENT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_PRM_RELATED_EVENT.ACT_LOC_CODE is 'Indicates the location of the agency regulating the handler. (ActivityLocationCode)'
+/
+
+comment on column RCRA_PRM_RELATED_EVENT.PERMIT_SERIES_SEQ_NUM is 'System-generated value used to uniquely identify a permit series. (PermitSeriesSequenceNumber)'
+/
+
+comment on column RCRA_PRM_RELATED_EVENT.PERMIT_EVENT_DATA_OWNER_CODE is 'Indicates the agency that defines the event. (PermitEventDataOwnerCode)'
+/
+
+comment on column RCRA_PRM_RELATED_EVENT.PERMIT_EVENT_CODE is 'Code used to indicate a specific permitting/closure program event and status that has actually occurred or is scheduled to occur. (PermitEventCode)'
+/
+
+comment on column RCRA_PRM_RELATED_EVENT.EVENT_AGN_CODE is 'Agency responsible for the event. (EventAgencyCode)'
+/
+
+comment on column RCRA_PRM_RELATED_EVENT.EVENT_SEQ_NUM is 'System-generated value used to uniquely identify multiple occurrences of a corrective action event. (EventSequenceNumber)'
+/
+
+create index IX_PR_RL_EV_PR_UN
+    on RCRA_PRM_RELATED_EVENT (PRM_UNIT_DETAIL_ID)
+/
+
+create table RCRA_PRM_WASTE_CODE
+(
+    PRM_WASTE_CODE_ID  NUMBER(10) not null
+        constraint PK_PRM_WASTE_CODE
+            primary key,
+    PRM_UNIT_DETAIL_ID NUMBER(10) not null
+        constraint FK_PR_WS_CD_PR_UN
+            references RCRA_PRM_UNIT_DETAIL
+                on delete cascade,
+    TRANSACTION_CODE   CHAR,
+    WASTE_CODE_OWNER   CHAR(2),
+    WASTE_CODE_TYPE    VARCHAR2(6)
+)
+/
+
+comment on table RCRA_PRM_WASTE_CODE is 'Schema element: PermitHandlerWasteCodeDataType'
+/
+
+comment on column RCRA_PRM_WASTE_CODE.PRM_WASTE_CODE_ID is 'Parent: Hazardous waste codes describing the handler''s hazardous waste streams. (_PK)'
+/
+
+comment on column RCRA_PRM_WASTE_CODE.PRM_UNIT_DETAIL_ID is 'Parent: Hazardous waste codes describing the handler''s hazardous waste streams. (_FK)'
+/
+
+comment on column RCRA_PRM_WASTE_CODE.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_PRM_WASTE_CODE.WASTE_CODE_OWNER is 'Indicates the agency that owns the data record. (WasteCodeOwnerName)'
+/
+
+comment on column RCRA_PRM_WASTE_CODE.WASTE_CODE_TYPE is 'Code used to describe hazardous waste. (WasteCode)'
+/
+
+create index IX_PR_WS_CD_PR_UN
+    on RCRA_PRM_WASTE_CODE (PRM_UNIT_DETAIL_ID)
+/
+
+create table RCRA_SUBMISSIONHISTORY
+(
+    SUBMISSIONHISTORY_ID NUMBER(10)   not null
+        constraint PK_SUBMISSIONHISTO
+            primary key,
+    SCHEDULERUNDATE      DATE         not null,
+    TRANSACTIONID        VARCHAR2(50) not null,
+    PROCESSINGSTATUS     VARCHAR2(50) not null,
+    SUBMISSIONTYPE       VARCHAR2(50) not null
+)
+/
+
+comment on table RCRA_SUBMISSIONHISTORY is 'Schema element: SubmissionHistoryDataType'
+/
+
+create table RCRA_HD_LQG_CLOSURE
+(
+    HD_LQG_CLOSURE_ID     NUMBER(10) not null
+        constraint PK_HD_LQG_CLOSURE
+            primary key,
+    HD_HANDLER_ID         NUMBER(10) not null
+        constraint FK_HD_LQG_CLOS_HANDLER_ID
+            references RCRA_HD_HANDLER
+                on delete cascade,
+    TRANSACTION_CODE      CHAR,
+    CLOSURE_TYPE          CHAR,
+    EXPECTED_CLOSURE_DATE DATE,
+    NEW_CLOSURE_DATE      DATE,
+    DATE_CLOSED           DATE,
+    IN_COMPLIANCE_IND     CHAR
+)
+/
+
+comment on column RCRA_HD_LQG_CLOSURE.HD_LQG_CLOSURE_ID is 'Parent: LQG closure info for a Handler'
+/
+
+comment on column RCRA_HD_LQG_CLOSURE.HD_HANDLER_ID is 'Parent: Handler data (_FK)'
+/
+
+comment on column RCRA_HD_LQG_CLOSURE.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_LQG_CLOSURE.CLOSURE_TYPE is 'Type of the closure. (ClosureType)'
+/
+
+comment on column RCRA_HD_LQG_CLOSURE.EXPECTED_CLOSURE_DATE is 'Date of expected closure. (ExpectedClosureDate)'
+/
+
+comment on column RCRA_HD_LQG_CLOSURE.NEW_CLOSURE_DATE is 'New closure date. (NewClosureDate)'
+/
+
+comment on column RCRA_HD_LQG_CLOSURE.DATE_CLOSED is 'Date of closed. (DateClosed)'
+/
+
+comment on column RCRA_HD_LQG_CLOSURE.IN_COMPLIANCE_IND is 'Type of in compliance. (InComplianceIndicator)'
+/
+
+create table RCRA_HD_LQG_CONSOLIDATION
+(
+    HD_LQG_CONSOLIDATION_ID NUMBER(10) not null
+        constraint PK_HD_LQG_CONSOLIDATION
+            primary key,
+    HD_HANDLER_ID           NUMBER(10) not null
+        constraint FK_HD_LQG_CONSOL_HANDLER_ID
+            references RCRA_HD_HANDLER
+                on delete cascade,
+    TRANSACTION_CODE        CHAR,
+    SEQ_NUMBER              NUMBER     not null,
+    HANDLER_ID              VARCHAR2(12),
+    HANDLER_NAME            VARCHAR2(80),
+    MAIL_STREET_NUMBER      VARCHAR2(12),
+    MAIL_STREET1            VARCHAR2(50),
+    MAIL_STREET2            VARCHAR2(50),
+    MAIL_CITY               VARCHAR2(25),
+    MAIL_STATE              CHAR(2),
+    MAIL_COUNTRY            CHAR(2),
+    MAIL_ZIP                VARCHAR2(14),
+    CONTACT_FIRST_NAME      VARCHAR2(38),
+    CONTACT_MIDDLE_INITIAL  CHAR,
+    CONTACT_LAST_NAME       VARCHAR2(38),
+    CONTACT_ORG_NAME        VARCHAR2(80),
+    CONTACT_TITLE           VARCHAR2(80),
+    CONTACT_EMAIL_ADDRESS   VARCHAR2(80),
+    CONTACT_PHONE           VARCHAR2(15),
+    CONTACT_PHONE_EXT       VARCHAR2(6),
+    CONTACT_FAX             VARCHAR2(15)
+)
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.HD_LQG_CONSOLIDATION_ID is 'Parent: LQG consolidation info for a Handler'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.HD_HANDLER_ID is 'Parent: Handler data (_FK)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.SEQ_NUMBER is 'Unique number that identifies the Consolidation. (ConsolidationSequenceNumber)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.HANDLER_ID is 'Code that uniquely identifies the handler. (HandlerID)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.HANDLER_NAME is 'Name of the Handler (HandlerName)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.MAIL_STREET_NUMBER is 'Parent: Mailing address information. (MailingAddressNumberText)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.MAIL_STREET1 is 'Parent: Mailing address information. (MailingAddressText)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.MAIL_STREET2 is 'Parent: Mailing address information. (SupplementalAddressText)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.MAIL_CITY is 'Parent: Mailing address information. (MailingAddressCityName)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.MAIL_STATE is 'Parent: Mailing address information. (MailingAddressStateUSPSCode)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.MAIL_COUNTRY is 'Parent: Mailing address information. (MailingAddressCountryName)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.MAIL_ZIP is 'Parent: Mailing address information. (MailingAddressZIPCode)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.CONTACT_FIRST_NAME is 'Parent: First name of the contact. (FirstName)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.CONTACT_MIDDLE_INITIAL is 'Parent: Middle initial of the contact. (MiddleInitial)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.CONTACT_LAST_NAME is 'Parent: Last name of the contact. (LastName)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.CONTACT_ORG_NAME is 'Parent: Name of the contact organization. (OrganizationFormalName)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.CONTACT_TITLE is 'Title of the contact person (IndividualTitleText)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.CONTACT_EMAIL_ADDRESS is 'Email address data (EmailAddressText)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.CONTACT_PHONE is 'Telephone Number data (TelephoneNumberText)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.CONTACT_PHONE_EXT is 'Telephone number extension (PhoneExtensionText)'
+/
+
+comment on column RCRA_HD_LQG_CONSOLIDATION.CONTACT_FAX is 'Contact fax number (FaxNumberText)'
+/
+
+create table RCRA_HD_EPISODIC_EVENT
+(
+    HD_EPISODIC_EVENT_ID   NUMBER(10) not null
+        constraint PK_HD_EPISODIC_EVENT
+            primary key,
+    HD_HANDLER_ID          NUMBER(10) not null
+        constraint FK_HD_EPIS_EVT_HANDLER_ID
+            references RCRA_HD_HANDLER
+                on delete cascade,
+    TRANSACTION_CODE       CHAR,
+    EVENT_OWNER            CHAR(2),
+    EVENT_TYPE             VARCHAR2(3),
+    CONTACT_FIRST_NAME     VARCHAR2(38),
+    CONTACT_MIDDLE_INITIAL CHAR,
+    CONTACT_LAST_NAME      VARCHAR2(38),
+    CONTACT_ORG_NAME       VARCHAR2(80),
+    CONTACT_TITLE          VARCHAR2(80),
+    CONTACT_EMAIL_ADDRESS  VARCHAR2(80),
+    CONTACT_PHONE          VARCHAR2(15),
+    CONTACT_PHONE_EXT      VARCHAR2(6),
+    CONTACT_FAX            VARCHAR2(15),
+    START_DATE             DATE,
+    END_DATE               DATE
+)
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.HD_EPISODIC_EVENT_ID is 'Parent: Episodic event info for a Handler'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.HD_HANDLER_ID is 'Parent: Handler data (_FK)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.EVENT_OWNER is 'Owner of the episodic event. (EpisodicEventOwner)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.EVENT_TYPE is 'Type of the episodic event. (EpisodicEventType)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.CONTACT_FIRST_NAME is 'First name of the contact. (FirstName)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.CONTACT_MIDDLE_INITIAL is 'Middle initial of the contact. (MiddleInitial)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.CONTACT_LAST_NAME is 'Last name of the contact. (LastName)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.CONTACT_ORG_NAME is 'Contact organization name. (OrganizationFormalName)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.CONTACT_TITLE is 'Title of the contact. (IndividualTitleText)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.CONTACT_EMAIL_ADDRESS is 'Email address of the contact. (EmailAddressText)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.CONTACT_PHONE is 'Telephone number of the contact. (TelephoneNumberText)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.CONTACT_PHONE_EXT is 'Phone extension of the contact. (PhoneExtensionText)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.CONTACT_FAX is 'Fax number of the contact. (FaxNumberText)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.START_DATE is 'Episodic event start event. (EpisodicEventStartDate)'
+/
+
+comment on column RCRA_HD_EPISODIC_EVENT.END_DATE is 'Episodic event end event. (EpisodicEventEndDate)'
+/
+
+create table RCRA_HD_EPISODIC_WASTE
+(
+    HD_EPISODIC_WASTE_ID NUMBER(10) not null
+        constraint PK_HD_EPISODIC_WASTE
+            primary key,
+    HD_EPISODIC_EVENT_ID NUMBER(10) not null
+        constraint FK_HD_EPIS_WASTE_EVT_ID
+            references RCRA_HD_EPISODIC_EVENT
+                on delete cascade,
+    TRANSACTION_CODE     CHAR,
+    SEQ_NUMBER           NUMBER,
+    WASTE_DESC           VARCHAR2(4000),
+    EST_QNTY             NUMBER
+)
+/
+
+comment on column RCRA_HD_EPISODIC_WASTE.HD_EPISODIC_WASTE_ID is 'Parent: Episodic waste info for a Handler Episodic Event'
+/
+
+comment on column RCRA_HD_EPISODIC_WASTE.HD_EPISODIC_EVENT_ID is 'Parent: Episode event data (_FK)'
+/
+
+comment on column RCRA_HD_EPISODIC_WASTE.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_EPISODIC_WASTE.SEQ_NUMBER is 'Unique number that identifies the episodic waste. (EpisodicWasteSequenceNumber)'
+/
+
+comment on column RCRA_HD_EPISODIC_WASTE.WASTE_DESC is 'Waste description. (WasteDescription)'
+/
+
+comment on column RCRA_HD_EPISODIC_WASTE.EST_QNTY is 'The quantity of waste that is handled by each process code. This element pertains only to Part A submissions. (EstimatedQuantity)'
+/
+
+create table RCRA_HD_EPISODIC_WASTE_CODE
+(
+    HD_EPISODIC_WASTE_CODE_ID NUMBER(10) not null
+        constraint PK_HD_EPISODIC_WASTE_CODE
+            primary key,
+    HD_EPISODIC_WASTE_ID      NUMBER(10) not null
+        constraint FK_HD_EPIS_WASTE_CD_WASTE_ID
+            references RCRA_HD_EPISODIC_WASTE
+                on delete cascade,
+    TRANSACTION_CODE          CHAR,
+    WASTE_CODE_OWNER          CHAR(2),
+    WASTE_CODE                VARCHAR2(6),
+    WASTE_CODE_TEXT           VARCHAR2(4000)
+)
+/
+
+comment on column RCRA_HD_EPISODIC_WASTE_CODE.HD_EPISODIC_WASTE_CODE_ID is 'Parent: Episodic waste code details for Handler Episodic Waste'
+/
+
+comment on column RCRA_HD_EPISODIC_WASTE_CODE.HD_EPISODIC_WASTE_ID is 'Parent: Episodic waste data (_FK)'
+/
+
+comment on column RCRA_HD_EPISODIC_WASTE_CODE.TRANSACTION_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_HD_EPISODIC_WASTE_CODE.WASTE_CODE_OWNER is 'Owner and definer of the waste code. (WasteCodeOwnerName)'
+/
+
+comment on column RCRA_HD_EPISODIC_WASTE_CODE.WASTE_CODE is 'Code used to describe hazardous waste. (WasteCode)'
+/
+
+comment on column RCRA_HD_EPISODIC_WASTE_CODE.WASTE_CODE_TEXT is 'Descriptive text describing the Waste Code (Data publishing only). (WasteCodeText)'
+/
+
+create table RCRA_RU_REPORT_UNIV
+(
+    RU_REPORT_UNIV_ID              NUMBER(10)   not null
+        constraint PK_RU_REPORT_UNIV
+            primary key,
+    HANDLER_ID                     VARCHAR2(12) not null,
+    ACTIVITY_LOCATION              CHAR(2)      not null,
+    SOURCE_TYPE                    CHAR,
+    SEQ_NUMBER                     NUMBER,
+    RECEIVE_DATE                   DATE,
+    HANDLER_NAME                   VARCHAR2(80),
+    NON_NOTIFIER_IND               CHAR,
+    ACCESSIBILITY                  CHAR,
+    REPORT_CYCLE                   NUMBER,
+    REGION                         CHAR(2),
+    STATE                          CHAR(2),
+    EXTRACT_FLAG                   CHAR,
+    ACTIVE_SITE                    VARCHAR2(5),
+    COUNTY_CODE                    VARCHAR2(5),
+    COUNTY_NAME                    VARCHAR2(80),
+    LOCATION_STREET_NUMBER         VARCHAR2(12),
+    LOCATION_STREET1               VARCHAR2(50),
+    LOCATION_STREET2               VARCHAR2(50),
+    LOCATION_CITY                  VARCHAR2(25),
+    LOCATION_STATE                 CHAR(2),
+    LOCATION_COUNTRY               CHAR(2),
+    LOCATION_ZIP                   VARCHAR2(14),
+    MAIL_STREET_NUMBER             VARCHAR2(12),
+    MAIL_STREET1                   VARCHAR2(50),
+    MAIL_STREET2                   VARCHAR2(50),
+    MAIL_CITY                      VARCHAR2(25),
+    MAIL_STATE                     CHAR(2),
+    MAIL_COUNTRY                   CHAR(2),
+    MAIL_ZIP                       VARCHAR2(14),
+    CONTACT_STREET_NUMBER          VARCHAR2(12),
+    CONTACT_STREET1                VARCHAR2(50),
+    CONTACT_STREET2                VARCHAR2(50),
+    CONTACT_CITY                   VARCHAR2(25),
+    CONTACT_STATE                  CHAR(2),
+    CONTACT_COUNTRY                CHAR(2),
+    CONTACT_ZIP                    VARCHAR2(14),
+    CONTACT_NAME                   VARCHAR2(80),
+    CONTACT_PHONE                  VARCHAR2(22),
+    CONTACT_FAX                    VARCHAR2(15),
+    CONTACT_EMAIL                  VARCHAR2(80),
+    CONTACT_TITLE                  VARCHAR2(45),
+    OWNER_NAME                     VARCHAR2(80),
+    OWNER_TYPE                     CHAR,
+    OWNER_SEQ_NUM                  NUMBER,
+    OPER_NAME                      VARCHAR2(80),
+    OPER_TYPE                      CHAR,
+    OPER_SEQ_NUM                   NUMBER,
+    NAIC1_CODE                     VARCHAR2(6),
+    NAIC2_CODE                     VARCHAR2(6),
+    NAIC3_CODE                     VARCHAR2(6),
+    NAIC4_CODE                     VARCHAR2(6),
+    IN_HANDLER_UNIVERSE            CHAR,
+    IN_A_UNIVERSE                  CHAR,
+    FED_WASTE_GENERATOR_OWNER      CHAR(2),
+    FED_WASTE_GENERATOR            CHAR,
+    STATE_WASTE_GENERATOR_OWNER    CHAR(2),
+    STATE_WASTE_GENERATOR          CHAR,
+    GEN_STATUS                     VARCHAR2(3),
+    UNIV_WASTE                     CHAR,
+    LAND_TYPE                      CHAR,
+    STATE_DISTRICT_OWNER           CHAR(2),
+    STATE_DISTRICT                 VARCHAR2(10),
+    SHORT_TERM_GEN_IND             CHAR,
+    IMPORTER_ACTIVITY              CHAR,
+    MIXED_WASTE_GENERATOR          CHAR,
+    TRANSPORTER_ACTIVITY           CHAR,
+    TRANSFER_FACILITY_IND          CHAR,
+    RECYCLER_ACTIVITY              CHAR,
+    ONSITE_BURNER_EXEMPTION        CHAR,
+    FURNACE_EXEMPTION              CHAR,
+    UNDERGROUND_INJECTION_ACTIVITY CHAR,
+    UNIVERSAL_WASTE_DEST_FACILITY  CHAR,
+    OFFSITE_WASTE_RECEIPT          CHAR,
+    USED_OIL                       VARCHAR2(7),
+    FEDERAL_UNIVERSAL_WASTE        CHAR,
+    AS_FEDERAL_REGULATED_TSDF      VARCHAR2(6),
+    AS_CONVERTED_TSDF              VARCHAR2(6),
+    AS_STATE_REGULATED_TSDF        VARCHAR2(9),
+    FEDERAL_IND                    VARCHAR2(3),
+    HSM                            CHAR(2),
+    SUBPART_K                      VARCHAR2(4),
+    COMMERCIAL_TSD                 CHAR,
+    TSD                            VARCHAR2(5),
+    GPRA_PERMIT                    CHAR,
+    GPRA_RENEWAL                   CHAR,
+    PERMIT_RENEWAL_WRKLD           VARCHAR2(6),
+    PERM_WRKLD                     VARCHAR2(6),
+    PERM_PROG                      VARCHAR2(6),
+    PC_WRKLD                       VARCHAR2(6),
+    CLOS_WRKLD                     VARCHAR2(6),
+    GPRACA                         CHAR,
+    CA_WRKLD                       CHAR,
+    SUBJ_CA                        CHAR,
+    SUBJ_CA_NON_TSD                CHAR,
+    SUBJ_CA_TSD_3004               CHAR,
+    SUBJ_CA_DISCRETION             CHAR,
+    NCAPS                          CHAR,
+    EC_IND                         CHAR,
+    IC_IND                         CHAR,
+    CA_725_IND                     CHAR,
+    CA_750_IND                     CHAR,
+    OPERATING_TSDF                 VARCHAR2(6),
+    FULL_ENFORCEMENT               VARCHAR2(6),
+    SNC                            CHAR,
+    BOY_SNC                        CHAR,
+    BOY_STATE_UNADDRESSED_SNC      CHAR,
+    STATE_UNADDRESSED              CHAR,
+    STATE_ADDRESSED                CHAR,
+    BOY_STATE_ADDRESSED            CHAR,
+    STATE_SNC_WITH_COMP_SCHED      CHAR,
+    BOY_STATE_SNC_WITH_COMP_SCHED  CHAR,
+    EPA_UNADDRESSED                CHAR,
+    BOY_EPA_UNADDRESSED            CHAR,
+    EPA_ADDRESSED                  CHAR,
+    BOY_EPA_ADDRESSED              CHAR,
+    EPA_SNC_WITH_COMP_SCHED        CHAR,
+    BOY_EPA_SNC_WITH_COMP_SCHED    CHAR,
+    FA_REQUIRED                    VARCHAR2(5),
+    HHANDLER_LAST_CHANGE_DATE      DATE,
+    PUBLIC_NOTES                   VARCHAR2(4000),
+    NOTES                          VARCHAR2(4000),
+    RECOGNIZED_TRADER_IMPORTER_IND CHAR,
+    RECOGNIZED_TRADER_EXPORTER_IND CHAR,
+    SLAB_IMPORTER_IND              CHAR,
+    SLAB_EXPORTER_IND              CHAR,
+    RECYCLER_NON_STORAGE_IND       CHAR,
+    MANIFEST_BROKER_IND            CHAR,
+    RECYCLER_NOTES                 VARCHAR2(4000),
+    SUBPART_P_IND                  CHAR,
+    LOCATION_LATITUDE              NUMBER(19, 14),
+    LOCATION_LONGITUDE             NUMBER(19, 14),
+    LOCATION_GIS_PRIM              CHAR,
+    LOCATION_GIS_ORIG              CHAR(2)
+)
+/
+
+comment on column RCRA_RU_REPORT_UNIV.RU_REPORT_UNIV_ID is 'Parent: Universal waste report details'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.HANDLER_ID is 'Code that uniquely identifies the handler. (HandlerIdCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.ACTIVITY_LOCATION is 'Indicates the location of the agency regulating the handler. (ActivityLocationCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.SOURCE_TYPE is 'Code indicating the source of information for the associated data (activity, wastes, etc.). (SourceTypeCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.SEQ_NUMBER is 'Sequence number for each source record about a handler. (SequenceNumber)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.RECEIVE_DATE is 'Date that the form (indicated by the associated Source) was received from the handler by the appropriate authority. (ReceiveDate)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.HANDLER_NAME is 'Name of the Handler (HandlerName)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.NON_NOTIFIER_IND is 'Flag indicating that the handler has been identified through a source other than Notification and is suspected of conducting RCRA-regulated activities without proper authority. (NonNotifierIndicator)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.ACCESSIBILITY is 'Reason why the handler is not accessible for normal processing (Bankrupt Indicator). (Accessibility)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.REPORT_CYCLE is 'Report cycle. (ReportCycle)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.REGION is 'Region (Region)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.STATE is 'State (State)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.EXTRACT_FLAG is 'Extract flag (ExtractFlag)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.ACTIVE_SITE is 'Active site (ActiveSite)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.COUNTY_CODE is 'The Federal Information Processing Standard (FIPS) code for the county in which the facility is located (Ref: FIPS Publication, 6-3, "Counties and County Equivalents of the States of the United States"). (CountyCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.COUNTY_NAME is 'Descriptive text describing the County Name(Data publishing only). (CountyName)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.LOCATION_STREET_NUMBER is 'Number portion of the location street address of the handler. (LocationAddressNumberText)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.LOCATION_STREET1 is 'Street address of the handler. (LocationAddressText)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.LOCATION_STREET2 is 'Supplemental address of the handler. (SupplementalLocationText)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.LOCATION_CITY is 'City in which the handler is located. (LocalityName)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.LOCATION_STATE is 'State in which the handler is located. (StateUSPSCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.LOCATION_COUNTRY is 'Country in which the handler is located. (CountryName)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.LOCATION_ZIP is 'ZIP code in which the handler is located. (LocationZIPCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.MAIL_STREET_NUMBER is 'Number portion of the mailing address of the handler. (MailingAddressNumberText)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.MAIL_STREET1 is 'Street address of the handler mailing address. (MailingAddressText)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.MAIL_STREET2 is 'Supplemental address of the handler mailing address. (SupplementalLocationText)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.MAIL_CITY is 'City of the handler mailing address. (MailingAddressCityName)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.MAIL_STATE is 'State of the handler mailing address. (MailingAddressStateUSPSCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.MAIL_COUNTRY is 'Country of the handler mailing address. (MailingAddressCountryName)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.MAIL_ZIP is 'ZIP code of the handler mailing address. (MailingAddressZIPCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CONTACT_STREET_NUMBER is 'Number portion of the mailing address of the handler contact. (MailingAddressNumberText)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CONTACT_STREET1 is 'Street address of the handler contact mailing address. (MailingAddressText)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CONTACT_STREET2 is 'Supplemental address of the handler contact mailing address. (SupplementalLocationText)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CONTACT_CITY is 'City of the handler contact mailing address. (MailingAddressCityName)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CONTACT_STATE is 'State of the handler contact mailing address. (MailingAddressStateUSPSCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CONTACT_COUNTRY is 'Country of the handler contact mailing address. (MailingAddressCountryName)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CONTACT_ZIP is 'ZIP code of the handler contact mailing address. (MailingAddressZIPCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CONTACT_NAME is 'Handler contact name (first + last). (ContactNameCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CONTACT_PHONE is 'Handler contact phone number. (ContactPhoneCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CONTACT_FAX is 'Handler contact fax number. (ContactFaxCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CONTACT_EMAIL is 'Handler contact email address. (ContactEmailCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CONTACT_TITLE is 'Handler contact title. (ContactTitleCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.OWNER_NAME is 'Handler owner name. (OwnerNameCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.OWNER_TYPE is 'Handler owner type. (OwnerTypeCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.OWNER_SEQ_NUM is 'Handler owner sequence number. (OwnerSeqCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.OPER_NAME is 'Handler operator name. (OperatorNameCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.OPER_TYPE is 'Handler operator type. (OperatorTypeCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.OPER_SEQ_NUM is 'Handler operator sequence number. (OperatorSeqCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.NAIC1_CODE is 'NAIC 1 code (NAIC1Code)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.NAIC2_CODE is 'NAIC 2 code (NAIC2Code)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.NAIC3_CODE is 'NAIC 3 code (NAIC3Code)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.NAIC4_CODE is 'NAIC 4 code (NAIC4Code)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.IN_HANDLER_UNIVERSE is 'In handler universe (InHandlerUniverseCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.IN_A_UNIVERSE is 'In a universe (InAUniverseCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.FED_WASTE_GENERATOR_OWNER is 'Federal code indicating that the handler is engaged in the generation of hazardous waste. (FederalWasteGeneratorOwner)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.FED_WASTE_GENERATOR is 'Federal code indicating that the handler is engaged in the generation of hazardous waste. (FederalWasteGeneratorCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.STATE_WASTE_GENERATOR_OWNER is 'State code indicating that the handler is engaged in the generation of hazardous waste. (StateWasteGeneratorOwner)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.STATE_WASTE_GENERATOR is 'State code indicating that the handler is engaged in the generation of hazardous waste. (StateWasteGeneratorCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.GEN_STATUS is 'Gen status (GENSTATUS)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.UNIV_WASTE is 'Univ waste (UNIVWASTE)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.LAND_TYPE is 'Code indicating current ownership status of the land on which the facility is located. (LandTypeCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.STATE_DISTRICT_OWNER is 'Owner of the state district code.  Usually 2-digit postal code (i.e. KS). (StateDistrictOwnerName)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.STATE_DISTRICT is 'Code indicating the state-designated legislative district(s) in which the site is located. (StateDistrictCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.SHORT_TERM_GEN_IND is 'Code indicating that the handler is engaged in short-term hazardous waste generation activities. (ShortTermGeneratorIndicator)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.IMPORTER_ACTIVITY is 'Code indicating that the handler is engaged in importing hazardous waste into the United States. (ImporterActivityCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.MIXED_WASTE_GENERATOR is 'Code indicating that the handler is engaged in generating mixed waste (waste that is both hazardous and radioactive). (MixedWasteGeneratorCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.TRANSPORTER_ACTIVITY is 'Code indicating that the handler is engaged in the transportation of hazardous waste. (TransporterActivityCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.TRANSFER_FACILITY_IND is 'Code indicating that the handler is a Hazardous Waste Transfer Facility (not to be confused with a used oil transfer facility). (TransferFacilityIndicator)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.RECYCLER_ACTIVITY is 'Code for recycling hazardous waste. (RecyclerActivityCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.ONSITE_BURNER_EXEMPTION is 'Code indicating that the handler qualifies for the Small Quantity Onsite Burner Exemption. (OnsiteBurnerExemptionCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.FURNACE_EXEMPTION is 'Code indicating that the handler qualifies for the Smelting, Melting, and Refining Furnace Exemption. (FurnaceExemptionCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.UNDERGROUND_INJECTION_ACTIVITY is 'Code indicating that the handler generates and or treats, stores, or disposes of hazardous waste and has an injection well located at the installation. (UndergroundInjectionActivityCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.UNIVERSAL_WASTE_DEST_FACILITY is 'Code indicating that the handler treats, disposes of, or recycles hazardous waste on site. (UniversalWasteDestinationFacilityIndicator)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.OFFSITE_WASTE_RECEIPT is 'Off site waste receipt (OffSiteWasteReceiptCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.USED_OIL is 'Used oil code (UsedOilCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.FEDERAL_UNIVERSAL_WASTE is 'Federal universal waste (FederalUniversalWasteCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.AS_FEDERAL_REGULATED_TSDF is 'As federal regulated TSDF (AsFederalRegulatedTSDFCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.AS_CONVERTED_TSDF is 'As converter TSDF (AsConverterTSDFCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.AS_STATE_REGULATED_TSDF is 'As state regulated TSDF (AsStateRegulatedTSDFCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.FEDERAL_IND is 'Federal indicator (FederalIndicatorCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.HSM is 'HSM code (HSMCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.SUBPART_K is 'Subpart K code (SubpartKCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.COMMERCIAL_TSD is 'Commercial TSD code (CommercialTSDCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.TSD is 'TSD type (TSDCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.GPRA_PERMIT is 'GPRA permit (GPRAPermitCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.GPRA_RENEWAL is 'GPRA renewal code (GPRARenewalCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.PERMIT_RENEWAL_WRKLD is 'Permit renewal WRKLD (PermitRenewalWRKLDCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.PERM_WRKLD is 'Perm WRKLD (PermWRKLDCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.PERM_PROG is 'Perm PROG (PermPROGCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.PC_WRKLD is 'PC WRKLD (PCWRKLDCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CLOS_WRKLD is 'Clos WRKLD (ClosWRKLDCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.GPRACA is 'GPRACA (GPRACACode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CA_WRKLD is 'CAWRKLD (CAWRKLDCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.SUBJ_CA is 'Subj CA (SubjCACode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.SUBJ_CA_NON_TSD is 'Subj CA non TSD (SubjCANonTSDCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.SUBJ_CA_TSD_3004 is 'Subj CA TSD 3004 (SubjCATSD3004Code)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.SUBJ_CA_DISCRETION is 'Subj CA discretion (SubjCADiscretionCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.NCAPS is 'NCAPS (NCAPSCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.EC_IND is 'EC indicator (ECIndicatorCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.IC_IND is 'IC indicator (ICIndicatorCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CA_725_IND is 'CA 725 indicator (CA725IndicatorCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.CA_750_IND is 'CA 750 indicator (CA750IndicatorCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.OPERATING_TSDF is 'Operating TSDF (OperatingTSDFCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.FULL_ENFORCEMENT is 'Full enforcement (FullEnforcementCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.SNC is 'SNC (SNCCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.BOY_SNC is 'BOY SNC (BOYSNCCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.BOY_STATE_UNADDRESSED_SNC is 'BOY state unaddressed SNC (BOYStateUnaddressedSNCCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.STATE_UNADDRESSED is 'State unaddressed (StateUnaddressedCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.STATE_ADDRESSED is 'State addressed (StateAddressedCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.BOY_STATE_ADDRESSED is 'BOY state addressed (BOYStateAddressedCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.STATE_SNC_WITH_COMP_SCHED is 'State SNC with comp sched (StateSNCWithCompSchedCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.BOY_STATE_SNC_WITH_COMP_SCHED is 'BOY state SNC with comp sched (BOYStateSNCWithCompSchedCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.EPA_UNADDRESSED is 'EPA unaddressed (EPAUnaddressedCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.BOY_EPA_UNADDRESSED is 'BOY EPA unaddressed (BOYEPAUnaddressedCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.EPA_ADDRESSED is 'EPA addressed (EPAAddressedCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.BOY_EPA_ADDRESSED is 'BOY EPA addressed (BOYEPAAddressedCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.EPA_SNC_WITH_COMP_SCHED is 'EPA SNC with comp sched (EPASNCWithcompSchedCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.BOY_EPA_SNC_WITH_COMP_SCHED is 'BOY EPA SNC with comp sched (BOYEPASNCWithcompSchedCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.FA_REQUIRED is 'FA required (FARequiredCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.HHANDLER_LAST_CHANGE_DATE is 'HHandler last change date (HHandlerLastChangeDate)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.PUBLIC_NOTES is 'Notes (PublicNotesCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.NOTES is 'Notes (NotesCode)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.RECOGNIZED_TRADER_IMPORTER_IND is 'Indicates that the Handler is participating in Import Trading activity. Possible values are: Y/N (RecognizedTraderImporterIndicator)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.RECOGNIZED_TRADER_EXPORTER_IND is 'Indicates that the Handler is participating in Export Trading activity. Possible values are: Y/N (RecognizedTraderExporterIndicator)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.SLAB_IMPORTER_IND is 'Indicates that the Handler is participating in Slab Import activity. Possible values are: Y/N (SlabImporterIndicator)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.SLAB_EXPORTER_IND is 'Indicates that the Handler is participating in Slab Export activity. Possible values are: Y/N (SlabExporterIndicator)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.RECYCLER_NON_STORAGE_IND is 'Recycle non storage (RecyclerNonStorageIndicator)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.MANIFEST_BROKER_IND is 'Manifest broker (ManifestBrokerIndicator)'
+/
+
+comment on column RCRA_RU_REPORT_UNIV.SUBPART_P_IND is 'Subpart P code (SubpartPIndicator)'
+/
+
+create table ETL_RUN
+(
+    ETL_RUN_ID NUMBER       not null
+        primary key,
+    RUN_DATE   TIMESTAMP(6) not null,
+    ETL_TYPE   CHAR(2)      not null,
+    SUBM_ID    VARCHAR2(40)
+)
+/
+
+create table ETL_RUN_HANDLER
+(
+    ETL_RUN_ID  NUMBER       not null
+        references ETL_RUN,
+    HANDLER_ID  VARCHAR2(12) not null,
+    STATUS_TYPE CHAR         not null
+)
+/
+
+create index IX_ETL_RUN_HANDLER_ETL_RUN_ID
+    on ETL_RUN_HANDLER (ETL_RUN_ID)
+/
+
+create index IX_ETL_RUN_HANDLER_HANDLER_ID
+    on ETL_RUN_HANDLER (HANDLER_ID)
+/
+
+create table RCRA_EM_SUBM
+(
+    EM_SUBM_ID NUMBER not null
+        constraint PK_RCRA_EM_SUBM
+            primary key
+)
+/
+
+create table RCRA_EM_EMANIFEST
+(
+    EM_EMANIFEST_ID                NUMBER not null
+        constraint PK_EM_EMANIFEST
+            primary key,
+    EM_SUBM_ID                     NUMBER,
+    CREATED_DATE                   TIMESTAMP(6),
+    UPDATED_DATE                   TIMESTAMP(6),
+    MAN_TRACKING_NUM               VARCHAR2(12),
+    STATUS                         VARCHAR2(17),
+    SUBM_TYPE                      VARCHAR2(14),
+    ORIGIN_TYPE                    VARCHAR2(7),
+    SHIPPED_DATE                   TIMESTAMP(6),
+    RECEIVED_DATE                  TIMESTAMP(6),
+    CERT_DATE                      TIMESTAMP(6),
+    REJ_IND                        CHAR,
+    RESIDUE                        CHAR,
+    IMPORT                         CHAR,
+    TRANSPORTER_ON_SITE            CHAR,
+    REJECTION_TYPE                 VARCHAR2(13),
+    ALTERNATE_DESIGNATED_FAC_TYPE  VARCHAR2(9),
+    FOREIGN_GENERATOR_NAME         VARCHAR2(80),
+    FOREIGN_GENERATOR_STREET       VARCHAR2(50),
+    FOREIGN_GENERATOR_CITY         VARCHAR2(25),
+    FOREIGN_GENERATOR_POST_CODE    VARCHAR2(50),
+    FOREIGN_GENERATOR_PROVINCE     VARCHAR2(50),
+    FOREIGN_GENERATOR_CTRY_CODE    CHAR(2),
+    FOREIGN_GENERATOR_CTRY_NAME    VARCHAR2(100),
+    PORT_OF_ENTRY_CITY             VARCHAR2(100),
+    PORT_OF_ENTRY_STA              CHAR(2),
+    MANIFEST_HANDLING_INSTR        VARCHAR2(4000),
+    GENERATOR_ID                   VARCHAR2(15),
+    GENERATOR_NAME                 VARCHAR2(80),
+    GENERATOR_MAIL_STREET_NUM      VARCHAR2(12),
+    GENERATOR_MAIL_STREET_1        VARCHAR2(50),
+    GENERATOR_MAIL_STREET_2        VARCHAR2(50),
+    GENERATOR_MAIL_CITY            VARCHAR2(35),
+    GENERATOR_MAIL_CTRY            CHAR(2),
+    GENERATOR_MAIL_STA             CHAR(2),
+    GENERATOR_MAIL_ZIP             VARCHAR2(50),
+    GENERATOR_LOC_STREET_NUM       VARCHAR2(12),
+    GENERATOR_LOC_STREET_1         VARCHAR2(50),
+    GENERATOR_LOC_STREET_2         VARCHAR2(50),
+    GENERATOR_LOC_CITY             VARCHAR2(35),
+    GENERATOR_LOC_STA              CHAR(2),
+    GENERATOR_LOC_ZIP              VARCHAR2(25),
+    GENERATOR_CONTACT_FIRST_NAME   VARCHAR2(38),
+    GENERATOR_CONTACT_LAST_NAME    VARCHAR2(38),
+    GENERATOR_CONTACT_COMPANY_NAME VARCHAR2(80),
+    GENERATOR_CONTACT_EMAIL        VARCHAR2(80),
+    GENERATOR_CONTACT_PHONE_NUM    VARCHAR2(15),
+    GENERATOR_CONTACT_PHONE_EXT    VARCHAR2(6),
+    GENERATOR_PRINTED_NAME         VARCHAR2(80),
+    GENERATOR_SIGNATURE_DATE       DATE,
+    GENERATOR_ESIG_FIRST_NAME      VARCHAR2(38),
+    GENERATOR_ESIG_LAST_NAME       VARCHAR2(38),
+    GENERATOR_ESIG_SIGNATURE_DATE  DATE,
+    GENERATOR_REGISTERED           CHAR,
+    GENERATOR_MODIFIED             CHAR,
+    DES_FAC_ID                     VARCHAR2(15),
+    DES_FAC_NAME                   VARCHAR2(80),
+    DES_FAC_MAIL_STREET_NUM        VARCHAR2(12),
+    DES_FAC_MAIL_STREET_1          VARCHAR2(50),
+    DES_FAC_MAIL_STREET_2          VARCHAR2(50),
+    DES_FAC_MAIL_CITY              VARCHAR2(35),
+    DES_FAC_MAIL_CTRY              CHAR(2),
+    DES_FAC_MAIL_STA               CHAR(2),
+    DES_FAC_MAIL_ZIP               VARCHAR2(25),
+    DES_FAC_LOC_STREET_NUM         VARCHAR2(12),
+    DES_FAC_LOC_STREET_1           VARCHAR2(50),
+    DES_FAC_LOC_STREET_2           VARCHAR2(50),
+    DES_FAC_LOC_CITY               VARCHAR2(35),
+    DES_FAC_LOC_STA                CHAR(2),
+    DES_FAC_LOC_ZIP                VARCHAR2(25),
+    DES_FAC_CONTACT_FIRST_NAME     VARCHAR2(38),
+    DES_FAC_CONTACT_LAST_NAME      VARCHAR2(38),
+    DES_FAC_CONTACT_COMPANY_NAME   VARCHAR2(80),
+    DES_FAC_CONTACT_PHONE_NUM      VARCHAR2(15),
+    DES_FAC_CONTACT_PHONE_EXT      VARCHAR2(6),
+    DES_FAC_CONTACT_EMAIL          VARCHAR2(80),
+    DES_FAC_PRINTED_NAME           VARCHAR2(80),
+    DES_FAC_SIGNATURE_DATE         DATE,
+    DES_FAC_ESIG_FIRST_NAME        VARCHAR2(38),
+    DES_FAC_ESIG_LAST_NAME         VARCHAR2(38),
+    DES_FAC_ESIG_SIGNATURE_DATE    DATE,
+    DES_FAC_REGISTERED             CHAR,
+    DES_FAC_MODIFIED               CHAR,
+    ALT_FAC_ID                     VARCHAR2(12),
+    ALT_FAC_NAME                   VARCHAR2(80),
+    ALT_FAC_MAIL_STREET_NUM        VARCHAR2(12),
+    ALT_FAC_MAIL_STREET_1          VARCHAR2(50),
+    ALT_FAC_MAIL_STREET_2          VARCHAR2(50),
+    ALT_FAC_MAIL_CITY              VARCHAR2(25),
+    ALT_FAC_MAIL_STA               CHAR(2),
+    ALT_FAC_MAIL_ZIP               VARCHAR2(14),
+    ALT_FAC_LOC_STREET_NUM         VARCHAR2(12),
+    ALT_FAC_LOC_STREET_1           VARCHAR2(50),
+    ALT_FAC_LOC_STREET_2           VARCHAR2(50),
+    ALT_FAC_LOC_CITY               VARCHAR2(25),
+    ALT_FAC_LOC_STA                CHAR(2),
+    ALT_FAC_LOC_ZIP                VARCHAR2(14),
+    ALT_FAC_CONTACT_FIRST_NAME     VARCHAR2(38),
+    ALT_FAC_CONTACT_LAST_NAME      VARCHAR2(38),
+    ALT_FAC_CONTACT_COMPANY_NAME   VARCHAR2(80),
+    ALT_FAC_CONTACT_PHONE_NO       VARCHAR2(15),
+    ALT_FAC_CONTACT_PHONE_EXT      VARCHAR2(6),
+    ALT_FAC_CONTACT_EMAIL          VARCHAR2(80),
+    ALT_FAC_PRINTED_NAME           VARCHAR2(80),
+    ALT_FAC_SIGNATURE_DATE         DATE,
+    ALT_FAC_ESIG_FIRST_NAME        VARCHAR2(38),
+    ALT_FAC_ESIG_LAST_NAME         VARCHAR2(38),
+    ALT_FAC_ESIG_SIGNATURE_DATE    DATE,
+    ALT_FAC_REGISTERED             CHAR,
+    ALT_FAC_MODIFIED               CHAR,
+    EMERGENCY_PHONE_NUM            VARCHAR2(15),
+    EMERGENCY_PHONE_EXT            VARCHAR2(6),
+    ORIG_SUBM_TYPE                 VARCHAR2(14),
+    COI_ONLY                       CHAR,
+    BROKER_ID                      VARCHAR2(15),
+    LAST_EM_UPDT_DATE              DATE
+)
+/
+
+create table RCRA_EM_EMANIFEST_COMMENT
+(
+    EM_EMANIFEST_COMMENT_ID NUMBER not null
+        constraint PK_EM_EMANIFEST_COMMENT
+            primary key,
+    EM_EMANIFEST_ID         NUMBER not null
+        constraint FK_EM_EMANIFEST_COMMENT_PARENT
+            references RCRA_EM_EMANIFEST
+                on delete cascade,
+    CMNT_DESC               VARCHAR2(4000),
+    CMNT_LABEL              VARCHAR2(255)
+)
+/
+
+create table RCRA_EM_WASTE
+(
+    EM_WASTE_ID                NUMBER not null
+        constraint PK_RCRA_EM_WASTE
+            primary key,
+    EM_EMANIFEST_ID            NUMBER not null
+        constraint FK_RCRA_EM_WASTE_PARENT
+            references RCRA_EM_EMANIFEST
+                on delete cascade,
+    DOT_HAZRD                  CHAR   not null,
+    NON_HAZ_WASTE_DESC         VARCHAR2(500),
+    PCB                        CHAR   not null,
+    LINE_NUM                   NUMBER(10),
+    EPA_WASTE                  CHAR,
+    DOT_ID_NUM_DESC            VARCHAR2(6),
+    DOT_PRINTED_INFO           VARCHAR2(500),
+    CONTAINER_NUM              NUMBER,
+    QNTY_VAL                   NUMBER(14, 6),
+    CONTAINER_TYPE_CODE        VARCHAR2(255),
+    CONTAINER_TYPE_DESC        VARCHAR2(255),
+    QTY_UNIT_OF_MEAS_CODE      CHAR,
+    QTY_UNIT_OF_MEAS_DESC      VARCHAR2(28),
+    BR_DENSITY                 NUMBER(14, 6),
+    BR_DENSITY_UOM_CODE        CHAR,
+    BR_DENSITY_UOM_DESC        VARCHAR2(240),
+    BR_FORM_CODE               VARCHAR2(4),
+    BR_FORM_CODE_DESC          VARCHAR2(240),
+    BR_SRC_CODE                VARCHAR2(3),
+    BR_SRC_CODE_DESC           VARCHAR2(240),
+    BR_WASTE_MIN_CODE          CHAR,
+    BR_WASTE_MIN_DESC          VARCHAR2(240),
+    QNTY_DISCREPANCY           CHAR,
+    WASTE_TYPE_DISCREPANCY     CHAR,
+    DISCREPANCY_COMM           VARCHAR2(257),
+    WASTE_RESIDUE              CHAR,
+    WASTE_RESIDUE_COMM         VARCHAR2(257),
+    MANAGEMENT_METH_CODE       VARCHAR2(4),
+    MANAGEMENT_METH_DESC       VARCHAR2(240),
+    CNST_NUM                   VARCHAR2(255),
+    HANDLING_INSTRUCTIONS      VARCHAR2(4000),
+    COI_ONLY                   CHAR,
+    QNTY_ACUTE_KG              NUMBER(14, 6),
+    QNTY_ACUTE_TONS            NUMBER(14, 6),
+    QNTY_NON_ACUTE_KG          NUMBER(14, 6),
+    QNTY_NON_ACUTE_TONS        NUMBER(14, 6),
+    QNTY_TONS                  NUMBER(14, 6),
+    BR_MIXED_RADIOACTIVE_WASTE CHAR,
+    QNTY_KG                    NUMBER(14, 6)
+)
+/
+
+create table RCRA_EM_WASTE_CD_TRANS
+(
+    EM_WASTE_CD_TRANS_ID NUMBER       not null
+        constraint PK_RCRA_EM_WASTE_CD_TRANS
+            primary key,
+    EM_WASTE_ID          NUMBER       not null
+        constraint FK_RCRA_EM_WASTE_CD_TRANS_PAR
+            references RCRA_EM_WASTE
+                on delete cascade,
+    WASTE_CODE           VARCHAR2(12) not null
+)
+/
+
+create table RCRA_EM_WASTE_COMMENT
+(
+    EM_WASTE_COMMENT_ID NUMBER not null
+        constraint PK_RCRA_EM_WASTE_COMMENT
+            primary key,
+    EM_WASTE_ID         NUMBER not null
+        constraint FK_RCRA_EM_WASTE_COMMENT_PAR
+            references RCRA_EM_WASTE
+                on delete cascade,
+    CMNT_DESC           VARCHAR2(4000),
+    CMNT_LABEL          VARCHAR2(255)
+)
+/
+
+create table RCRA_EM_WASTE_PCB
+(
+    EM_WASTE_PCB_ID     NUMBER not null
+        constraint PK_RCRA_EM_WASTE_PCB
+            primary key,
+    EM_WASTE_ID         NUMBER not null
+        constraint FK_RCRA_EM_WASTE_PCB_PAR
+            references RCRA_EM_WASTE
+                on delete cascade,
+    PCB_LOAD_TYPE_CODE  VARCHAR2(25),
+    PCB_ARTICLE_CONT_ID VARCHAR2(255),
+    PCB_REMOVAL_DATE    TIMESTAMP(6),
+    PCB_WEIGHT          NUMBER(14, 6),
+    PCB_WASTE_TYPE      VARCHAR2(150),
+    PCB_BULK_IDENTITY   VARCHAR2(255),
+    LOAD_TYPE_DESC      VARCHAR2(25)
+)
+/
+
+create table RCRA_PRM_MOD_EVENT
+(
+    PRM_MOD_EVENT_ID          NUMBER(10)   not null
+        constraint PK_RCRA_PRM_MOD_EVENT
+            primary key,
+    PRM_EVENT_ID              NUMBER(10)   not null
+        constraint FK_RCRA_PRM_MOD_EVENT_PARENT
+            references RCRA_PRM_EVENT
+                on delete cascade,
+    TRANS_CODE                CHAR,
+    MOD_HANDLER_ID            VARCHAR2(12) not null,
+    MOD_ACT_LOC_CODE          CHAR(2)      not null,
+    MOD_SERIES_SEQ_NUM        NUMBER       not null,
+    MOD_EVENT_SEQ_NUM         NUMBER       not null,
+    MOD_EVENT_AGN_CODE        CHAR         not null,
+    MOD_EVENT_DATA_OWNER_CODE CHAR(2)      not null,
+    MOD_EVENT_CODE            VARCHAR2(7)  not null
+)
+/
+
+comment on table RCRA_PRM_MOD_EVENT is 'Linking mod event for Permitting Events (PermitModEventDataType)'
+/
+
+comment on column RCRA_PRM_MOD_EVENT.PRM_MOD_EVENT_ID is 'Id of the mod event record (PK)'
+/
+
+comment on column RCRA_PRM_MOD_EVENT.PRM_EVENT_ID is 'Id of the parent PRM_EVENT record (FK)'
+/
+
+comment on column RCRA_PRM_MOD_EVENT.TRANS_CODE is 'Transaction code used to define the add, update, or delete. (TransactionCode)'
+/
+
+comment on column RCRA_PRM_MOD_EVENT.MOD_HANDLER_ID is 'Handler id (ModHandlerId)'
+/
+
+comment on column RCRA_PRM_MOD_EVENT.MOD_ACT_LOC_CODE is 'Permit event activity location (ModActivityLocationCode)'
+/
+
+comment on column RCRA_PRM_MOD_EVENT.MOD_SERIES_SEQ_NUM is 'Permit series sequence number (ModSeriesSequenceNumber)'
+/
+
+comment on column RCRA_PRM_MOD_EVENT.MOD_EVENT_SEQ_NUM is 'Permit event sequence number (ModEventSequenceNumber)'
+/
+
+comment on column RCRA_PRM_MOD_EVENT.MOD_EVENT_AGN_CODE is 'Permit event owner (ModEventAgencyCode)'
+/
+
+comment on column RCRA_PRM_MOD_EVENT.MOD_EVENT_DATA_OWNER_CODE is 'Permit event owner (ModEventDataOwnerCode)'
+/
+
+comment on column RCRA_PRM_MOD_EVENT.MOD_EVENT_CODE is 'Permit event code (ModEventCode)'
+/
+
+create table RCRA_HD_EPISODIC_PRJT
+(
+    HD_EPISODIC_PRJT_ID  NUMBER  not null
+        constraint PK_HD_EPISODIC_PRJT
+            primary key,
+    HD_EPISODIC_EVENT_ID NUMBER  not null
+        constraint FK_HD_EPISO_PRJT_HD_EPISO_EVEN
+            references RCRA_HD_EPISODIC_EVENT
+                on delete cascade,
+    TRANSACTION_CODE     CHAR,
+    PRJT_CODE_OWNER      CHAR(2) not null,
+    PRJT_CODE            CHAR(3) not null,
+    OTHER_PRJT_DESC      VARCHAR2(255)
+)
+/
+
+create index IX_HD_EPIS_PRJT_HD_EPIS_EVE_ID
+    on RCRA_HD_EPISODIC_PRJT (HD_EPISODIC_EVENT_ID)
+/
+
+create table RCRA_EM_FED_WASTE_CODE_DESC
+(
+    EM_FED_WASTE_CODE_DESC_ID NUMBER      not null
+        constraint PK_EM_FED_WASTE_CODE_DESC
+            primary key,
+    EM_WASTE_ID               NUMBER      not null
+        constraint FK_RCRA_EM_FED_WS_CD_EM_WS_ID
+            references RCRA_EM_WASTE
+                on delete cascade,
+    FED_MANIFEST_WASTE_CODE   VARCHAR2(6) not null,
+    MANIFEST_WASTE_DESC       VARCHAR2(2000),
+    COI_IND                   CHAR
+)
+/
+
+create index IX_EM_FD_WST_CDE_DSC_EM_WST_ID
+    on RCRA_EM_FED_WASTE_CODE_DESC (EM_WASTE_ID)
+/
+
+create table RCRA_EM_STATE_WASTE_CODE_DESC
+(
+    EM_STATE_WASTE_CODE_DESC_ID NUMBER      not null
+        constraint PK_EM_STATE_WASTE_CODE_DESC
+            primary key,
+    EM_WASTE_ID                 NUMBER      not null
+        constraint FK_EM_ST_WST_CD_DESC_EM_WST_ID
+            references RCRA_EM_WASTE
+                on delete cascade,
+    STA_MANIFEST_WASTE_CODE     VARCHAR2(8) not null,
+    MANIFEST_WASTE_DESC         VARCHAR2(2000)
+)
+/
+
+create index IX_EM_STT_WST_CDE_DSC_EM_WS_ID
+    on RCRA_EM_STATE_WASTE_CODE_DESC (EM_WASTE_ID)
+/
+
+create table RCRA_EM_TRANSPORTER
+(
+    EM_TRANSPORTER_ID           NUMBER not null
+        constraint PK_EM_TRANSPORTER
+            primary key,
+    EM_EMANIFEST_ID             NUMBER not null
+        constraint FK_RCRA_EM_TRANS_EM_EM_ID
+            references RCRA_EM_EMANIFEST
+                on delete cascade,
+    TRANSPORTER_ID              VARCHAR2(15),
+    TRANSPORTER_NAME            VARCHAR2(80),
+    TRANSPORTER_PRINTED_NAME    VARCHAR2(80),
+    TRANSPORTER_SIGNATURE_DATE  DATE,
+    TRANSPORTER_ESIG_FIRST_NAME VARCHAR2(38),
+    TRANSPORTER_ESIG_LAST_NAME  VARCHAR2(38),
+    TRANS_ESIG_SIGNATURE_DATE   DATE,
+    TRANSPORTER_LINE_NUM        VARCHAR2(19),
+    TRANSPORTER_REGISTERED      CHAR
+)
+/
+
+create index IX_EM_TRNSPORTER_EM_EMNIFST_ID
+    on RCRA_EM_TRANSPORTER (EM_EMANIFEST_ID)
+/
+
+create view RCRA_CA_REL_EVENT_VW as
+(
+SELECT CA_AREA_REL_EVENT_ID CA_REL_EVENT_ID,
+       CA_AREA_ID,
+       NULL                 CA_AUTHORITY_ID,
+       TRANS_CODE,
+       ACT_LOC_CODE,
+       CORCT_ACT_EVENT_DATA_OWNER_CDE,
+       CORCT_ACT_EVENT_CODE,
+       EVENT_AGN_CODE,
+       EVENT_SEQ_NUM
+FROM RCRA_CA_AREA_REL_EVENT
+UNION ALL
+SELECT CA_AUTH_REL_EVENT_ID,
+       NULL,
+       CA_AUTHORITY_ID,
+       TRANS_CODE,
+       ACT_LOC_CODE,
+       CORCT_ACT_EVENT_DATA_OWNER_CDE,
+       CORCT_ACT_EVENT_CODE,
+       EVENT_AGN_CODE,
+       EVENT_SEQ_NUM
+FROM RCRA_CA_AUTH_REL_EVENT
+    )
+/
+
+create view RCRA_EVENT_COMMITMENT_VW as
+(
+SELECT CA_EVENT_COMMITMENT_ID EVENT_COMMITMENT_ID,
+       CA_EVENT_ID,
+       NULL                   PRM_EVENT_ID,
+       TRANS_CODE,
+       COMMIT_LEAD,
+       COMMIT_SEQ_NUM
+FROM RCRA_CA_EVENT_COMMITMENT
+UNION ALL
+SELECT PRM_EVENT_COMMITMENT_ID,
+       NULL,
+       PRM_EVENT_ID,
+       TRANS_CODE,
+       COMMIT_LEAD,
+       COMMIT_SEQ_NUM
+FROM RCRA_PRM_EVENT_COMMITMENT
+    )
+/
+
+create view RCRA_WASTE_CODE_VW as
+(
+SELECT HD_SEC_WASTE_CODE_ID WASTE_CODE_ID,
+       HD_SEC_MATERIAL_ACTIVITY_ID,
+       NULL                 HD_HANDLER_ID,
+       NULL                 PRM_UNIT_DETAIL_ID,
+       TRANSACTION_CODE     TRANS_CODE,
+       WASTE_CODE_OWNER,
+       WASTE_CODE_TYPE
+FROM RCRA_HD_SEC_WASTE_CODE
+UNION ALL
+SELECT HD_WASTE_CODE_ID,
+       NULL,
+       HD_HANDLER_ID,
+       NULL PRM_UNIT_DETAIL_ID,
+       TRANSACTION_CODE,
+       WASTE_CODE_OWNER,
+       WASTE_CODE_TYPE
+FROM RCRA_HD_WASTE_CODE
+UNION ALL
+SELECT PRM_WASTE_CODE_ID,
+       NULL,
+       NULL,
+       PRM_UNIT_DETAIL_ID,
+       TRANSACTION_CODE,
+       WASTE_CODE_OWNER,
+       WASTE_CODE_TYPE
+FROM RCRA_PRM_WASTE_CODE
+    )
+/
+
+create view WH_TABLE_COUNTS as
+SELECT 'RCRA_CA_AREA' table_name,
+       count(*)       cnt
+FROM RCRA_CA_AREA
+UNION ALL
+SELECT 'RCRA_CA_AREA_REL_EVENT' table_name,
+       count(*)                 cnt
+FROM RCRA_CA_AREA_REL_EVENT
+UNION ALL
+SELECT 'RCRA_CA_AUTH_REL_EVENT' table_name,
+       count(*)                 cnt
+FROM RCRA_CA_AUTH_REL_EVENT
+UNION ALL
+SELECT 'RCRA_CA_AUTHORITY' table_name,
+       count(*)            cnt
+FROM RCRA_CA_AUTHORITY
+UNION ALL
+SELECT 'RCRA_CA_EVENT' table_name,
+       count(*)        cnt
+FROM RCRA_CA_EVENT
+UNION ALL
+SELECT 'RCRA_CA_EVENT_COMMITMENT' table_name,
+       count(*)                   cnt
+FROM RCRA_CA_EVENT_COMMITMENT
+UNION ALL
+SELECT 'RCRA_CA_FAC_SUBM' table_name,
+       count(*)           cnt
+FROM RCRA_CA_FAC_SUBM
+UNION ALL
+SELECT 'RCRA_CA_REL_PERMIT_UNIT' table_name,
+       count(*)                  cnt
+FROM RCRA_CA_REL_PERMIT_UNIT
+UNION ALL
+SELECT 'RCRA_CA_STATUTORY_CITATION' table_name,
+       count(*)                     cnt
+FROM RCRA_CA_STATUTORY_CITATION
+UNION ALL
+SELECT 'RCRA_CME_CITATION' table_name,
+       count(*)            cnt
+FROM RCRA_CME_CITATION
+UNION ALL
+SELECT 'RCRA_CME_CSNY_DATE' table_name,
+       count(*)             cnt
+FROM RCRA_CME_CSNY_DATE
+UNION ALL
+SELECT 'RCRA_CME_ENFRC_ACT' table_name,
+       count(*)             cnt
+FROM RCRA_CME_ENFRC_ACT
+UNION ALL
+SELECT 'RCRA_CME_EVAL' table_name,
+       count(*)        cnt
+FROM RCRA_CME_EVAL
+UNION ALL
+SELECT 'RCRA_CME_EVAL_COMMIT' table_name,
+       count(*)               cnt
+FROM RCRA_CME_EVAL_COMMIT
+UNION ALL
+SELECT 'RCRA_CME_EVAL_VIOL' table_name,
+       count(*)             cnt
+FROM RCRA_CME_EVAL_VIOL
+UNION ALL
+SELECT 'RCRA_CME_FAC_SUBM' table_name,
+       count(*)            cnt
+FROM RCRA_CME_FAC_SUBM
+UNION ALL
+SELECT 'RCRA_CME_MEDIA' table_name,
+       count(*)         cnt
+FROM RCRA_CME_MEDIA
+UNION ALL
+SELECT 'RCRA_CME_MILESTONE' table_name,
+       count(*)             cnt
+FROM RCRA_CME_MILESTONE
+UNION ALL
+SELECT 'RCRA_CME_PNLTY' table_name,
+       count(*)         cnt
+FROM RCRA_CME_PNLTY
+UNION ALL
+SELECT 'RCRA_CME_PYMT' table_name,
+       count(*)        cnt
+FROM RCRA_CME_PYMT
+UNION ALL
+SELECT 'RCRA_CME_RQST' table_name,
+       count(*)        cnt
+FROM RCRA_CME_RQST
+UNION ALL
+SELECT 'RCRA_CME_SUPP_ENVR_PRJT' table_name,
+       count(*)                  cnt
+FROM RCRA_CME_SUPP_ENVR_PRJT
+UNION ALL
+SELECT 'RCRA_CME_VIOL' table_name,
+       count(*)        cnt
+FROM RCRA_CME_VIOL
+UNION ALL
+SELECT 'RCRA_CME_VIOL_ENFRC' table_name,
+       count(*)              cnt
+FROM RCRA_CME_VIOL_ENFRC
+UNION ALL
+SELECT 'RCRA_FA_COST_EST' table_name,
+       count(*)           cnt
+FROM RCRA_FA_COST_EST
+UNION ALL
+SELECT 'RCRA_FA_COST_EST_REL_MECHANISM' table_name,
+       count(*)                         cnt
+FROM RCRA_FA_COST_EST_REL_MECHANISM
+UNION ALL
+SELECT 'RCRA_FA_FAC_SUBM' table_name,
+       count(*)           cnt
+FROM RCRA_FA_FAC_SUBM
+UNION ALL
+SELECT 'RCRA_FA_MECHANISM' table_name,
+       count(*)            cnt
+FROM RCRA_FA_MECHANISM
+UNION ALL
+SELECT 'RCRA_FA_MECHANISM_DETAIL' table_name,
+       count(*)                   cnt
+FROM RCRA_FA_MECHANISM_DETAIL
+UNION ALL
+SELECT 'RCRA_GIS_FAC_SUBM' table_name,
+       count(*)            cnt
+FROM RCRA_GIS_FAC_SUBM
+UNION ALL
+SELECT 'RCRA_GIS_GEO_INFORMATION' table_name,
+       count(*)                   cnt
+FROM RCRA_GIS_GEO_INFORMATION
+UNION ALL
+SELECT 'RCRA_HD_CERTIFICATION' table_name,
+       count(*)                cnt
+FROM RCRA_HD_CERTIFICATION
+UNION ALL
+SELECT 'RCRA_HD_ENV_PERMIT' table_name,
+       count(*)             cnt
+FROM RCRA_HD_ENV_PERMIT
+UNION ALL
+SELECT 'RCRA_HD_EPISODIC_EVENT' table_name,
+       count(*)                 cnt
+FROM RCRA_HD_EPISODIC_EVENT
+UNION ALL
+SELECT 'RCRA_HD_EPISODIC_WASTE' table_name,
+       count(*)                 cnt
+FROM RCRA_HD_EPISODIC_WASTE
+UNION ALL
+SELECT 'RCRA_HD_EPISODIC_WASTE_CODE' table_name,
+       count(*)                      cnt
+FROM RCRA_HD_EPISODIC_WASTE_CODE
+UNION ALL
+SELECT 'RCRA_HD_HANDLER' table_name,
+       count(*)          cnt
+FROM RCRA_HD_HANDLER
+UNION ALL
+SELECT 'RCRA_HD_HBASIC' table_name,
+       count(*)         cnt
+FROM RCRA_HD_HBASIC
+UNION ALL
+SELECT 'RCRA_HD_LQG_CLOSURE' table_name,
+       count(*)              cnt
+FROM RCRA_HD_LQG_CLOSURE
+UNION ALL
+SELECT 'RCRA_HD_LQG_CONSOLIDATION' table_name,
+       count(*)                    cnt
+FROM RCRA_HD_LQG_CONSOLIDATION
+UNION ALL
+SELECT 'RCRA_HD_NAICS' table_name,
+       count(*)        cnt
+FROM RCRA_HD_NAICS
+UNION ALL
+SELECT 'RCRA_HD_OTHER_ID' table_name,
+       count(*)           cnt
+FROM RCRA_HD_OTHER_ID
+UNION ALL
+SELECT 'RCRA_HD_OWNEROP' table_name,
+       count(*)          cnt
+FROM RCRA_HD_OWNEROP
+UNION ALL
+SELECT 'RCRA_HD_SEC_MATERIAL_ACTIVITY' table_name,
+       count(*)                        cnt
+FROM RCRA_HD_SEC_MATERIAL_ACTIVITY
+UNION ALL
+SELECT 'RCRA_HD_SEC_WASTE_CODE' table_name,
+       count(*)                 cnt
+FROM RCRA_HD_SEC_WASTE_CODE
+UNION ALL
+SELECT 'RCRA_HD_STATE_ACTIVITY' table_name,
+       count(*)                 cnt
+FROM RCRA_HD_STATE_ACTIVITY
+UNION ALL
+SELECT 'RCRA_HD_UNIVERSAL_WASTE' table_name,
+       count(*)                  cnt
+FROM RCRA_HD_UNIVERSAL_WASTE
+UNION ALL
+SELECT 'RCRA_HD_WASTE_CODE' table_name,
+       count(*)             cnt
+FROM RCRA_HD_WASTE_CODE
+UNION ALL
+SELECT 'RCRA_PRM_EVENT' table_name,
+       count(*)         cnt
+FROM RCRA_PRM_EVENT
+UNION ALL
+SELECT 'RCRA_PRM_EVENT_COMMITMENT' table_name,
+       count(*)                    cnt
+FROM RCRA_PRM_EVENT_COMMITMENT
+UNION ALL
+SELECT 'RCRA_PRM_FAC_SUBM' table_name,
+       count(*)            cnt
+FROM RCRA_PRM_FAC_SUBM
+UNION ALL
+SELECT 'RCRA_PRM_RELATED_EVENT' table_name,
+       count(*)                 cnt
+FROM RCRA_PRM_RELATED_EVENT
+UNION ALL
+SELECT 'RCRA_PRM_SERIES' table_name,
+       count(*)          cnt
+FROM RCRA_PRM_SERIES
+UNION ALL
+SELECT 'RCRA_PRM_UNIT' table_name,
+       count(*)        cnt
+FROM RCRA_PRM_UNIT
+UNION ALL
+SELECT 'RCRA_PRM_UNIT_DETAIL' table_name,
+       count(*)               cnt
+FROM RCRA_PRM_UNIT_DETAIL
+UNION ALL
+SELECT 'RCRA_PRM_WASTE_CODE' table_name,
+       count(*)              cnt
+FROM RCRA_PRM_WASTE_CODE
+UNION ALL
+SELECT 'RCRA_RU_REPORT_UNIV' table_name,
+       count(*)              cnt
+FROM RCRA_RU_REPORT_UNIV
+UNION ALL
+SELECT 'RCRA_SUBMISSIONHISTORY' table_name,
+       count(*)                 cnt
+FROM RCRA_SUBMISSIONHISTORY
+UNION ALL
+SELECT 'RCRA_EM_EMANIFEST' table_name,
+       count(*)            cnt
+FROM RCRA_EM_EMANIFEST
+UNION ALL
+SELECT 'RCRA_EM_EMANIFEST_COMMENT' table_name,
+       count(*)                    cnt
+FROM RCRA_EM_EMANIFEST_COMMENT
+UNION ALL
+SELECT 'RCRA_EM_HANDLER' table_name,
+       count(*)          cnt
+FROM RCRA_EM_HANDLER
+UNION ALL
+SELECT 'RCRA_EM_SUBM' table_name,
+       count(*)       cnt
+FROM RCRA_EM_SUBM
+UNION ALL
+SELECT 'RCRA_EM_TR_NUM_ORIG' table_name,
+       count(*)              cnt
+FROM RCRA_EM_TR_NUM_ORIG
+UNION ALL
+SELECT 'RCRA_EM_TR_NUM_REJ' table_name,
+       count(*)             cnt
+FROM RCRA_EM_TR_NUM_REJ
+UNION ALL
+SELECT 'RCRA_EM_TR_NUM_RESIDUE_NEW' table_name,
+       count(*)                     cnt
+FROM RCRA_EM_TR_NUM_RESIDUE_NEW
+UNION ALL
+SELECT 'RCRA_EM_TR_NUM_WASTE' table_name,
+       count(*)               cnt
+FROM RCRA_EM_TR_NUM_WASTE
+UNION ALL
+SELECT 'RCRA_EM_WASTE' table_name,
+       count(*)        cnt
+FROM RCRA_EM_WASTE
+UNION ALL
+SELECT 'RCRA_EM_WASTE_CD_FED' table_name,
+       count(*)               cnt
+FROM RCRA_EM_WASTE_CD_FED
+UNION ALL
+SELECT 'RCRA_EM_WASTE_CD_GEN' table_name,
+       count(*)               cnt
+FROM RCRA_EM_WASTE_CD_GEN
+UNION ALL
+SELECT 'RCRA_EM_WASTE_CD_TRANS' table_name,
+       count(*)                 cnt
+FROM RCRA_EM_WASTE_CD_TRANS
+UNION ALL
+SELECT 'RCRA_EM_WASTE_CD_TSDF' table_name,
+       count(*)                cnt
+FROM RCRA_EM_WASTE_CD_TSDF
+UNION ALL
+SELECT 'RCRA_EM_WASTE_COMMENT' table_name,
+       count(*)                cnt
+FROM RCRA_EM_WASTE_COMMENT
+UNION ALL
+SELECT 'RCRA_EM_WASTE_PCB' table_name,
+       count(*)            cnt
+FROM RCRA_EM_WASTE_PCB
+UNION ALL
+SELECT 'ETL_RUN' table_name,
+       count(*)
+FROM ETL_RUN
+UNION ALL
+SELECT 'ETL_RUN_HANDLER' table_name,
+       count(*)
+FROM ETL_RUN_HANDLER
+/
+
+create view HD_HANDLER as
+(
+SELECT HD_HANDLER_ID,
+       HD_HBASIC_ID,
+       TRANSACTION_CODE,
+       ACTIVITY_LOCATION,
+       SOURCE_TYPE,
+       SEQ_NUMBER,
+       TO_DATE(RECEIVE_DATE, 'YYYY-MM-DD') RECEIVE_DATE,
+       HANDLER_NAME,
+       ACKNOWLEDGE_DATE,
+       NON_NOTIFIER,
+       TSD_DATE,
+       OFF_SITE_RECEIPT,
+       ACCESSIBILITY,
+       COUNTY_CODE_OWNER,
+       COUNTY_CODE,
+       NOTES,
+       ACKNOWLEDGE_FLAG,
+       LOCATION_STREET1,
+       LOCATION_STREET2,
+       LOCATION_CITY,
+       LOCATION_STATE,
+       LOCATION_COUNTRY,
+       LOCATION_ZIP,
+       MAIL_STREET1,
+       MAIL_STREET2,
+       MAIL_CITY,
+       MAIL_STATE,
+       MAIL_COUNTRY,
+       MAIL_ZIP,
+       CONTACT_FIRST_NAME,
+       CONTACT_MIDDLE_INITIAL,
+       CONTACT_LAST_NAME,
+       CONTACT_ORG_NAME,
+       CONTACT_TITLE,
+       CONTACT_EMAIL_ADDRESS,
+       CONTACT_PHONE,
+       CONTACT_PHONE_EXT,
+       CONTACT_FAX,
+       CONTACT_STREET_NUMBER,
+       CONTACT_STREET1,
+       CONTACT_STREET2,
+       CONTACT_CITY,
+       CONTACT_STATE,
+       CONTACT_COUNTRY,
+       CONTACT_ZIP,
+       PCONTACT_FIRST_NAME,
+       PCONTACT_MIDDLE_NAME,
+       PCONTACT_LAST_NAME,
+       PCONTACT_ORG_NAME,
+       PCONTACT_TITLE,
+       PCONTACT_EMAIL_ADDRESS,
+       PCONTACT_PHONE,
+       PCONTACT_PHONE_EXT,
+       PCONTACT_FAX,
+       PCONTACT_STREET_NUMBER,
+       PCONTACT_STREET1,
+       PCONTACT_STREET2,
+       PCONTACT_CITY,
+       PCONTACT_STATE,
+       PCONTACT_COUNTRY,
+       PCONTACT_ZIP,
+       USED_OIL_BURNER,
+       USED_OIL_PROCESSOR,
+       USED_OIL_REFINER,
+       USED_OIL_MARKET_BURNER,
+       USED_OIL_SPEC_MARKETER,
+       USED_OIL_TRANSFER_FACILITY,
+       USED_OIL_TRANSPORTER,
+       LAND_TYPE,
+       STATE_DISTRICT_OWNER,
+       STATE_DISTRICT,
+       IMPORTER_ACTIVITY,
+       MIXED_WASTE_GENERATOR,
+       RECYCLER_ACTIVITY,
+       TRANSPORTER_ACTIVITY,
+       TSD_ACTIVITY,
+       UNDERGROUND_INJECTION_ACTIVITY,
+       UNIVERSAL_WASTE_DEST_FACILITY,
+       ONSITE_BURNER_EXEMPTION,
+       FURNACE_EXEMPTION,
+       SHORT_TERM_GEN_IND,
+       TRANSFER_FACILITY_IND,
+       STATE_WASTE_GENERATOR_OWNER,
+       STATE_WASTE_GENERATOR,
+       FED_WASTE_GENERATOR_OWNER,
+       FED_WASTE_GENERATOR,
+       COLLEGE_IND,
+       HOSPITAL_IND,
+       NON_PROFIT_IND,
+       WITHDRAWAL_IND,
+       TRANS_CODE,
+       NOTIFICATION_RSN_CODE,
+       EFFC_DATE,
+       FINANCIAL_ASSURANCE_IND,
+       RECYCLING_IND,
+       MAIL_STREET_NUMBER,
+       LOCATION_STREET_NUMBER,
+       NON_NOTIFIER_TEXT,
+       ACCESSIBILITY_TEXT,
+       STATE_DISTRICT_TEXT,
+       INTRNL_NOTES,
+       SHORT_TERM_INTRNL_NOTES,
+       NATURE_OF_BUSINESS_TEXT,
+       RECOGNIZED_TRADER_IMPORTER_IND,
+       RECOGNIZED_TRADER_EXPORTER_IND,
+       SLAB_IMPORTER_IND,
+       SLAB_EXPORTER_IND,
+       RECYCLER_ACT_NONSTORAGE,
+       MANIFEST_BROKER,
+       ACKNOWLEDGE_FLAG_IND,
+       INCLUDE_IN_NATIONAL_REPORT_IND,
+       LQHUW_IND,
+       HD_REPORT_CYCLE_YEAR,
+       HEALTHCARE_FAC,
+       REVERSE_DISTRIBUTOR,
+       SUBPART_P_WITHDRAWAL,
+       RECYCLER_IND
+from RCRA_HD_HANDLER
+    )
+/
+
+create PACKAGE RCRAINFO_ETL AS
     PROCEDURE MERGE_DATA(TRANS_TYPE varchar);
 END RCRAINFO_ETL;
 /
 
-CREATE OR REPLACE PACKAGE BODY RCRAINFO_ETL AS
+create synonym NODE_RCRA_SUBMISSIONHISTORY for NODE_FLOW_RCRA.RCRA_SUBMISSIONHISTORY
+/
+
+create synonym NODE_RCRA_PRM_SUBM for NODE_FLOW_RCRA.RCRA_PRM_SUBM
+/
+
+create synonym NODE_RCRA_HD_SUBM for NODE_FLOW_RCRA.RCRA_HD_SUBM
+/
+
+create synonym NODE_RCRA_GIS_SUBM for NODE_FLOW_RCRA.RCRA_GIS_SUBM
+/
+
+create synonym NODE_RCRA_FA_SUBM for NODE_FLOW_RCRA.RCRA_FA_SUBM
+/
+
+create synonym NODE_RCRA_CME_SUBM for NODE_FLOW_RCRA.RCRA_CME_SUBM
+/
+
+create synonym NODE_RCRA_CA_SUBM for NODE_FLOW_RCRA.RCRA_CA_SUBM
+/
+
+create synonym NODE_RCRA_CME_FAC_SUBM for NODE_FLOW_RCRA.RCRA_CME_FAC_SUBM
+/
+
+create view ETL_CME_FAC_SUBM_VW as
+(
+SELECT WH.CME_FAC_SUBM_ID WH_CME_FAC_SUBM_ID,
+       NODE."CME_FAC_SUBM_ID",
+       NODE."CME_SUBM_ID",
+       NODE."EPA_HDLR_ID"
+FROM NODE_RCRA_CME_FAC_SUBM NODE
+         LEFT OUTER JOIN RCRA_CME_FAC_SUBM WH ON WH.EPA_HDLR_ID = NODE.EPA_HDLR_ID
+    )
+/
+
+create synonym NODE_RCRA_CA_FAC_SUBM for NODE_FLOW_RCRA.RCRA_CA_FAC_SUBM
+/
+
+create view ETL_CA_FAC_SUBM_VW as
+(
+SELECT WH.CA_FAC_SUBM_ID WH_CA_FAC_SUBM_ID,
+       NODE."CA_FAC_SUBM_ID",
+       NODE."CA_SUBM_ID",
+       NODE."HANDLER_ID"
+FROM NODE_RCRA_CA_FAC_SUBM NODE
+         LEFT OUTER JOIN RCRA_CA_FAC_SUBM WH ON WH.HANDLER_ID = NODE.HANDLER_ID
+    )
+/
+
+create synonym NODE_RCRA_GIS_FAC_SUBM for NODE_FLOW_RCRA.RCRA_GIS_FAC_SUBM
+/
+
+create view ETL_GIS_FAC_SUBM_VW as
+(
+SELECT WH.GIS_FAC_SUBM_ID WH_GIS_FAC_SUBM_ID,
+       NODE."GIS_FAC_SUBM_ID",
+       NODE."GIS_SUBM_ID",
+       NODE."HANDLER_ID"
+FROM NODE_RCRA_GIS_FAC_SUBM NODE
+         LEFT OUTER JOIN RCRA_GIS_FAC_SUBM WH ON NODE.HANDLER_ID = WH.HANDLER_ID
+    )
+/
+
+create synonym NODE_RCRA_FA_FAC_SUBM for NODE_FLOW_RCRA.RCRA_FA_FAC_SUBM
+/
+
+create view ETL_FA_FAC_SUBM_VW as
+(
+SELECT WH.FA_FAC_SUBM_ID WH_FA_FAC_SUBM_ID,
+       NODE."FA_FAC_SUBM_ID",
+       NODE."FA_SUBM_ID",
+       NODE."HANDLER_ID"
+FROM NODE_RCRA_FA_FAC_SUBM NODE
+         LEFT OUTER JOIN RCRA_FA_FAC_SUBM WH ON WH.HANDLER_ID = NODE.HANDLER_ID
+    )
+/
+
+create synonym NODE_RCRA_HD_HBASIC for NODE_FLOW_RCRA.RCRA_HD_HBASIC
+/
+
+create view ETL_HD_BASIC_VW as
+(
+SELECT WH.HD_HBASIC_ID WH_HD_HBASIC_ID,
+       NODE."HD_HBASIC_ID",
+       NODE."HD_SUBM_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."HANDLER_ID",
+       NODE."EXTRACT_FLAG",
+       NODE."FACILITY_IDENTIFIER"
+FROM NODE_RCRA_HD_HBASIC NODE
+         LEFT OUTER JOIN RCRA_HD_HBASIC WH ON WH.HANDLER_ID = NODE.HANDLER_ID
+    )
+/
+
+create synonym NODE_RCRA_PRM_FAC_SUBM for NODE_FLOW_RCRA.RCRA_PRM_FAC_SUBM
+/
+
+create view ETL_PRM_FAC_SUBM_VW as
+(
+SELECT WH.PRM_FAC_SUBM_ID WH_PRM_FAC_SUBM_ID,
+       NODE."PRM_FAC_SUBM_ID",
+       NODE."PRM_SUBM_ID",
+       NODE."HANDLER_ID"
+FROM NODE_RCRA_PRM_FAC_SUBM NODE
+         LEFT OUTER JOIN RCRA_PRM_FAC_SUBM WH ON WH.HANDLER_ID = NODE.HANDLER_ID
+    )
+/
+
+create synonym NODE_RCRA_PRM_SERIES for NODE_FLOW_RCRA.RCRA_PRM_SERIES
+/
+
+create view ETL_PRM_SERIES_VW as
+(
+SELECT WH.PRM_SERIES_ID WH_PRM_SERIES_ID,
+       ETL.WH_PRM_FAC_SUBM_ID,
+       ETL.PRM_SUBM_ID,
+       NODE."PRM_SERIES_ID",
+       NODE."PRM_FAC_SUBM_ID",
+       NODE."TRANS_CODE",
+       NODE."PERMIT_SERIES_SEQ_NUM",
+       NODE."PERMIT_SERIES_NAME",
+       NODE."RESP_PERSON_DATA_OWNER_CODE",
+       NODE."RESP_PERSON_ID",
+       NODE."SUPP_INFO_TXT",
+       NODE."ACTIVE_SERIES_IND",
+       NODE."CREATED_BY_USERID",
+       NODE."P_CREATED_DATE",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_PRM_SERIES NODE
+         INNER JOIN ETL_PRM_FAC_SUBM_VW ETL ON ETL.PRM_FAC_SUBM_ID = NODE.PRM_FAC_SUBM_ID
+         LEFT OUTER JOIN RCRA_PRM_SERIES WH ON WH.PRM_FAC_SUBM_ID = ETL.WH_PRM_FAC_SUBM_ID
+    AND WH.PERMIT_SERIES_SEQ_NUM = NODE.PERMIT_SERIES_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_PRM_UNIT for NODE_FLOW_RCRA.RCRA_PRM_UNIT
+/
+
+create view ETL_PRM_UNIT_VW as
+(
+SELECT WH.PRM_UNIT_ID WH_PRM_UNIT_ID,
+       ETL.WH_PRM_FAC_SUBM_ID,
+       ETL.PRM_SUBM_ID,
+       NODE."PRM_UNIT_ID",
+       NODE."PRM_FAC_SUBM_ID",
+       NODE."TRANS_CODE",
+       NODE."PERMIT_UNIT_SEQ_NUM",
+       NODE."PERMIT_UNIT_NAME",
+       NODE."SUPP_INFO_TXT",
+       NODE."ACTIVE_UNIT_IND",
+       NODE."CREATED_BY_USERID",
+       NODE."P_CREATED_DATE",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_PRM_UNIT NODE
+         INNER JOIN ETL_PRM_FAC_SUBM_VW ETL ON ETL.PRM_FAC_SUBM_ID = NODE.PRM_FAC_SUBM_ID
+         LEFT OUTER JOIN RCRA_PRM_UNIT WH ON WH.PRM_FAC_SUBM_ID = ETL.WH_PRM_FAC_SUBM_ID
+    AND WH.PERMIT_UNIT_SEQ_NUM = NODE.PERMIT_UNIT_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_GIS_GEO_INFORMATION for NODE_FLOW_RCRA.RCRA_GIS_GEO_INFORMATION
+/
+
+create view ETL_GIS_GEO_INFORMATION_VW as
+(
+SELECT WH.GIS_GEO_INFORMATION_ID WH_GIS_GEO_INFORMATION_ID,
+       ETL.WH_GIS_FAC_SUBM_ID,
+       ETL.GIS_SUBM_ID,
+       NODE."GIS_GEO_INFORMATION_ID",
+       NODE."GIS_FAC_SUBM_ID",
+       NODE."TRANS_CODE",
+       NODE."GEO_INFO_OWNER",
+       NODE."GEO_INFO_SEQ_NUM",
+       NODE."PERMIT_UNIT_SEQ_NUM",
+       NODE."AREA_SEQ_NUM",
+       NODE."LOC_COMM_TXT",
+       NODE."AREA_ACREAGE_MEAS",
+       NODE."AREA_MEAS_SRC_DATA_OWNER_CODE",
+       NODE."AREA_MEAS_SRC_CODE",
+       NODE."AREA_MEAS_DATE",
+       NODE."DATA_COLL_DATE",
+       NODE."HORZ_ACC_MEAS",
+       NODE."SRC_MAP_SCALE_NUM",
+       NODE."COORD_DATA_SRC_DATA_OWNER_CODE",
+       NODE."COORD_DATA_SRC_CODE",
+       NODE."GEO_REF_PT_DATA_OWNER_CODE",
+       NODE."GEO_REF_PT_CODE",
+       NODE."GEOM_TYPE_DATA_OWNER_CODE",
+       NODE."GEOM_TYPE_CODE",
+       NODE."HORZ_COLL_METH_DATA_OWNER_CODE",
+       NODE."HORZ_COLL_METH_CODE",
+       NODE."HRZ_CRD_RF_SYS_DTM_DTA_OWN_CDE",
+       NODE."HORZ_COORD_REF_SYS_DATUM_CODE",
+       NODE."VERF_METH_DATA_OWNER_CODE",
+       NODE."VERF_METH_CODE",
+       NODE."LATITUDE",
+       NODE."LONGITUDE",
+       NODE."ELEVATION",
+       NODE."CREATED_BY_USERID",
+       NODE."G_CREATED_DATE",
+       NODE."DATA_ORIG",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_GIS_GEO_INFORMATION NODE
+         JOIN ETL_GIS_FAC_SUBM_VW ETL ON ETL.GIS_FAC_SUBM_ID = NODE.GIS_FAC_SUBM_ID
+         LEFT OUTER JOIN RCRA_GIS_GEO_INFORMATION WH ON WH.GIS_FAC_SUBM_ID = ETL.WH_GIS_FAC_SUBM_ID
+    AND WH.GEO_INFO_SEQ_NUM = NODE.GEO_INFO_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_HD_OTHER_ID for NODE_FLOW_RCRA.RCRA_HD_OTHER_ID
+/
+
+create view ETL_HD_OTHER_ID_VW as
+(
+SELECT WH.HD_OTHER_ID_ID WH_HD_OTHER_ID_ID,
+       ETL.WH_HD_HBASIC_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_OTHER_ID_ID",
+       NODE."HD_HBASIC_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."OTHER_ID",
+       NODE."RELATIONSHIP_OWNER",
+       NODE."RELATIONSHIP_TYPE",
+       NODE."SAME_FACILITY",
+       NODE."NOTES"
+FROM NODE_RCRA_HD_OTHER_ID NODE
+         INNER JOIN ETL_HD_BASIC_VW ETL ON ETL.HD_HBASIC_ID = NODE.HD_HBASIC_ID
+         LEFT OUTER JOIN RCRA_HD_OTHER_ID WH ON WH.HD_HBASIC_ID = ETL.WH_HD_HBASIC_ID
+    AND (
+                                                            WH.RELATIONSHIP_OWNER = NODE.RELATIONSHIP_OWNER
+                                                        OR
+                                                            (WH.RELATIONSHIP_OWNER IS NULL AND NODE.RELATIONSHIP_OWNER IS NULL)
+                                                    )
+    AND WH.RELATIONSHIP_TYPE = NODE.RELATIONSHIP_TYPE
+    AND WH.OTHER_ID = NODE.OTHER_ID
+    )
+/
+
+create synonym NODE_RCRA_HD_HANDLER for NODE_FLOW_RCRA.RCRA_HD_HANDLER
+/
+
+create view ETL_HD_HANDLER_ID_VW as
+(
+SELECT WH.HD_HANDLER_ID    WH_HD_HANDLER_ID,
+       ETL.WH_HD_HBASIC_ID WH_HD_HBASIC_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_HANDLER_ID",
+       NODE."HD_HBASIC_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."ACTIVITY_LOCATION",
+       NODE."SOURCE_TYPE",
+       NODE."SEQ_NUMBER",
+       NODE."RECEIVE_DATE",
+       NODE."HANDLER_NAME",
+       NODE."ACKNOWLEDGE_DATE",
+       NODE."NON_NOTIFIER",
+       NODE."NON_NOTIFIER_TEXT",
+       NODE."TSD_DATE",
+       NODE."NATURE_OF_BUSINESS_TEXT",
+       NODE."OFF_SITE_RECEIPT",
+       NODE."ACCESSIBILITY",
+       NODE."ACCESSIBILITY_TEXT",
+       NODE."COUNTY_CODE_OWNER",
+       NODE."COUNTY_CODE",
+       NODE."NOTES",
+       NODE."INTRNL_NOTES",
+       NODE."SHORT_TERM_INTRNL_NOTES",
+       NODE."ACKNOWLEDGE_FLAG_IND",
+       NODE."INCLUDE_IN_NATIONAL_REPORT_IND",
+       NODE."LQHUW_IND",
+       NODE."HD_REPORT_CYCLE_YEAR",
+       NODE."HEALTHCARE_FAC",
+       NODE."REVERSE_DISTRIBUTOR",
+       NODE."SUBPART_P_WITHDRAWAL",
+       NODE."ACKNOWLEDGE_FLAG",
+       NODE."LOCATION_STREET_NUMBER",
+       NODE."LOCATION_STREET1",
+       NODE."LOCATION_STREET2",
+       NODE."LOCATION_CITY",
+       NODE."LOCATION_STATE",
+       NODE."LOCATION_COUNTRY",
+       NODE."LOCATION_ZIP",
+       NODE."MAIL_STREET_NUMBER",
+       NODE."MAIL_STREET1",
+       NODE."MAIL_STREET2",
+       NODE."MAIL_CITY",
+       NODE."MAIL_STATE",
+       NODE."MAIL_COUNTRY",
+       NODE."MAIL_ZIP",
+       NODE."CONTACT_FIRST_NAME",
+       NODE."CONTACT_MIDDLE_INITIAL",
+       NODE."CONTACT_LAST_NAME",
+       NODE."CONTACT_ORG_NAME",
+       NODE."CONTACT_TITLE",
+       NODE."CONTACT_EMAIL_ADDRESS",
+       NODE."CONTACT_PHONE",
+       NODE."CONTACT_PHONE_EXT",
+       NODE."CONTACT_FAX",
+       NODE."CONTACT_STREET_NUMBER",
+       NODE."CONTACT_STREET1",
+       NODE."CONTACT_STREET2",
+       NODE."CONTACT_CITY",
+       NODE."CONTACT_STATE",
+       NODE."CONTACT_COUNTRY",
+       NODE."CONTACT_ZIP",
+       NODE."PCONTACT_FIRST_NAME",
+       NODE."PCONTACT_MIDDLE_NAME",
+       NODE."PCONTACT_LAST_NAME",
+       NODE."PCONTACT_ORG_NAME",
+       NODE."PCONTACT_TITLE",
+       NODE."PCONTACT_EMAIL_ADDRESS",
+       NODE."PCONTACT_PHONE",
+       NODE."PCONTACT_PHONE_EXT",
+       NODE."PCONTACT_FAX",
+       NODE."PCONTACT_STREET_NUMBER",
+       NODE."PCONTACT_STREET1",
+       NODE."PCONTACT_STREET2",
+       NODE."PCONTACT_CITY",
+       NODE."PCONTACT_STATE",
+       NODE."PCONTACT_COUNTRY",
+       NODE."PCONTACT_ZIP",
+       NODE."USED_OIL_BURNER",
+       NODE."USED_OIL_PROCESSOR",
+       NODE."USED_OIL_REFINER",
+       NODE."USED_OIL_MARKET_BURNER",
+       NODE."USED_OIL_SPEC_MARKETER",
+       NODE."USED_OIL_TRANSFER_FACILITY",
+       NODE."USED_OIL_TRANSPORTER",
+       NODE."LAND_TYPE",
+       NODE."STATE_DISTRICT_OWNER",
+       NODE."STATE_DISTRICT",
+       NODE."STATE_DISTRICT_TEXT",
+       NODE."IMPORTER_ACTIVITY",
+       NODE."MIXED_WASTE_GENERATOR",
+       NODE."RECYCLER_ACTIVITY",
+       NODE."TRANSPORTER_ACTIVITY",
+       NODE."TSD_ACTIVITY",
+       NODE."UNDERGROUND_INJECTION_ACTIVITY",
+       NODE."UNIVERSAL_WASTE_DEST_FACILITY",
+       NODE."ONSITE_BURNER_EXEMPTION",
+       NODE."FURNACE_EXEMPTION",
+       NODE."SHORT_TERM_GEN_IND",
+       NODE."TRANSFER_FACILITY_IND",
+       NODE."RECOGNIZED_TRADER_IMPORTER_IND",
+       NODE."RECOGNIZED_TRADER_EXPORTER_IND",
+       NODE."SLAB_IMPORTER_IND",
+       NODE."SLAB_EXPORTER_IND",
+       NODE."RECYCLER_ACT_NONSTORAGE",
+       NODE."MANIFEST_BROKER",
+       NODE."STATE_WASTE_GENERATOR_OWNER",
+       NODE."STATE_WASTE_GENERATOR",
+       NODE."FED_WASTE_GENERATOR_OWNER",
+       NODE."FED_WASTE_GENERATOR",
+       NODE."COLLEGE_IND",
+       NODE."HOSPITAL_IND",
+       NODE."NON_PROFIT_IND",
+       NODE."WITHDRAWAL_IND",
+       NODE."TRANS_CODE",
+       NODE."NOTIFICATION_RSN_CODE",
+       NODE."EFFC_DATE",
+       NODE."FINANCIAL_ASSURANCE_IND",
+       NODE."RECYCLER_IND",
+       NODE."RECYCLER_NOTES",
+       NODE."RECYCLING_IND"
+FROM NODE_RCRA_HD_HANDLER NODE
+         JOIN ETL_HD_BASIC_VW ETL ON ETL.HD_HBASIC_ID = NODE.HD_HBASIC_ID
+         LEFT OUTER JOIN RCRA_HD_HANDLER WH ON WH.HD_HBASIC_ID = ETL.WH_HD_HBASIC_ID
+    AND WH.SEQ_NUMBER = NODE.SEQ_NUMBER
+    AND WH.SOURCE_TYPE = NODE.SOURCE_TYPE
+    )
+/
+
+create view ETL_HD_HANDLER_VW as
+(
+SELECT WH.HD_HANDLER_ID WH_HD_HANDLER_ID,
+       ETL.WH_HD_HBASIC_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_HANDLER_ID",
+       NODE."HD_HBASIC_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."ACTIVITY_LOCATION",
+       NODE."SOURCE_TYPE",
+       NODE."SEQ_NUMBER",
+       NODE."RECEIVE_DATE",
+       NODE."HANDLER_NAME",
+       NODE."ACKNOWLEDGE_DATE",
+       NODE."NON_NOTIFIER",
+       NODE."TSD_DATE",
+       NODE."OFF_SITE_RECEIPT",
+       NODE."ACCESSIBILITY",
+       NODE."COUNTY_CODE_OWNER",
+       NODE."COUNTY_CODE",
+       NODE."NOTES",
+       NODE."ACKNOWLEDGE_FLAG",
+       NODE."LOCATION_STREET1",
+       NODE."LOCATION_STREET2",
+       NODE."LOCATION_CITY",
+       NODE."LOCATION_STATE",
+       NODE."LOCATION_COUNTRY",
+       NODE."LOCATION_ZIP",
+       NODE."MAIL_STREET1",
+       NODE."MAIL_STREET2",
+       NODE."MAIL_CITY",
+       NODE."MAIL_STATE",
+       NODE."MAIL_COUNTRY",
+       NODE."MAIL_ZIP",
+       NODE."CONTACT_FIRST_NAME",
+       NODE."CONTACT_MIDDLE_INITIAL",
+       NODE."CONTACT_LAST_NAME",
+       NODE."CONTACT_ORG_NAME",
+       NODE."CONTACT_TITLE",
+       NODE."CONTACT_EMAIL_ADDRESS",
+       NODE."CONTACT_PHONE",
+       NODE."CONTACT_PHONE_EXT",
+       NODE."CONTACT_FAX",
+       NODE."CONTACT_STREET_NUMBER",
+       NODE."CONTACT_STREET1",
+       NODE."CONTACT_STREET2",
+       NODE."CONTACT_CITY",
+       NODE."CONTACT_STATE",
+       NODE."CONTACT_COUNTRY",
+       NODE."CONTACT_ZIP",
+       NODE."PCONTACT_FIRST_NAME",
+       NODE."PCONTACT_MIDDLE_NAME",
+       NODE."PCONTACT_LAST_NAME",
+       NODE."PCONTACT_ORG_NAME",
+       NODE."PCONTACT_TITLE",
+       NODE."PCONTACT_EMAIL_ADDRESS",
+       NODE."PCONTACT_PHONE",
+       NODE."PCONTACT_PHONE_EXT",
+       NODE."PCONTACT_FAX",
+       NODE."PCONTACT_STREET_NUMBER",
+       NODE."PCONTACT_STREET1",
+       NODE."PCONTACT_STREET2",
+       NODE."PCONTACT_CITY",
+       NODE."PCONTACT_STATE",
+       NODE."PCONTACT_COUNTRY",
+       NODE."PCONTACT_ZIP",
+       NODE."USED_OIL_BURNER",
+       NODE."USED_OIL_PROCESSOR",
+       NODE."USED_OIL_REFINER",
+       NODE."USED_OIL_MARKET_BURNER",
+       NODE."USED_OIL_SPEC_MARKETER",
+       NODE."USED_OIL_TRANSFER_FACILITY",
+       NODE."USED_OIL_TRANSPORTER",
+       NODE."LAND_TYPE",
+       NODE."STATE_DISTRICT_OWNER",
+       NODE."STATE_DISTRICT",
+       NODE."IMPORTER_ACTIVITY",
+       NODE."MIXED_WASTE_GENERATOR",
+       NODE."RECYCLER_ACTIVITY",
+       NODE."TRANSPORTER_ACTIVITY",
+       NODE."TSD_ACTIVITY",
+       NODE."UNDERGROUND_INJECTION_ACTIVITY",
+       NODE."UNIVERSAL_WASTE_DEST_FACILITY",
+       NODE."ONSITE_BURNER_EXEMPTION",
+       NODE."FURNACE_EXEMPTION",
+       NODE."SHORT_TERM_GEN_IND",
+       NODE."TRANSFER_FACILITY_IND",
+       NODE."STATE_WASTE_GENERATOR_OWNER",
+       NODE."STATE_WASTE_GENERATOR",
+       NODE."FED_WASTE_GENERATOR_OWNER",
+       NODE."FED_WASTE_GENERATOR",
+       NODE."COLLEGE_IND",
+       NODE."HOSPITAL_IND",
+       NODE."NON_PROFIT_IND",
+       NODE."WITHDRAWAL_IND",
+       NODE."TRANS_CODE",
+       NODE."NOTIFICATION_RSN_CODE",
+       NODE."EFFC_DATE",
+       NODE."FINANCIAL_ASSURANCE_IND",
+       NODE."RECYCLING_IND",
+       NODE."MAIL_STREET_NUMBER",
+       NODE."LOCATION_STREET_NUMBER",
+       NODE."NON_NOTIFIER_TEXT",
+       NODE."ACCESSIBILITY_TEXT",
+       NODE."STATE_DISTRICT_TEXT",
+       NODE."INTRNL_NOTES",
+       NODE."SHORT_TERM_INTRNL_NOTES",
+       NODE."NATURE_OF_BUSINESS_TEXT",
+       NODE."RECOGNIZED_TRADER_IMPORTER_IND",
+       NODE."RECOGNIZED_TRADER_EXPORTER_IND",
+       NODE."SLAB_IMPORTER_IND",
+       NODE."SLAB_EXPORTER_IND",
+       NODE."RECYCLER_ACT_NONSTORAGE",
+       NODE."MANIFEST_BROKER",
+       NODE."RECYCLER_NOTES",
+       NODE."ACKNOWLEDGE_FLAG_IND",
+       NODE."INCLUDE_IN_NATIONAL_REPORT_IND",
+       NODE."LQHUW_IND",
+       NODE."HD_REPORT_CYCLE_YEAR",
+       NODE."HEALTHCARE_FAC",
+       NODE."REVERSE_DISTRIBUTOR",
+       NODE."SUBPART_P_WITHDRAWAL",
+       NODE."RECYCLER_IND",
+       NODE."CURRENT_RECORD",
+       NODE."CREATED_BY_USERID",
+       NODE."H_CREATED_DATE",
+       NODE."DATA_ORIG",
+       NODE."LOCATION_LATITUDE",
+       NODE."LOCATION_LONGITUDE",
+       NODE."LOCATION_GIS_PRIM",
+       NODE."LOCATION_GIS_ORIG",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE",
+       NODE."BR_EXEMPT_IND"
+FROM NODE_RCRA_HD_HANDLER NODE
+         INNER JOIN ETL_HD_BASIC_VW ETL ON ETL.HD_HBASIC_ID = NODE.HD_HBASIC_ID
+         LEFT OUTER JOIN RCRA_HD_HANDLER WH ON WH.HD_HBASIC_ID = ETL.WH_HD_HBASIC_ID
+    AND WH.ACTIVITY_LOCATION = NODE.ACTIVITY_LOCATION
+    AND WH.SEQ_NUMBER = NODE.SEQ_NUMBER
+    AND WH.SOURCE_TYPE = NODE.SOURCE_TYPE
+    )
+/
+
+create synonym NODE_RCRA_CA_AREA for NODE_FLOW_RCRA.RCRA_CA_AREA
+/
+
+create view ETL_CA_AREA_VW as
+(
+SELECT WH.CA_AREA_ID WH_CA_AREA_ID,
+       ETL.WH_CA_FAC_SUBM_ID,
+       ETL.CA_SUBM_ID,
+       NODE."CA_AREA_ID",
+       NODE."CA_FAC_SUBM_ID",
+       NODE."TRANS_CODE",
+       NODE."AREA_SEQ_NUM",
+       NODE."FAC_WIDE_IND",
+       NODE."AREA_NAME",
+       NODE."AIR_REL_IND",
+       NODE."GROUNDWATER_REL_IND",
+       NODE."SOIL_REL_IND",
+       NODE."SURFACE_WATER_REL_IND",
+       NODE."REGULATED_UNIT_IND",
+       NODE."EPA_RESP_PERSON_DATA_OWNER_CDE",
+       NODE."EPA_RESP_PERSON_ID",
+       NODE."STA_RESP_PERSON_DATA_OWNER_CDE",
+       NODE."STA_RESP_PERSON_ID",
+       NODE."SUPP_INFO_TXT",
+       NODE."CREATED_BY_USERID",
+       NODE."A_CREATED_DATE",
+       NODE."DATA_ORIG",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_CA_AREA NODE
+         INNER JOIN ETL_CA_FAC_SUBM_VW ETL ON ETL.CA_FAC_SUBM_ID = NODE.CA_FAC_SUBM_ID
+         LEFT OUTER JOIN RCRA_CA_AREA WH ON WH.CA_FAC_SUBM_ID = ETL.WH_CA_FAC_SUBM_ID
+    AND WH.AREA_SEQ_NUM = NODE.AREA_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_CME_VIOL for NODE_FLOW_RCRA.RCRA_CME_VIOL
+/
+
+create view ETL_CME_VIOL_VW as
+(
+SELECT WH.CME_VIOL_ID WH_CME_VIOL_ID,
+       ETL.WH_CME_FAC_SUBM_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_VIOL_ID",
+       NODE."CME_FAC_SUBM_ID",
+       NODE."TRANS_CODE",
+       NODE."VIOL_ACT_LOC",
+       NODE."VIOL_SEQ_NUM",
+       NODE."AGN_WHICH_DTRM_VIOL",
+       NODE."VIOL_TYPE_OWNER",
+       NODE."VIOL_TYPE",
+       NODE."FORMER_CITATION_NAME",
+       NODE."VIOL_DTRM_DATE",
+       NODE."RTN_COMPL_ACTL_DATE",
+       NODE."RTN_TO_COMPL_QUAL",
+       NODE."VIOL_RESP_AGN",
+       NODE."NOTES",
+       NODE."CREATED_BY_USERID",
+       NODE."C_CREATED_DATE",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_CME_VIOL NODE
+         JOIN ETL_CME_FAC_SUBM_VW ETL ON ETL.CME_FAC_SUBM_ID = NODE.CME_FAC_SUBM_ID
+         LEFT OUTER JOIN RCRA_CME_VIOL WH ON WH.CME_FAC_SUBM_ID = ETL.WH_CME_FAC_SUBM_ID
+    AND WH.VIOL_SEQ_NUM = NODE.VIOL_SEQ_NUM
+    AND WH.VIOL_ACT_LOC = NODE.VIOL_ACT_LOC
+    AND WH.AGN_WHICH_DTRM_VIOL = NODE.AGN_WHICH_DTRM_VIOL
+    )
+/
+
+create synonym NODE_RCRA_FA_MECHANISM for NODE_FLOW_RCRA.RCRA_FA_MECHANISM
+/
+
+create view ETL_FA_MECHANISM_VW as
+(
+SELECT WH.FA_MECHANISM_ID WH_FA_MECHANISM_ID,
+       ETL.WH_FA_FAC_SUBM_ID,
+       ETL.FA_SUBM_ID,
+       NODE."FA_MECHANISM_ID",
+       NODE."FA_FAC_SUBM_ID",
+       NODE."TRANS_CODE",
+       NODE."ACT_LOC_CODE",
+       NODE."MECHANISM_AGN_CODE",
+       NODE."MECHANISM_SEQ_NUM",
+       NODE."MECHANISM_TYPE_DATA_OWNER_CODE",
+       NODE."MECHANISM_TYPE_CODE",
+       NODE."PROVIDER_TXT",
+       NODE."PROVIDER_FULL_CONTACT_NAME",
+       NODE."TELE_NUM_TXT",
+       NODE."SUPP_INFO_TXT",
+       NODE."CREATED_BY_USERID",
+       NODE."F_CREATED_DATE",
+       NODE."DATA_ORIG",
+       NODE."PROVIDER_CONTACT_EMAIL",
+       NODE."ACTIVE_MECHANISM_IND",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_FA_MECHANISM NODE
+         INNER JOIN ETL_FA_FAC_SUBM_VW ETL ON ETL.FA_FAC_SUBM_ID = NODE.FA_FAC_SUBM_ID
+         LEFT OUTER JOIN RCRA_FA_MECHANISM WH ON WH.FA_FAC_SUBM_ID = ETL.WH_FA_FAC_SUBM_ID
+    AND WH.MECHANISM_SEQ_NUM = NODE.MECHANISM_SEQ_NUM
+    AND WH.MECHANISM_AGN_CODE = NODE.MECHANISM_AGN_CODE
+    )
+/
+
+create synonym NODE_RCRA_FA_COST_EST for NODE_FLOW_RCRA.RCRA_FA_COST_EST
+/
+
+create view ETL_FA_COST_EST_VW as
+(
+SELECT WH.FA_COST_EST_ID WH_FA_COST_EST_ID,
+       ETL.WH_FA_FAC_SUBM_ID,
+       ETL.FA_SUBM_ID,
+       NODE."FA_COST_EST_ID",
+       NODE."FA_FAC_SUBM_ID",
+       NODE."TRANS_CODE",
+       NODE."ACT_LOC_CODE",
+       NODE."COST_ESTIMATE_TYPE_CODE",
+       NODE."COST_ESTIMATE_AGN_CODE",
+       NODE."COST_ESTIMATE_SEQ_NUM",
+       NODE."RESP_PERSON_DATA_OWNER_CODE",
+       NODE."RESP_PERSON_ID",
+       NODE."COST_ESTIMATE_AMOUNT",
+       NODE."COST_ESTIMATE_DATE",
+       NODE."COST_ESTIMATE_RSN_CODE",
+       NODE."AREA_UNIT_NOTES_TXT",
+       NODE."SUPP_INFO_TXT",
+       NODE."CREATED_BY_USERID",
+       NODE."F_CREATED_DATE",
+       NODE."DATA_ORIG",
+       NODE."UPDATE_DUE_DATE",
+       NODE."CURRENT_COST_ESTIMATE_IND",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_FA_COST_EST NODE
+         INNER JOIN ETL_FA_FAC_SUBM_VW ETL ON ETL.FA_FAC_SUBM_ID = NODE.FA_FAC_SUBM_ID
+         LEFT OUTER JOIN RCRA_FA_COST_EST WH
+                         ON WH.FA_FAC_SUBM_ID = ETL.WH_FA_FAC_SUBM_ID
+                             AND WH.ACT_LOC_CODE = NODE.ACT_LOC_CODE
+                             AND WH.COST_ESTIMATE_TYPE_CODE = NODE.COST_ESTIMATE_TYPE_CODE
+                             AND WH.COST_ESTIMATE_AGN_CODE = NODE.COST_ESTIMATE_AGN_CODE
+                             AND WH.COST_ESTIMATE_SEQ_NUM = NODE.COST_ESTIMATE_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_CA_EVENT for NODE_FLOW_RCRA.RCRA_CA_EVENT
+/
+
+create view ETL_CA_EVENT_VW as
+(
+SELECT WH.CA_EVENT_ID WH_CA_EVENT_ID,
+       ETL.WH_CA_FAC_SUBM_ID,
+       ETL.CA_SUBM_ID,
+       NODE."CA_EVENT_ID",
+       NODE."CA_FAC_SUBM_ID",
+       NODE."TRANS_CODE",
+       NODE."ACT_LOC_CODE",
+       NODE."CORCT_ACT_EVENT_DATA_OWNER_CDE",
+       NODE."CORCT_ACT_EVENT_CODE",
+       NODE."EVENT_AGN_CODE",
+       NODE."EVENT_SEQ_NUM",
+       NODE."ACTL_DATE",
+       NODE."ORIGINAL_SCHEDULE_DATE",
+       NODE."NEW_SCHEDULE_DATE",
+       NODE."EVENT_SUBORG_DATA_OWNER_CODE",
+       NODE."EVENT_SUBORG_CODE",
+       NODE."RESP_PERSON_DATA_OWNER_CODE",
+       NODE."RESP_PERSON_ID",
+       NODE."SUPP_INFO_TXT",
+       NODE."PUBLIC_SUPP_INFO_TXT",
+       NODE."CREATED_BY_USERID",
+       NODE."A_CREATED_DATE",
+       NODE."DATA_ORIG",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_CA_EVENT NODE
+         INNER JOIN ETL_CA_FAC_SUBM_VW ETL ON ETL.CA_FAC_SUBM_ID = NODE.CA_FAC_SUBM_ID
+         LEFT OUTER JOIN RCRA_CA_EVENT WH ON WH.CA_FAC_SUBM_ID = ETL.WH_CA_FAC_SUBM_ID
+    AND WH.EVENT_SEQ_NUM = NODE.EVENT_SEQ_NUM
+    AND WH.EVENT_AGN_CODE = NODE.EVENT_AGN_CODE
+    AND WH.CORCT_ACT_EVENT_CODE = NODE.CORCT_ACT_EVENT_CODE
+    )
+/
+
+create synonym NODE_RCRA_CA_AUTHORITY for NODE_FLOW_RCRA.RCRA_CA_AUTHORITY
+/
+
+create view ETL_CA_AUTHORITY_VW as
+(
+SELECT WH.CA_AUTHORITY_ID WH_CA_AUTHORITY_ID,
+       ETL.WH_CA_FAC_SUBM_ID,
+       ETL.CA_SUBM_ID,
+       NODE."CA_AUTHORITY_ID",
+       NODE."CA_FAC_SUBM_ID",
+       NODE."TRANS_CODE",
+       NODE."ACT_LOC_CODE",
+       NODE."AUTHORITY_DATA_OWNER_CODE",
+       NODE."AUTHORITY_TYPE_CODE",
+       NODE."AUTHORITY_AGN_CODE",
+       NODE."AUTHORITY_EFFC_DATE",
+       NODE."ISSUE_DATE",
+       NODE."END_DATE",
+       NODE."ESTABLISHED_REPOSITORY_CODE",
+       NODE."RESP_LEAD_PROG_IDEN",
+       NODE."AUTHORITY_SUBORG_DATA_OWNR_CDE",
+       NODE."AUTHORITY_SUBORG_CODE",
+       NODE."RESP_PERSON_DATA_OWNER_CODE",
+       NODE."RESP_PERSON_ID",
+       NODE."SUPP_INFO_TXT",
+       NODE."CREATED_BY_USERID",
+       NODE."A_CREATED_DATE",
+       NODE."DATA_ORIG",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_CA_AUTHORITY NODE
+         INNER JOIN ETL_CA_FAC_SUBM_VW ETL ON ETL.CA_FAC_SUBM_ID = NODE.CA_FAC_SUBM_ID
+         LEFT OUTER JOIN RCRA_CA_AUTHORITY WH ON WH.CA_FAC_SUBM_ID = ETL.WH_CA_FAC_SUBM_ID
+    AND WH.ACT_LOC_CODE = NODE.ACT_LOC_CODE
+    AND WH.AUTHORITY_AGN_CODE = NODE.AUTHORITY_AGN_CODE
+    AND WH.AUTHORITY_EFFC_DATE = NODE.AUTHORITY_EFFC_DATE
+    AND WH.AUTHORITY_DATA_OWNER_CODE = NODE.AUTHORITY_DATA_OWNER_CODE
+    AND WH.AUTHORITY_TYPE_CODE = NODE.AUTHORITY_TYPE_CODE
+    )
+/
+
+create synonym NODE_RCRA_CME_EVAL for NODE_FLOW_RCRA.RCRA_CME_EVAL
+/
+
+create view ETL_CME_EVAL_VW as
+(
+SELECT WH.CME_EVAL_ID WH_CME_EVAL_ID,
+       ETL.WH_CME_FAC_SUBM_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_EVAL_ID",
+       NODE."CME_FAC_SUBM_ID",
+       NODE."TRANS_CODE",
+       NODE."EVAL_ACT_LOC",
+       NODE."EVAL_IDEN",
+       NODE."EVAL_START_DATE",
+       NODE."EVAL_RESP_AGN",
+       NODE."DAY_ZERO",
+       NODE."FOUND_VIOL",
+       NODE."CTZN_CPLT_IND",
+       NODE."MULTIMEDIA_IND",
+       NODE."SAMPL_IND",
+       NODE."NOT_SUBTL_C_IND",
+       NODE."EVAL_TYPE_OWNER",
+       NODE."EVAL_TYPE",
+       NODE."FOCUS_AREA_OWNER",
+       NODE."FOCUS_AREA",
+       NODE."EVAL_RESP_PERSON_IDEN_OWNER",
+       NODE."EVAL_RESP_PERSON_IDEN",
+       NODE."EVAL_RESP_SUBORG_OWNER",
+       NODE."EVAL_RESP_SUBORG",
+       NODE."NOTES",
+       NODE."NOC_DATE",
+       NODE."CREATED_BY_USERID",
+       NODE."C_CREATED_DATE",
+       NODE."DATA_ORIG",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_CME_EVAL NODE
+         JOIN ETL_CME_FAC_SUBM_VW ETL ON ETL.CME_FAC_SUBM_ID = NODE.CME_FAC_SUBM_ID
+         LEFT OUTER JOIN RCRA_CME_EVAL WH ON WH.CME_FAC_SUBM_ID = ETL.WH_CME_FAC_SUBM_ID
+    AND WH.EVAL_ACT_LOC = NODE.EVAL_ACT_LOC
+    AND WH.EVAL_IDEN = NODE.EVAL_IDEN
+    AND WH.EVAL_RESP_AGN = NODE.EVAL_RESP_AGN
+    AND WH.EVAL_START_DATE = NODE.EVAL_START_DATE
+    )
+/
+
+create synonym NODE_RCRA_CME_ENFRC_ACT for NODE_FLOW_RCRA.RCRA_CME_ENFRC_ACT
+/
+
+create view ETL_CME_ENFRC_ACT_VW as
+(
+SELECT WH.CME_ENFRC_ACT_ID WH_CME_ENFR_ACT_ID,
+       ETL.WH_CME_FAC_SUBM_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_ENFRC_ACT_ID",
+       NODE."CME_FAC_SUBM_ID",
+       NODE."TRANS_CODE",
+       NODE."ENFRC_AGN_LOC_NAME",
+       NODE."ENFRC_ACT_IDEN",
+       NODE."ENFRC_ACT_DATE",
+       NODE."ENFRC_AGN_NAME",
+       NODE."ENFRC_DOCKET_NUM",
+       NODE."ENFRC_ATTRY",
+       NODE."CORCT_ACT_COMPT",
+       NODE."CNST_AGMT_FINAL_ORDER_SEQ_NUM",
+       NODE."APPEAL_INIT_DATE",
+       NODE."APPEAL_RSLN_DATE",
+       NODE."DISP_STAT_DATE",
+       NODE."DISP_STAT_OWNER",
+       NODE."DISP_STAT",
+       NODE."ENFRC_OWNER",
+       NODE."ENFRC_TYPE",
+       NODE."ENFRC_RESP_PERSON_OWNER",
+       NODE."ENFRC_RESP_PERSON_IDEN",
+       NODE."ENFRC_RESP_SUBORG_OWNER",
+       NODE."ENFRC_RESP_SUBORG",
+       NODE."NOTES",
+       NODE."FA_REQUIRED",
+       NODE."CREATED_BY_USERID",
+       NODE."C_CREATED_DATE",
+       NODE."DATA_ORIG",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_CME_ENFRC_ACT NODE
+         INNER JOIN ETL_CME_FAC_SUBM_VW ETL ON ETL.CME_FAC_SUBM_ID = NODE.CME_FAC_SUBM_ID
+         LEFT OUTER JOIN RCRA_CME_ENFRC_ACT WH ON WH.CME_FAC_SUBM_ID = ETL.WH_CME_FAC_SUBM_ID
+    AND WH.ENFRC_ACT_IDEN = NODE.ENFRC_ACT_IDEN
+    AND WH.ENFRC_ACT_DATE = NODE.ENFRC_ACT_DATE
+    AND WH.ENFRC_AGN_NAME = NODE.ENFRC_AGN_NAME
+    )
+/
+
+create synonym NODE_RCRA_CME_CSNY_DATE for NODE_FLOW_RCRA.RCRA_CME_CSNY_DATE
+/
+
+create view ETL_CME_CSNY_DATE_VW as
+(
+SELECT WH.CME_CSNY_DATE_ID WH_CME_CSNY_DATE_ID,
+       ETL.WH_CME_ENFR_ACT_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_CSNY_DATE_ID",
+       NODE."CME_ENFRC_ACT_ID",
+       NODE."TRANS_CODE",
+       NODE."SNY_DATE"
+FROM NODE_RCRA_CME_CSNY_DATE NODE
+         INNER JOIN ETL_CME_ENFRC_ACT_VW ETL ON ETL.CME_ENFRC_ACT_ID = NODE.CME_ENFRC_ACT_ID
+         LEFT OUTER JOIN RCRA_CME_CSNY_DATE WH ON WH.CME_ENFRC_ACT_ID = ETL.WH_CME_ENFR_ACT_ID
+    AND WH.SNY_DATE = NODE.SNY_DATE
+    )
+/
+
+create synonym NODE_RCRA_CME_CITATION for NODE_FLOW_RCRA.RCRA_CME_CITATION
+/
+
+create view ETL_CME_CITATION_VW as
+(
+SELECT WH.CME_CITATION_ID WH_CME_CITATION_ID,
+       ETL.WH_CME_VIOL_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_CITATION_ID",
+       NODE."CME_VIOL_ID",
+       NODE."TRANS_CODE",
+       NODE."CITATION_NAME_SEQ_NUM",
+       NODE."CITATION_NAME",
+       NODE."CITATION_NAME_OWNER",
+       NODE."CITATION_NAME_TYPE",
+       NODE."NOTES"
+FROM NODE_RCRA_CME_CITATION NODE
+         INNER JOIN ETL_CME_VIOL_VW ETL ON ETL.CME_VIOL_ID = NODE.CME_VIOL_ID
+         LEFT OUTER JOIN RCRA_CME_CITATION WH ON WH.CME_VIOL_ID = ETL.WH_CME_VIOL_ID
+    AND WH.CITATION_NAME_SEQ_NUM = NODE.CITATION_NAME_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_CA_EVENT_COMMITMENT for NODE_FLOW_RCRA.RCRA_CA_EVENT_COMMITMENT
+/
+
+create view ETL_CA_EVENT_COMMITMENT_VW as
+(
+SELECT WH.CA_EVENT_COMMITMENT_ID WH_CA_EVENT_COMMITMENT_ID,
+       ETL.WH_CA_EVENT_ID,
+       ETL.CA_SUBM_ID,
+       NODE."CA_EVENT_COMMITMENT_ID",
+       NODE."CA_EVENT_ID",
+       NODE."TRANS_CODE",
+       NODE."COMMIT_LEAD",
+       NODE."COMMIT_SEQ_NUM"
+FROM NODE_RCRA_CA_EVENT_COMMITMENT NODE
+         INNER JOIN ETL_CA_EVENT_VW ETL ON ETL.CA_EVENT_ID = NODE.CA_EVENT_ID
+         LEFT OUTER JOIN RCRA_CA_EVENT_COMMITMENT WH ON WH.CA_EVENT_ID = ETL.WH_CA_EVENT_ID
+    AND WH.COMMIT_SEQ_NUM = NODE.COMMIT_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_CA_AUTH_REL_EVENT for NODE_FLOW_RCRA.RCRA_CA_AUTH_REL_EVENT
+/
+
+create view ETL_CA_AUTH_REL_EVENT_VW as
+(
+SELECT WH.CA_AUTH_REL_EVENT_ID WH_CA_AUTH_REL_EVENT_ID,
+       ETL.WH_CA_AUTHORITY_ID,
+       ETL.CA_SUBM_ID,
+       NODE."CA_AUTH_REL_EVENT_ID",
+       NODE."CA_AUTHORITY_ID",
+       NODE."TRANS_CODE",
+       NODE."ACT_LOC_CODE",
+       NODE."CORCT_ACT_EVENT_DATA_OWNER_CDE",
+       NODE."CORCT_ACT_EVENT_CODE",
+       NODE."EVENT_AGN_CODE",
+       NODE."EVENT_SEQ_NUM"
+FROM NODE_RCRA_CA_AUTH_REL_EVENT NODE
+         INNER JOIN ETL_CA_AUTHORITY_VW ETL ON ETL.CA_AUTHORITY_ID = NODE.CA_AUTHORITY_ID
+         LEFT OUTER JOIN RCRA_CA_AUTH_REL_EVENT WH ON WH.CA_AUTHORITY_ID = ETL.WH_CA_AUTHORITY_ID
+    AND
+                                                      WH.CORCT_ACT_EVENT_DATA_OWNER_CDE = NODE.CORCT_ACT_EVENT_DATA_OWNER_CDE
+    AND WH.CORCT_ACT_EVENT_CODE = NODE.CORCT_ACT_EVENT_CODE
+    AND WH.EVENT_AGN_CODE = NODE.EVENT_AGN_CODE
+    AND WH.EVENT_SEQ_NUM = NODE.EVENT_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_CA_AREA_REL_EVENT for NODE_FLOW_RCRA.RCRA_CA_AREA_REL_EVENT
+/
+
+create view ETL_CA_AREA_REL_EVENT_VW as
+(
+SELECT WH.CA_AREA_REL_EVENT_ID WH_CA_AREA_REL_EVENT_ID,
+       ETL.WH_CA_AREA_ID,
+       ETL.CA_SUBM_ID,
+       NODE."CA_AREA_REL_EVENT_ID",
+       NODE."CA_AREA_ID",
+       NODE."TRANS_CODE",
+       NODE."ACT_LOC_CODE",
+       NODE."CORCT_ACT_EVENT_DATA_OWNER_CDE",
+       NODE."CORCT_ACT_EVENT_CODE",
+       NODE."EVENT_AGN_CODE",
+       NODE."EVENT_SEQ_NUM"
+FROM NODE_RCRA_CA_AREA_REL_EVENT NODE
+         INNER JOIN ETL_CA_AREA_VW ETL ON ETL.CA_AREA_ID = NODE.CA_AREA_ID
+         LEFT OUTER JOIN RCRA_CA_AREA_REL_EVENT WH ON WH.CA_AREA_ID = ETL.WH_CA_AREA_ID
+    AND
+                                                      WH.CORCT_ACT_EVENT_DATA_OWNER_CDE = NODE.CORCT_ACT_EVENT_DATA_OWNER_CDE
+    AND WH.CORCT_ACT_EVENT_CODE = NODE.CORCT_ACT_EVENT_CODE
+    AND WH.EVENT_AGN_CODE = NODE.EVENT_AGN_CODE
+    AND WH.EVENT_SEQ_NUM = NODE.EVENT_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_CME_EVAL_VIOL for NODE_FLOW_RCRA.RCRA_CME_EVAL_VIOL
+/
+
+create view ETL_CME_EVAL_VIOL_VW as
+(
+SELECT WH.CME_EVAL_VIOL_ID WH_CME_EVAL_VIOL_ID,
+       ETL.WH_CME_EVAL_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_EVAL_VIOL_ID",
+       NODE."CME_EVAL_ID",
+       NODE."TRANS_CODE",
+       NODE."VIOL_ACT_LOC",
+       NODE."VIOL_SEQ_NUM",
+       NODE."AGN_WHICH_DTRM_VIOL"
+FROM NODE_RCRA_CME_EVAL_VIOL NODE
+         INNER JOIN ETL_CME_EVAL_VW ETL ON ETL.CME_EVAL_ID = NODE.CME_EVAL_ID
+         LEFT OUTER JOIN RCRA_CME_EVAL_VIOL WH ON WH.CME_EVAL_ID = ETL.WH_CME_EVAL_ID
+    AND WH.VIOL_ACT_LOC = NODE.VIOL_ACT_LOC
+    AND WH.VIOL_SEQ_NUM = NODE.VIOL_SEQ_NUM
+    AND WH.AGN_WHICH_DTRM_VIOL = NODE.AGN_WHICH_DTRM_VIOL
+    )
+/
+
+create synonym NODE_RCRA_CME_EVAL_COMMIT for NODE_FLOW_RCRA.RCRA_CME_EVAL_COMMIT
+/
+
+create view ETL_CME_EVAL_COMMIT_VW as
+(
+SELECT WH.CME_EVAL_COMMIT_ID WH_CME_EVAL_COMMIT_ID,
+       ETL.WH_CME_EVAL_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_EVAL_COMMIT_ID",
+       NODE."CME_EVAL_ID",
+       NODE."TRANS_CODE",
+       NODE."COMMIT_LEAD",
+       NODE."COMMIT_SEQ_NUM"
+FROM NODE_RCRA_CME_EVAL_COMMIT NODE
+         INNER JOIN ETL_CME_EVAL_VW ETL ON ETL.CME_EVAL_ID = NODE.CME_EVAL_ID
+         LEFT OUTER JOIN RCRA_CME_EVAL_COMMIT WH ON WH.CME_EVAL_ID = ETL.WH_CME_EVAL_ID
+    AND WH.COMMIT_SEQ_NUM = NODE.COMMIT_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_CA_REL_PERMIT_UNIT for NODE_FLOW_RCRA.RCRA_CA_REL_PERMIT_UNIT
+/
+
+create view ETL_CA_REL_PERMIT_UNIT_VW as
+(
+SELECT WH.CA_REL_PERMIT_UNIT_ID WH_CA_REL_PERMIT_UNIT_ID,
+       ETL.WH_CA_AREA_ID,
+       ETL.CA_SUBM_ID,
+       NODE."CA_REL_PERMIT_UNIT_ID",
+       NODE."CA_AREA_ID",
+       NODE."TRANS_CODE",
+       NODE."PERMIT_UNIT_SEQ_NUM"
+FROM NODE_RCRA_CA_REL_PERMIT_UNIT NODE
+         INNER JOIN ETL_CA_AREA_VW ETL ON ETL.CA_AREA_ID = NODE.CA_AREA_ID
+         LEFT OUTER JOIN RCRA_CA_REL_PERMIT_UNIT WH ON WH.CA_AREA_ID = ETL.WH_CA_AREA_ID
+    AND WH.PERMIT_UNIT_SEQ_NUM = NODE.PERMIT_UNIT_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_CME_PNLTY for NODE_FLOW_RCRA.RCRA_CME_PNLTY
+/
+
+create view ETL_CME_PNLTY_VW as
+(
+SELECT WH.CME_PNLTY_ID WH_CME_PNLTY_ID,
+       ETL.WH_CME_ENFR_ACT_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_PNLTY_ID",
+       NODE."CME_ENFRC_ACT_ID",
+       NODE."TRANS_CODE",
+       NODE."PNLTY_TYPE_OWNER",
+       NODE."PNLTY_TYPE",
+       NODE."CASH_CIVIL_PNLTY_SOUGHT_AMOUNT",
+       NODE."NOTES"
+FROM NODE_RCRA_CME_PNLTY NODE
+         INNER JOIN ETL_CME_ENFRC_ACT_VW ETL ON ETL.CME_ENFRC_ACT_ID = NODE.CME_ENFRC_ACT_ID
+         LEFT OUTER JOIN RCRA_CME_PNLTY WH ON WH.CME_ENFRC_ACT_ID = ETL.WH_CME_ENFR_ACT_ID
+    AND WH.PNLTY_TYPE_OWNER = NODE.PNLTY_TYPE_OWNER
+    AND WH.PNLTY_TYPE = NODE.PNLTY_TYPE
+    )
+/
+
+create synonym NODE_RCRA_CME_MILESTONE for NODE_FLOW_RCRA.RCRA_CME_MILESTONE
+/
+
+create view ETL_CME_MILESTONE_VW as
+(
+SELECT WH.CME_MILESTONE_ID WH_CME_MILESTONE_ID,
+       ETL.WH_CME_ENFR_ACT_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_MILESTONE_ID",
+       NODE."CME_ENFRC_ACT_ID",
+       NODE."TRANS_CODE",
+       NODE."MILESTONE_SEQ_NUM",
+       NODE."TECH_RQMT_IDEN",
+       NODE."TECH_RQMT_DESC",
+       NODE."MILESTONE_SCHD_COMP_DATE",
+       NODE."MILESTONE_ACTL_COMP_DATE",
+       NODE."MILESTONE_DFLT_DATE",
+       NODE."NOTES"
+FROM NODE_RCRA_CME_MILESTONE NODE
+         INNER JOIN ETL_CME_ENFRC_ACT_VW ETL ON ETL.CME_ENFRC_ACT_ID = NODE.CME_ENFRC_ACT_ID
+         LEFT OUTER JOIN RCRA_CME_MILESTONE WH ON WH.CME_ENFRC_ACT_ID = ETL.WH_CME_ENFR_ACT_ID
+    AND WH.MILESTONE_SEQ_NUM = NODE.MILESTONE_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_CME_MEDIA for NODE_FLOW_RCRA.RCRA_CME_MEDIA
+/
+
+create view ETL_CME_MEDIA_VW as
+(
+SELECT WH.CME_MEDIA_ID WH_CME_MEDIA_ID,
+       ETL.WH_CME_ENFR_ACT_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_MEDIA_ID",
+       NODE."CME_ENFRC_ACT_ID",
+       NODE."TRANS_CODE",
+       NODE."MULTIMEDIA_CODE_OWNER",
+       NODE."MULTIMEDIA_CODE",
+       NODE."NOTES"
+FROM NODE_RCRA_CME_MEDIA NODE
+         INNER JOIN ETL_CME_ENFRC_ACT_VW ETL ON ETL.CME_ENFRC_ACT_ID = NODE.CME_ENFRC_ACT_ID
+         LEFT OUTER JOIN RCRA_CME_MEDIA WH ON WH.CME_ENFRC_ACT_ID = ETL.WH_CME_ENFR_ACT_ID
+    AND WH.MULTIMEDIA_CODE_OWNER = NODE.MULTIMEDIA_CODE_OWNER
+    AND WH.MULTIMEDIA_CODE = NODE.MULTIMEDIA_CODE
+    )
+/
+
+create synonym NODE_RCRA_CME_RQST for NODE_FLOW_RCRA.RCRA_CME_RQST
+/
+
+create view ETL_CME_RQST_VW as
+(
+SELECT WH.CME_RQST_ID WH_CME_RQST_ID,
+       ETL.WH_CME_EVAL_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_RQST_ID",
+       NODE."CME_EVAL_ID",
+       NODE."TRANS_CODE",
+       NODE."RQST_SEQ_NUM",
+       NODE."DATE_OF_RQST",
+       NODE."DATE_RESP_RCVD",
+       NODE."RQST_AGN",
+       NODE."NOTES"
+FROM NODE_RCRA_CME_RQST NODE
+         INNER JOIN ETL_CME_EVAL_VW ETL ON ETL.CME_EVAL_ID = NODE.CME_EVAL_ID
+         LEFT OUTER JOIN RCRA_CME_RQST WH ON WH.CME_EVAL_ID = ETL.WH_CME_EVAL_ID
+    AND WH.RQST_SEQ_NUM = NODE.RQST_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_FA_MECHANISM_DETAIL for NODE_FLOW_RCRA.RCRA_FA_MECHANISM_DETAIL
+/
+
+create view ETL_FA_MECHANISM_DETAIL_VW as
+(
+SELECT WH.FA_MECHANISM_DETAIL_ID WH_FA_MECHANISM_DETAIL_ID,
+       ETL.WH_FA_MECHANISM_ID,
+       ETL.FA_SUBM_ID,
+       NODE."FA_MECHANISM_DETAIL_ID",
+       NODE."FA_MECHANISM_ID",
+       NODE."TRANS_CODE",
+       NODE."MECHANISM_DETAIL_SEQ_NUM",
+       NODE."MECHANISM_IDEN_TXT",
+       NODE."FACE_VAL_AMOUNT",
+       NODE."EFFC_DATE",
+       NODE."EXPIRATION_DATE",
+       NODE."SUPP_INFO_TXT",
+       NODE."CURRENT_MECHANISM_DETAIL_IND",
+       NODE."CREATED_BY_USERID",
+       NODE."F_CREATED_DATE",
+       NODE."DATA_ORIG",
+       NODE."FAC_FACE_VAL_AMOUNT",
+       NODE."ALT_IND",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_FA_MECHANISM_DETAIL NODE
+         INNER JOIN ETL_FA_MECHANISM_VW ETL ON ETL.FA_MECHANISM_ID = NODE.FA_MECHANISM_ID
+         LEFT OUTER JOIN RCRA_FA_MECHANISM_DETAIL WH ON WH.FA_MECHANISM_ID = ETL.WH_FA_MECHANISM_ID
+    AND WH.MECHANISM_DETAIL_SEQ_NUM = NODE.MECHANISM_DETAIL_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_CME_VIOL_ENFRC for NODE_FLOW_RCRA.RCRA_CME_VIOL_ENFRC
+/
+
+create view ETL_CME_VIOL_ENFRC_VW as
+(
+SELECT WH.CME_VIOL_ENFRC_ID WH_CME_VIOL_ENFRC_ID,
+       ETL.WH_CME_ENFR_ACT_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_VIOL_ENFRC_ID",
+       NODE."CME_ENFRC_ACT_ID",
+       NODE."TRANS_CODE",
+       NODE."VIOL_SEQ_NUM",
+       NODE."AGN_WHICH_DTRM_VIOL",
+       NODE."RTN_COMPL_SCHD_DATE"
+FROM NODE_RCRA_CME_VIOL_ENFRC NODE
+         INNER JOIN ETL_CME_ENFRC_ACT_VW ETL ON ETL.CME_ENFRC_ACT_ID = NODE.CME_ENFRC_ACT_ID
+         LEFT OUTER JOIN RCRA_CME_VIOL_ENFRC WH ON WH.CME_ENFRC_ACT_ID = ETL.WH_CME_ENFR_ACT_ID
+    AND WH.VIOL_SEQ_NUM = NODE.VIOL_SEQ_NUM
+    AND WH.AGN_WHICH_DTRM_VIOL = NODE.AGN_WHICH_DTRM_VIOL
+    )
+/
+
+create synonym NODE_RCRA_CME_SUPP_ENVR_PRJT for NODE_FLOW_RCRA.RCRA_CME_SUPP_ENVR_PRJT
+/
+
+create view ETL_CME_SUPP_ENVR_PRJT_VW as
+(
+SELECT WH.CME_SUPP_ENVR_PRJT_ID WH_CME_SUPP_ENVR_PRJT_ID,
+       ETL.WH_CME_ENFR_ACT_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_SUPP_ENVR_PRJT_ID",
+       NODE."CME_ENFRC_ACT_ID",
+       NODE."TRANS_CODE",
+       NODE."SEP_SEQ_NUM",
+       NODE."SEP_EXPND_AMOUNT",
+       NODE."SEP_SCHD_COMP_DATE",
+       NODE."SEP_ACTL_DATE",
+       NODE."SEP_DFLT_DATE",
+       NODE."SEP_CODE_OWNER",
+       NODE."SEP_DESC_TXT",
+       NODE."NOTES"
+FROM NODE_RCRA_CME_SUPP_ENVR_PRJT NODE
+         INNER JOIN ETL_CME_ENFRC_ACT_VW ETL ON ETL.CME_ENFRC_ACT_ID = NODE.CME_ENFRC_ACT_ID
+         LEFT OUTER JOIN RCRA_CME_SUPP_ENVR_PRJT WH ON WH.CME_ENFRC_ACT_ID = ETL.WH_CME_ENFR_ACT_ID
+    AND WH.SEP_SEQ_NUM = NODE.SEP_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_HD_ENV_PERMIT for NODE_FLOW_RCRA.RCRA_HD_ENV_PERMIT
+/
+
+create view ETL_HD_ENV_PERMIT_VW as
+(
+SELECT WH.HD_ENV_PERMIT_ID WH_HD_ENV_PERMIT_ID,
+       ETL.WH_HD_HANDLER_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_ENV_PERMIT_ID",
+       NODE."HD_HANDLER_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."ENV_PERMIT_NUMBER",
+       NODE."ENV_PERMIT_OWNER",
+       NODE."ENV_PERMIT_TYPE",
+       NODE."ENV_PERMIT_DESC"
+FROM NODE_RCRA_HD_ENV_PERMIT NODE
+         INNER JOIN ETL_HD_HANDLER_ID_VW ETL ON ETL.HD_HANDLER_ID = NODE.HD_HANDLER_ID
+         LEFT OUTER JOIN RCRA_HD_ENV_PERMIT WH ON WH.HD_HANDLER_ID = ETL.WH_HD_HANDLER_ID
+    AND WH.ENV_PERMIT_NUMBER = NODE.ENV_PERMIT_NUMBER
+    )
+/
+
+create synonym NODE_RCRA_HD_CERTIFICATION for NODE_FLOW_RCRA.RCRA_HD_CERTIFICATION
+/
+
+create view ETL_HD_CERT_VW as
+(
+SELECT WH.HD_CERTIFICATION_ID WH_HD_CERTIFICATION_ID,
+       ETL.WH_HD_HANDLER_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_CERTIFICATION_ID",
+       NODE."HD_HANDLER_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."CERT_SEQ",
+       NODE."CERT_SIGNED_DATE",
+       NODE."CERT_TITLE",
+       NODE."CERT_FIRST_NAME",
+       NODE."CERT_MIDDLE_INITIAL",
+       NODE."CERT_LAST_NAME",
+       NODE."CERT_EMAIL_TEXT"
+FROM NODE_RCRA_HD_CERTIFICATION NODE
+         INNER JOIN ETL_HD_HANDLER_ID_VW ETL ON ETL.HD_HANDLER_ID = NODE.HD_HANDLER_ID
+         LEFT OUTER JOIN RCRA_HD_CERTIFICATION WH ON WH.HD_HANDLER_ID = ETL.WH_HD_HANDLER_ID
+    AND WH.CERT_SEQ = NODE.CERT_SEQ
+    )
+/
+
+create synonym NODE_RCRA_HD_NAICS for NODE_FLOW_RCRA.RCRA_HD_NAICS
+/
+
+create view ETL_HD_NAICS_VW as
+(
+SELECT WH.HD_NAICS_ID WH_HD_NAICS_ID,
+       ETL.WH_HD_HANDLER_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_NAICS_ID",
+       NODE."HD_HANDLER_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."NAICS_SEQ",
+       NODE."NAICS_OWNER",
+       NODE."NAICS_CODE"
+FROM NODE_RCRA_HD_NAICS NODE
+         INNER JOIN ETL_HD_HANDLER_ID_VW ETL ON ETL.HD_HANDLER_ID = NODE.HD_HANDLER_ID
+         LEFT OUTER JOIN RCRA_HD_NAICS WH ON WH.HD_HANDLER_ID = ETL.WH_HD_HANDLER_ID
+    AND WH.NAICS_SEQ = NODE.NAICS_SEQ
+    )
+/
+
+create synonym NODE_RCRA_HD_STATE_ACTIVITY for NODE_FLOW_RCRA.RCRA_HD_STATE_ACTIVITY
+/
+
+create view ETL_HD_STATE_ACT_VW as
+(
+SELECT WH.HD_STATE_ACTIVITY_ID WH_HD_STATE_ACTIVITY_ID,
+       ETL.WH_HD_HANDLER_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_STATE_ACTIVITY_ID",
+       NODE."HD_HANDLER_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."STATE_ACTIVITY_OWNER",
+       NODE."STATE_ACTIVITY_TYPE"
+FROM NODE_RCRA_HD_STATE_ACTIVITY NODE
+         INNER JOIN ETL_HD_HANDLER_ID_VW ETL ON ETL.HD_HANDLER_ID = NODE.HD_HANDLER_ID
+         LEFT OUTER JOIN RCRA_HD_STATE_ACTIVITY WH ON WH.HD_HANDLER_ID = ETL.WH_HD_HANDLER_ID
+    AND WH.STATE_ACTIVITY_OWNER = NODE.STATE_ACTIVITY_OWNER
+    AND WH.STATE_ACTIVITY_TYPE = NODE.STATE_ACTIVITY_TYPE
+    )
+/
+
+create synonym NODE_RCRA_PRM_EVENT for NODE_FLOW_RCRA.RCRA_PRM_EVENT
+/
+
+create view ETL_PRM_EVENT_VW as
+(
+SELECT WH.PRM_EVENT_ID WH_PRM_EVENT_ID,
+       ETL.WH_PRM_SERIES_ID,
+       ETL.PRM_SUBM_ID,
+       NODE."PRM_EVENT_ID",
+       NODE."PRM_SERIES_ID",
+       NODE."TRANS_CODE",
+       NODE."ACT_LOC_CODE",
+       NODE."PERMIT_EVENT_DATA_OWNER_CODE",
+       NODE."PERMIT_EVENT_CODE",
+       NODE."EVENT_AGN_CODE",
+       NODE."EVENT_SEQ_NUM",
+       NODE."ACTL_DATE",
+       NODE."ORIGINAL_SCHEDULE_DATE",
+       NODE."NEW_SCHEDULE_DATE",
+       NODE."RESP_PERSON_DATA_OWNER_CODE",
+       NODE."RESP_PERSON_ID",
+       NODE."EVENT_SUBORG_DATA_OWNER_CODE",
+       NODE."EVENT_SUBORG_CODE",
+       NODE."SUPP_INFO_TXT",
+       NODE."CREATED_BY_USERID",
+       NODE."P_CREATED_DATE",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_PRM_EVENT NODE
+         INNER JOIN ETL_PRM_SERIES_VW ETL ON ETL.PRM_SERIES_ID = NODE.PRM_SERIES_ID
+         LEFT OUTER JOIN RCRA_PRM_EVENT WH ON WH.PRM_SERIES_ID = ETL.WH_PRM_SERIES_ID
+    AND WH.EVENT_SEQ_NUM = NODE.EVENT_SEQ_NUM
+    AND WH.PERMIT_EVENT_CODE = NODE.PERMIT_EVENT_CODE
+    )
+/
+
+create synonym NODE_RCRA_HD_WASTE_CODE for NODE_FLOW_RCRA.RCRA_HD_WASTE_CODE
+/
+
+create view ETL_HD_WASTE_CODE_VW as
+(
+SELECT WH.HD_WASTE_CODE_ID WH_HD_WASTE_CODE_ID,
+       ETL.WH_HD_HANDLER_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_WASTE_CODE_ID",
+       NODE."HD_HANDLER_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."WASTE_CODE_OWNER",
+       NODE."WASTE_CODE_TYPE"
+FROM NODE_RCRA_HD_WASTE_CODE NODE
+         INNER JOIN ETL_HD_HANDLER_ID_VW ETL ON ETL.HD_HANDLER_ID = NODE.HD_HANDLER_ID
+         LEFT OUTER JOIN RCRA_HD_WASTE_CODE WH ON WH.HD_HANDLER_ID = ETL.WH_HD_HANDLER_ID
+    AND WH.WASTE_CODE_OWNER = NODE.WASTE_CODE_OWNER
+    AND WH.WASTE_CODE_TYPE = NODE.WASTE_CODE_TYPE
+    )
+/
+
+create synonym NODE_RCRA_HD_UNIVERSAL_WASTE for NODE_FLOW_RCRA.RCRA_HD_UNIVERSAL_WASTE
+/
+
+create view ETL_HD_UNIV_WASTE_VW as
+(
+SELECT WH.HD_UNIVERSAL_WASTE_ID WH_HD_UNIVERSAL_WASTE_ID,
+       ETL.WH_HD_HANDLER_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_UNIVERSAL_WASTE_ID",
+       NODE."HD_HANDLER_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."UNIVERSAL_WASTE_OWNER",
+       NODE."UNIVERSAL_WASTE_TYPE",
+       NODE."ACCUMULATED",
+       NODE."GENERATED"
+FROM NODE_RCRA_HD_UNIVERSAL_WASTE NODE
+         INNER JOIN ETL_HD_HANDLER_ID_VW ETL ON ETL.HD_HANDLER_ID = NODE.HD_HANDLER_ID
+         LEFT OUTER JOIN RCRA_HD_UNIVERSAL_WASTE WH
+                         ON WH.HD_HANDLER_ID = ETL.WH_HD_HANDLER_ID
+                             AND WH.UNIVERSAL_WASTE_OWNER = NODE.UNIVERSAL_WASTE_OWNER
+                             AND WH.UNIVERSAL_WASTE_TYPE = NODE.UNIVERSAL_WASTE_TYPE
+    )
+/
+
+create synonym NODE_RCRA_HD_OWNEROP for NODE_FLOW_RCRA.RCRA_HD_OWNEROP
+/
+
+create view ETL_HD_OWNEROP_VW as
+(
+SELECT WH.HD_OWNEROP_ID WH_HD_OWNEROP_ID,
+       ETL.WH_HD_HANDLER_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_OWNEROP_ID",
+       NODE."HD_HANDLER_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."OWNER_OP_SEQ",
+       NODE."OWNER_OP_IND",
+       NODE."OWNER_OP_TYPE",
+       NODE."DATE_BECAME_CURRENT",
+       NODE."DATE_ENDED_CURRENT",
+       NODE."NOTES",
+       NODE."FIRST_NAME",
+       NODE."MIDDLE_INITIAL",
+       NODE."LAST_NAME",
+       NODE."ORG_NAME",
+       NODE."TITLE",
+       NODE."EMAIL_ADDRESS",
+       NODE."PHONE",
+       NODE."PHONE_EXT",
+       NODE."FAX",
+       NODE."MAIL_ADDR_NUM_TXT",
+       NODE."STREET1",
+       NODE."STREET2",
+       NODE."CITY",
+       NODE."STATE",
+       NODE."COUNTRY",
+       NODE."ZIP"
+FROM NODE_RCRA_HD_OWNEROP NODE
+         INNER JOIN ETL_HD_HANDLER_VW ETL ON ETL.HD_HANDLER_ID = NODE.HD_HANDLER_ID
+         LEFT OUTER JOIN RCRA_HD_OWNEROP WH ON WH.HD_HANDLER_ID = ETL.WH_HD_HANDLER_ID
+    AND WH.OWNER_OP_SEQ = NODE.OWNER_OP_SEQ
+    )
+/
+
+create synonym NODE_RCRA_PRM_UNIT_DETAIL for NODE_FLOW_RCRA.RCRA_PRM_UNIT_DETAIL
+/
+
+create view ETL_PRM_UNIT_DETAIL_VW as
+(
+SELECT WH.PRM_UNIT_DETAIL_ID WH_PRM_UNIT_DETAIL_ID,
+       ETL.WH_PRM_UNIT_ID,
+       ETL.PRM_SUBM_ID,
+       NODE."PRM_UNIT_DETAIL_ID",
+       NODE."PRM_UNIT_ID",
+       NODE."TRANS_CODE",
+       NODE."PERMIT_UNIT_DETAIL_SEQ_NUM",
+       NODE."PROC_UNIT_DATA_OWNER_CODE",
+       NODE."PROC_UNIT_CODE",
+       NODE."PERMIT_STAT_EFFC_DATE",
+       NODE."PERMIT_UNIT_CAP_QNTY",
+       NODE."CAP_TYPE_CODE",
+       NODE."COMMER_STAT_CODE",
+       NODE."LEGAL_OPER_STAT_DATA_OWNER_CDE",
+       NODE."LEGAL_OPER_STAT_CODE",
+       NODE."MEASUREMENT_UNIT_DATA_OWNR_CDE",
+       NODE."MEASUREMENT_UNIT_CODE",
+       NODE."NUM_OF_UNITS_COUNT",
+       NODE."STANDARD_PERMIT_IND",
+       NODE."SUPP_INFO_TXT",
+       NODE."CURRENT_UNIT_DETAIL_IND",
+       NODE."CREATED_BY_USERID",
+       NODE."P_CREATED_DATE",
+       NODE."LAST_UPDT_BY",
+       NODE."LAST_UPDT_DATE"
+FROM NODE_RCRA_PRM_UNIT_DETAIL NODE
+         INNER JOIN ETL_PRM_UNIT_VW ETL ON ETL.PRM_UNIT_ID = NODE.PRM_UNIT_ID
+         LEFT OUTER JOIN RCRA_PRM_UNIT_DETAIL WH ON WH.PRM_UNIT_ID = ETL.WH_PRM_UNIT_ID
+    AND WH.PERMIT_UNIT_DETAIL_SEQ_NUM = NODE.PERMIT_UNIT_DETAIL_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_PRM_WASTE_CODE for NODE_FLOW_RCRA.RCRA_PRM_WASTE_CODE
+/
+
+create view ETL_PRM_WASTE_CODE_VW as
+(
+SELECT WH.PRM_WASTE_CODE_ID WH_PRM_WASTE_CODE_ID,
+       ETL.WH_PRM_UNIT_DETAIL_ID,
+       ETL.PRM_SUBM_ID,
+       NODE."PRM_WASTE_CODE_ID",
+       NODE."PRM_UNIT_DETAIL_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."WASTE_CODE_OWNER",
+       NODE."WASTE_CODE_TYPE"
+FROM NODE_RCRA_PRM_WASTE_CODE NODE
+         INNER JOIN ETL_PRM_UNIT_DETAIL_VW ETL ON ETL.PRM_UNIT_DETAIL_ID = NODE.PRM_UNIT_DETAIL_ID
+         LEFT OUTER JOIN RCRA_PRM_WASTE_CODE WH ON WH.PRM_UNIT_DETAIL_ID = ETL.WH_PRM_UNIT_DETAIL_ID
+    AND WH.WASTE_CODE_OWNER = NODE.WASTE_CODE_OWNER
+    AND WH.WASTE_CODE_TYPE = NODE.WASTE_CODE_TYPE
+    )
+/
+
+create synonym NODE_RCRA_PRM_RELATED_EVENT for NODE_FLOW_RCRA.RCRA_PRM_RELATED_EVENT
+/
+
+create view ETL_PRM_REL_EVENT_VW as
+(
+SELECT WH.PRM_RELATED_EVENT_ID WH_PRM_RELATED_EVENT_ID,
+       ETL.WH_PRM_UNIT_DETAIL_ID,
+       ETL.PRM_SUBM_ID,
+       NODE."PRM_RELATED_EVENT_ID",
+       NODE."PRM_UNIT_DETAIL_ID",
+       NODE."TRANS_CODE",
+       NODE."ACT_LOC_CODE",
+       NODE."PERMIT_SERIES_SEQ_NUM",
+       NODE."PERMIT_EVENT_DATA_OWNER_CODE",
+       NODE."PERMIT_EVENT_CODE",
+       NODE."EVENT_AGN_CODE",
+       NODE."EVENT_SEQ_NUM"
+FROM NODE_RCRA_PRM_RELATED_EVENT NODE
+         INNER JOIN ETL_PRM_UNIT_DETAIL_VW ETL ON ETL.PRM_UNIT_DETAIL_ID = NODE.PRM_UNIT_DETAIL_ID
+         LEFT OUTER JOIN RCRA_PRM_RELATED_EVENT WH ON WH.PRM_UNIT_DETAIL_ID = ETL.WH_PRM_UNIT_DETAIL_ID
+    AND WH.EVENT_SEQ_NUM = NODE.EVENT_SEQ_NUM
+    AND WH.PERMIT_EVENT_CODE = NODE.PERMIT_EVENT_CODE
+    AND WH.PERMIT_SERIES_SEQ_NUM = NODE.PERMIT_SERIES_SEQ_NUM
+    AND WH.EVENT_AGN_CODE = NODE.EVENT_AGN_CODE
+    )
+/
+
+create synonym NODE_RCRA_PRM_EVENT_COMMITMENT for NODE_FLOW_RCRA.RCRA_PRM_EVENT_COMMITMENT
+/
+
+create view ETL_PRM_EVENT_COMM_VW as
+(
+SELECT WH.PRM_EVENT_COMMITMENT_ID WH_PRM_EVENT_COMMITMENT_ID,
+       ETL.WH_PRM_EVENT_ID,
+       ETL.PRM_SUBM_ID,
+       NODE."PRM_EVENT_COMMITMENT_ID",
+       NODE."PRM_EVENT_ID",
+       NODE."TRANS_CODE",
+       NODE."COMMIT_LEAD",
+       NODE."COMMIT_SEQ_NUM"
+FROM NODE_RCRA_PRM_EVENT_COMMITMENT NODE
+         INNER JOIN ETL_PRM_EVENT_VW ETL ON ETL.PRM_EVENT_ID = NODE.PRM_EVENT_ID
+         LEFT OUTER JOIN RCRA_PRM_EVENT_COMMITMENT WH ON WH.PRM_EVENT_ID = ETL.WH_PRM_EVENT_ID
+    AND WH.COMMIT_SEQ_NUM = NODE.COMMIT_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_HD_SEC_WASTE_CODE for NODE_FLOW_RCRA.RCRA_HD_SEC_WASTE_CODE
+/
+
+create synonym NODE_RCRA_CME_PYMT for NODE_FLOW_RCRA.RCRA_CME_PYMT
+/
+
+create view ETL_CME_PYMT_VW as
+(
+SELECT WH.CME_PYMT_ID WH_CME_PYMT_ID,
+       ETL.WH_CME_PNLTY_ID,
+       ETL.CME_SUBM_ID,
+       NODE."CME_PYMT_ID",
+       NODE."CME_PNLTY_ID",
+       NODE."TRANS_CODE",
+       NODE."PYMT_SEQ_NUM",
+       NODE."PYMT_DFLT_DATE",
+       NODE."SCHD_PYMT_DATE",
+       NODE."SCHD_PYMT_AMOUNT",
+       NODE."ACTL_PYMT_DATE",
+       NODE."ACTL_PAID_AMOUNT",
+       NODE."NOTES"
+FROM NODE_RCRA_CME_PYMT NODE
+         INNER JOIN ETL_CME_PNLTY_VW ETL ON ETL.CME_PNLTY_ID = NODE.CME_PNLTY_ID
+         LEFT OUTER JOIN RCRA_CME_PYMT WH ON WH.CME_PNLTY_ID = ETL.WH_CME_PNLTY_ID
+    AND WH.PYMT_SEQ_NUM = NODE.PYMT_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_HD_LQG_CLOSURE for NODE_FLOW_RCRA.RCRA_HD_LQG_CLOSURE
+/
+
+create view ETL_HD_LQG_CLOSURE as
+(
+SELECT WH.HD_LQG_CLOSURE_ID WH_HD_LQG_CLOSURE_ID,
+       ETL.WH_HD_HANDLER_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_LQG_CLOSURE_ID",
+       NODE."HD_HANDLER_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."CLOSURE_TYPE",
+       NODE."EXPECTED_CLOSURE_DATE",
+       NODE."NEW_CLOSURE_DATE",
+       NODE."DATE_CLOSED",
+       NODE."IN_COMPLIANCE_IND"
+FROM NODE_RCRA_HD_LQG_CLOSURE NODE
+         INNER JOIN ETL_HD_HANDLER_ID_VW ETL ON ETL.HD_HANDLER_ID = NODE.HD_HANDLER_ID
+         LEFT OUTER JOIN RCRA_HD_LQG_CLOSURE WH ON WH.HD_HANDLER_ID = ETL.WH_HD_HANDLER_ID
+    )
+/
+
+create synonym NODE_RCRA_HD_LQG_CONSOLIDATION for NODE_FLOW_RCRA.RCRA_HD_LQG_CONSOLIDATION
+/
+
+create view ETL_HD_LQG_CONSOLIDATION_VW as
+(
+SELECT WH.HD_LQG_CONSOLIDATION_ID WH_HD_LQG_CONSOLIDATION_ID,
+       ETL.WH_HD_HANDLER_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_LQG_CONSOLIDATION_ID",
+       NODE."HD_HANDLER_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."SEQ_NUMBER",
+       NODE."HANDLER_ID",
+       NODE."HANDLER_NAME",
+       NODE."MAIL_STREET_NUMBER",
+       NODE."MAIL_STREET1",
+       NODE."MAIL_STREET2",
+       NODE."MAIL_CITY",
+       NODE."MAIL_STATE",
+       NODE."MAIL_COUNTRY",
+       NODE."MAIL_ZIP",
+       NODE."CONTACT_FIRST_NAME",
+       NODE."CONTACT_MIDDLE_INITIAL",
+       NODE."CONTACT_LAST_NAME",
+       NODE."CONTACT_ORG_NAME",
+       NODE."CONTACT_TITLE",
+       NODE."CONTACT_EMAIL_ADDRESS",
+       NODE."CONTACT_PHONE",
+       NODE."CONTACT_PHONE_EXT",
+       NODE."CONTACT_FAX"
+FROM NODE_RCRA_HD_LQG_CONSOLIDATION NODE
+         INNER JOIN ETL_HD_HANDLER_ID_VW ETL ON ETL.HD_HANDLER_ID = NODE.HD_HANDLER_ID
+         LEFT OUTER JOIN RCRA_HD_LQG_CONSOLIDATION WH ON WH.HD_HANDLER_ID = ETL.WH_HD_HANDLER_ID
+    AND WH.SEQ_NUMBER = NODE.SEQ_NUMBER
+    )
+/
+
+create synonym NODE_RCRA_HD_EPISODIC_EVENT for NODE_FLOW_RCRA.RCRA_HD_EPISODIC_EVENT
+/
+
+create view ETL_HD_EPISODIC_EVENT as
+(
+SELECT WH.HD_EPISODIC_EVENT_ID WH_HD_EPISODIC_EVENT_ID,
+       ETL.WH_HD_HANDLER_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_EPISODIC_EVENT_ID",
+       NODE."HD_HANDLER_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."EVENT_OWNER",
+       NODE."EVENT_TYPE",
+       NODE."CONTACT_FIRST_NAME",
+       NODE."CONTACT_MIDDLE_INITIAL",
+       NODE."CONTACT_LAST_NAME",
+       NODE."CONTACT_ORG_NAME",
+       NODE."CONTACT_TITLE",
+       NODE."CONTACT_EMAIL_ADDRESS",
+       NODE."CONTACT_PHONE",
+       NODE."CONTACT_PHONE_EXT",
+       NODE."CONTACT_FAX",
+       NODE."START_DATE",
+       NODE."END_DATE"
+FROM NODE_RCRA_HD_EPISODIC_EVENT NODE
+         INNER JOIN ETL_HD_HANDLER_ID_VW ETL ON ETL.HD_HANDLER_ID = NODE.HD_HANDLER_ID
+         LEFT OUTER JOIN RCRA_HD_EPISODIC_EVENT WH ON WH.HD_HANDLER_ID = ETL.WH_HD_HANDLER_ID
+    )
+/
+
+create synonym NODE_RCRA_HD_EPISODIC_WASTE for NODE_FLOW_RCRA.RCRA_HD_EPISODIC_WASTE
+/
+
+create view ETL_HD_EPISODIC_WASTE as
+(
+SELECT WH.HD_EPISODIC_WASTE_ID WH_HD_EPISODIC_WASTE_ID,
+       ETL.WH_HD_EPISODIC_EVENT_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_EPISODIC_WASTE_ID",
+       NODE."HD_EPISODIC_EVENT_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."SEQ_NUMBER",
+       NODE."WASTE_DESC",
+       NODE."EST_QNTY"
+FROM NODE_RCRA_HD_EPISODIC_WASTE NODE
+         INNER JOIN ETL_HD_EPISODIC_EVENT ETL ON ETL.HD_EPISODIC_EVENT_ID = NODE.HD_EPISODIC_EVENT_ID
+         LEFT OUTER JOIN RCRA_HD_EPISODIC_WASTE WH ON WH.HD_EPISODIC_EVENT_ID = ETL.WH_HD_EPISODIC_EVENT_ID
+    AND WH.SEQ_NUMBER = NODE.SEQ_NUMBER
+    )
+/
+
+create synonym NODE_RCRA_RU_SUBM for NODE_FLOW_RCRA.RCRA_RU_SUBM
+/
+
+create synonym NODE_RCRA_RU_REPORT_UNIV_SUBM for NODE_FLOW_RCRA.RCRA_RU_REPORT_UNIV_SUBM
+/
+
+create synonym NODE_RCRA_RU_REPORT_UNIV for NODE_FLOW_RCRA.RCRA_RU_REPORT_UNIV
+/
+
+create view ETL_RU_REPORT_UNIV_VW as
+(
+SELECT SUBM.RU_SUBM_ID      WH_RU_SUBM_ID,
+       WH.RU_REPORT_UNIV_ID WH_RU_REPORT_UNIV_ID,
+       NODE."RU_REPORT_UNIV_ID",
+       NODE."RU_REPORT_UNIV_SUBM_ID",
+       NODE."HANDLER_ID",
+       NODE."ACTIVITY_LOCATION",
+       NODE."SOURCE_TYPE",
+       NODE."SEQ_NUMBER",
+       NODE."RECEIVE_DATE",
+       NODE."HANDLER_NAME",
+       NODE."NON_NOTIFIER_IND",
+       NODE."ACCESSIBILITY",
+       NODE."REPORT_CYCLE",
+       NODE."REGION",
+       NODE."STATE",
+       NODE."EXTRACT_FLAG",
+       NODE."ACTIVE_SITE",
+       NODE."COUNTY_CODE",
+       NODE."COUNTY_NAME",
+       NODE."LOCATION_STREET_NUMBER",
+       NODE."LOCATION_STREET1",
+       NODE."LOCATION_STREET2",
+       NODE."LOCATION_CITY",
+       NODE."LOCATION_STATE",
+       NODE."LOCATION_COUNTRY",
+       NODE."LOCATION_ZIP",
+       NODE."MAIL_STREET_NUMBER",
+       NODE."MAIL_STREET1",
+       NODE."MAIL_STREET2",
+       NODE."MAIL_CITY",
+       NODE."MAIL_STATE",
+       NODE."MAIL_COUNTRY",
+       NODE."MAIL_ZIP",
+       NODE."CONTACT_STREET_NUMBER",
+       NODE."CONTACT_STREET1",
+       NODE."CONTACT_STREET2",
+       NODE."CONTACT_CITY",
+       NODE."CONTACT_STATE",
+       NODE."CONTACT_COUNTRY",
+       NODE."CONTACT_ZIP",
+       NODE."CONTACT_NAME",
+       NODE."CONTACT_PHONE",
+       NODE."CONTACT_FAX",
+       NODE."CONTACT_EMAIL",
+       NODE."CONTACT_TITLE",
+       NODE."OWNER_NAME",
+       NODE."OWNER_TYPE",
+       NODE."OWNER_SEQ_NUM",
+       NODE."OPER_NAME",
+       NODE."OPER_TYPE",
+       NODE."OPER_SEQ_NUM",
+       NODE."NAIC1_CODE",
+       NODE."NAIC2_CODE",
+       NODE."NAIC3_CODE",
+       NODE."NAIC4_CODE",
+       NODE."IN_HANDLER_UNIVERSE",
+       NODE."IN_A_UNIVERSE",
+       NODE."FED_WASTE_GENERATOR_OWNER",
+       NODE."FED_WASTE_GENERATOR",
+       NODE."STATE_WASTE_GENERATOR_OWNER",
+       NODE."STATE_WASTE_GENERATOR",
+       NODE."GEN_STATUS",
+       NODE."UNIV_WASTE",
+       NODE."LAND_TYPE",
+       NODE."STATE_DISTRICT_OWNER",
+       NODE."STATE_DISTRICT",
+       NODE."SHORT_TERM_GEN_IND",
+       NODE."IMPORTER_ACTIVITY",
+       NODE."MIXED_WASTE_GENERATOR",
+       NODE."TRANSPORTER_ACTIVITY",
+       NODE."TRANSFER_FACILITY_IND",
+       NODE."RECYCLER_ACTIVITY",
+       NODE."ONSITE_BURNER_EXEMPTION",
+       NODE."FURNACE_EXEMPTION",
+       NODE."UNDERGROUND_INJECTION_ACTIVITY",
+       NODE."UNIVERSAL_WASTE_DEST_FACILITY",
+       NODE."OFFSITE_WASTE_RECEIPT",
+       NODE."USED_OIL",
+       NODE."FEDERAL_UNIVERSAL_WASTE",
+       NODE."AS_FEDERAL_REGULATED_TSDF",
+       NODE."AS_CONVERTED_TSDF",
+       NODE."AS_STATE_REGULATED_TSDF",
+       NODE."FEDERAL_IND",
+       NODE."HSM",
+       NODE."SUBPART_K",
+       NODE."COMMERCIAL_TSD",
+       NODE."TSD",
+       NODE."GPRA_PERMIT",
+       NODE."GPRA_RENEWAL",
+       NODE."PERMIT_RENEWAL_WRKLD",
+       NODE."PERM_WRKLD",
+       NODE."PERM_PROG",
+       NODE."PC_WRKLD",
+       NODE."CLOS_WRKLD",
+       NODE."GPRACA",
+       NODE."CA_WRKLD",
+       NODE."SUBJ_CA",
+       NODE."SUBJ_CA_NON_TSD",
+       NODE."SUBJ_CA_TSD_3004",
+       NODE."SUBJ_CA_DISCRETION",
+       NODE."NCAPS",
+       NODE."EC_IND",
+       NODE."IC_IND",
+       NODE."CA_725_IND",
+       NODE."CA_750_IND",
+       NODE."OPERATING_TSDF",
+       NODE."FULL_ENFORCEMENT",
+       NODE."SNC",
+       NODE."BOY_SNC",
+       NODE."BOY_STATE_UNADDRESSED_SNC",
+       NODE."STATE_UNADDRESSED",
+       NODE."STATE_ADDRESSED",
+       NODE."BOY_STATE_ADDRESSED",
+       NODE."STATE_SNC_WITH_COMP_SCHED",
+       NODE."BOY_STATE_SNC_WITH_COMP_SCHED",
+       NODE."EPA_UNADDRESSED",
+       NODE."BOY_EPA_UNADDRESSED",
+       NODE."EPA_ADDRESSED",
+       NODE."BOY_EPA_ADDRESSED",
+       NODE."EPA_SNC_WITH_COMP_SCHED",
+       NODE."BOY_EPA_SNC_WITH_COMP_SCHED",
+       NODE."FA_REQUIRED",
+       NODE."HHANDLER_LAST_CHANGE_DATE",
+       NODE."PUBLIC_NOTES",
+       NODE."NOTES",
+       NODE."RECOGNIZED_TRADER_IMPORTER_IND",
+       NODE."RECOGNIZED_TRADER_EXPORTER_IND",
+       NODE."SLAB_IMPORTER_IND",
+       NODE."SLAB_EXPORTER_IND",
+       NODE."RECYCLER_NON_STORAGE_IND",
+       NODE."MANIFEST_BROKER_IND",
+       NODE."SUBPART_P_IND",
+       NODE."LOCATION_LATITUDE",
+       NODE."LOCATION_LONGITUDE",
+       NODE."LOCATION_GIS_PRIM",
+       NODE."LOCATION_GIS_ORIG"
+FROM NODE_RCRA_RU_REPORT_UNIV NODE
+         JOIN NODE_RCRA_RU_REPORT_UNIV_SUBM SUBM ON SUBM.RU_REPORT_UNIV_SUBM_ID = NODE.RU_REPORT_UNIV_SUBM_ID
+         LEFT OUTER JOIN RCRA_RU_REPORT_UNIV WH ON WH.HANDLER_ID = NODE.HANDLER_ID
+    )
+/
+
+create synonym NODE_RCRA_EM_EMANIFEST for NODE_FLOW_RCRA.RCRA_EM_EMANIFEST
+/
+
+create view ETL_EM_EMANIFEST_VW as
+select WH.EM_EMANIFEST_ID WH_EM_EMANIFEST_ID,
+       NODE."EM_EMANIFEST_ID",NODE."EM_SUBM_ID",NODE."CREATED_DATE",NODE."UPDATED_DATE",NODE."MAN_TRACKING_NUM",NODE."STATUS",NODE."DES_FAC_MODIFIED",NODE."SUBM_TYPE",NODE."GENERATOR_MODIFIED",NODE."ORIGIN_TYPE",NODE."SHIPPED_DATE",NODE."RECEIVED_DATE",NODE."CERT_DATE",NODE."REJ_IND",NODE."DES_FAC_REGISTERED",NODE."IMPORT",NODE."GENERATOR_CONTACT_FIRST_NAME",NODE."GENERATOR_CONTACT_LAST_NAME",NODE."GENERATOR_REGISTERED",NODE."REJECTION_TYPE",NODE."ALTERNATE_DESIGNATED_FAC_TYPE",NODE."GENERATOR_NAME",NODE."DES_FAC_SIGNATURE_DATE",NODE."GENERATOR_ESIG_SIGNATURE_DATE",NODE."DES_FAC_LOC_STREET_1",NODE."ALT_FAC_MAIL_STREET_2",NODE."DES_FAC_CONTACT_FIRST_NAME",NODE."DES_FAC_CONTACT_LAST_NAME",NODE."GENERATOR_LOC_STREET_2",NODE."GENERATOR_CONTACT_EMAIL",NODE."DES_FAC_MAIL_STREET_1",NODE."PORT_OF_ENTRY_CITY",NODE."GENERATOR_MAIL_ZIP",NODE."DES_FAC_MAIL_STREET_2",NODE."GENERATOR_MAIL_STA",NODE."FOREIGN_GENERATOR_CTRY_NAME",NODE."GENERATOR_MAIL_CTRY",NODE."GENERATOR_MAIL_STREET_1",NODE."GENERATOR_MAIL_STREET_2",NODE."MANIFEST_HANDLING_INSTR",NODE."RESIDUE",NODE."GENERATOR_ID",NODE."GENERATOR_SIGNATURE_DATE",NODE."DES_FAC_LOC_STREET_2",NODE."ALT_FAC_MAIL_STREET_1",NODE."GENERATOR_ESIG_FIRST_NAME",NODE."GENERATOR_ESIG_LAST_NAME",NODE."GENERATOR_LOC_STREET_1",NODE."GENERATOR_MAIL_STREET_NUM",NODE."GENERATOR_MAIL_CITY",NODE."GENERATOR_LOC_STREET_NUM",NODE."GENERATOR_LOC_CITY",NODE."GENERATOR_LOC_STA",NODE."GENERATOR_LOC_ZIP",NODE."GENERATOR_CONTACT_PHONE_NUM",NODE."GENERATOR_CONTACT_PHONE_EXT",NODE."GENERATOR_CONTACT_COMPANY_NAME",NODE."EMERGENCY_PHONE_NUM",NODE."EMERGENCY_PHONE_EXT",NODE."GENERATOR_PRINTED_NAME",NODE."DES_FAC_ID",NODE."DES_FAC_NAME",NODE."DES_FAC_MAIL_STREET_NUM",NODE."DES_FAC_MAIL_CITY",NODE."DES_FAC_MAIL_CTRY",NODE."DES_FAC_MAIL_STA",NODE."DES_FAC_MAIL_ZIP",NODE."DES_FAC_LOC_STREET_NUM",NODE."DES_FAC_LOC_CITY",NODE."DES_FAC_LOC_STA",NODE."DES_FAC_LOC_ZIP",NODE."DES_FAC_CONTACT_PHONE_NUM",NODE."DES_FAC_CONTACT_PHONE_EXT",NODE."DES_FAC_CONTACT_EMAIL",NODE."DES_FAC_CONTACT_COMPANY_NAME",NODE."DES_FAC_PRINTED_NAME",NODE."DES_FAC_ESIG_FIRST_NAME",NODE."DES_FAC_ESIG_LAST_NAME",NODE."DES_FAC_ESIG_SIGNATURE_DATE",NODE."ORIG_SUBM_TYPE",NODE."COI_ONLY",NODE."BROKER_ID",NODE."LAST_EM_UPDT_DATE",NODE."TRANSPORTER_ON_SITE",NODE."ALT_FAC_PRINTED_NAME",NODE."ALT_FAC_SIGNATURE_DATE",NODE."ALT_FAC_ESIG_FIRST_NAME",NODE."ALT_FAC_ESIG_LAST_NAME",NODE."ALT_FAC_ESIG_SIGNATURE_DATE",NODE."ALT_FAC_ID",NODE."ALT_FAC_NAME",NODE."ALT_FAC_MAIL_STREET_NUM",NODE."ALT_FAC_MAIL_CITY",NODE."ALT_FAC_MAIL_STA",NODE."ALT_FAC_MAIL_ZIP",NODE."ALT_FAC_LOC_STREET_NUM",NODE."ALT_FAC_LOC_STREET_1",NODE."ALT_FAC_LOC_STREET_2",NODE."ALT_FAC_LOC_CITY",NODE."ALT_FAC_LOC_STA",NODE."ALT_FAC_LOC_ZIP",NODE."ALT_FAC_CONTACT_FIRST_NAME",NODE."ALT_FAC_CONTACT_LAST_NAME",NODE."ALT_FAC_CONTACT_PHONE_NO",NODE."ALT_FAC_CONTACT_PHONE_EXT",NODE."ALT_FAC_CONTACT_EMAIL",NODE."ALT_FAC_CONTACT_COMPANY_NAME",NODE."ALT_FAC_REGISTERED",NODE."ALT_FAC_MODIFIED",NODE."FOREIGN_GENERATOR_NAME",NODE."FOREIGN_GENERATOR_STREET",NODE."FOREIGN_GENERATOR_CITY",NODE."FOREIGN_GENERATOR_CTRY_CODE",NODE."FOREIGN_GENERATOR_POST_CODE",NODE."FOREIGN_GENERATOR_PROVINCE",NODE."PORT_OF_ENTRY_STA"
+from NODE_RCRA_EM_EMANIFEST NODE
+         left join RCRA_EM_EMANIFEST WH on WH.MAN_TRACKING_NUM = NODE.MAN_TRACKING_NUM
+/
+
+create synonym NODE_RCRA_EM_EMANIFEST_COMMENT for NODE_FLOW_RCRA.RCRA_EM_EMANIFEST_COMMENT
+/
+
+create view ETL_EM_EMANIFEST_COMMENT_VW as
+select ETL.WH_EM_EMANIFEST_ID,
+       ETL.EM_SUBM_ID,
+       NODE."EM_EMANIFEST_COMMENT_ID",NODE."EM_EMANIFEST_ID",NODE."CMNT_LABEL",NODE."CMNT_DESC"
+from NODE_RCRA_EM_EMANIFEST_COMMENT NODE
+         join ETL_EM_EMANIFEST_VW ETL on ETL.EM_EMANIFEST_ID = NODE.EM_EMANIFEST_ID
+/
+
+create synonym NODE_RCRA_EM_SUBM for NODE_FLOW_RCRA.RCRA_EM_SUBM
+/
+
+create synonym NODE_RCRA_EM_WASTE for NODE_FLOW_RCRA.RCRA_EM_WASTE
+/
+
+create view ETL_EM_WASTE_VW as
+select WH.EM_WASTE_ID WH_EM_WASTE_ID,
+       ETL.WH_EM_EMANIFEST_ID,
+       ETL.EM_SUBM_ID,
+       NODE."EM_WASTE_ID",NODE."EM_EMANIFEST_ID",NODE."NON_HAZ_WASTE_DESC",NODE."DOT_HAZRD",NODE."LINE_NUM",NODE."BR_MIXED_RADIOACTIVE_WASTE",NODE."DOT_PRINTED_INFO",NODE."CONTAINER_NUM",NODE."QNTY_VAL",NODE."QTY_UNIT_OF_MEAS_CODE",NODE."QTY_UNIT_OF_MEAS_DESC",NODE."BR_DENSITY",NODE."BR_DENSITY_UOM_CODE",NODE."BR_DENSITY_UOM_DESC",NODE."BR_FORM_CODE",NODE."BR_FORM_CODE_DESC",NODE."BR_SRC_CODE",NODE."BR_SRC_CODE_DESC",NODE."BR_WASTE_MIN_CODE",NODE."BR_WASTE_MIN_DESC",NODE."QNTY_DISCREPANCY",NODE."WASTE_TYPE_DISCREPANCY",NODE."WASTE_RESIDUE_COMM",NODE."PCB",NODE."MANAGEMENT_METH_CODE",NODE."MANAGEMENT_METH_DESC",NODE."HANDLING_INSTRUCTIONS",NODE."DOT_ID_NUM_DESC",NODE."CONTAINER_TYPE_CODE",NODE."CONTAINER_TYPE_DESC",NODE."DISCREPANCY_COMM",NODE."WASTE_RESIDUE",NODE."CNST_NUM",NODE."EPA_WASTE",NODE."COI_ONLY",NODE."QNTY_ACUTE_KG",NODE."QNTY_ACUTE_TONS",NODE."QNTY_KG",NODE."QNTY_NON_ACUTE_KG",NODE."QNTY_NON_ACUTE_TONS",NODE."QNTY_TONS"
+from NODE_RCRA_EM_WASTE NODE
+         join ETL_EM_EMANIFEST_VW ETL on ETL.EM_EMANIFEST_ID = NODE.EM_EMANIFEST_ID
+         left join RCRA_EM_WASTE WH
+                   on WH.EM_EMANIFEST_ID = ETL.WH_EM_EMANIFEST_ID
+                       and WH.LINE_NUM = NODE.LINE_NUM
+/
+
+create synonym NODE_RCRA_EM_WASTE_CD_TRANS for NODE_FLOW_RCRA.RCRA_EM_WASTE_CD_TRANS
+/
+
+create view ETL_EM_WASTE_CD_TRANS_VW as
+select ETL.WH_EM_WASTE_ID,
+       ETL.WH_EM_EMANIFEST_ID,
+       ETL.EM_SUBM_ID,
+       NODE."EM_WASTE_CD_TRANS_ID",NODE."EM_WASTE_ID",NODE."WASTE_CODE"
+from NODE_RCRA_EM_WASTE_CD_TRANS NODE
+         join ETL_EM_WASTE_VW ETL on ETL.EM_WASTE_ID = NODE.EM_WASTE_ID
+/
+
+create synonym NODE_RCRA_EM_WASTE_COMMENT for NODE_FLOW_RCRA.RCRA_EM_WASTE_COMMENT
+/
+
+create view ETL_EM_WASTE_COMMENT_VW as
+select ETL.WH_EM_WASTE_ID,
+       ETL.WH_EM_EMANIFEST_ID,
+       ETL.EM_SUBM_ID,
+       NODE."EM_WASTE_COMMENT_ID",NODE."EM_WASTE_ID",NODE."CMNT_LABEL",NODE."CMNT_DESC"
+from NODE_RCRA_EM_WASTE_COMMENT NODE
+         join ETL_EM_WASTE_VW ETL on ETL.EM_WASTE_ID = NODE.EM_WASTE_ID
+/
+
+create synonym NODE_RCRA_EM_WASTE_PCB for NODE_FLOW_RCRA.RCRA_EM_WASTE_PCB
+/
+
+create view ETL_EM_WASTE_PCB_VW as
+select ETL.WH_EM_WASTE_ID,
+       ETL.WH_EM_EMANIFEST_ID,
+       ETL.EM_SUBM_ID,
+       NODE."EM_WASTE_PCB_ID",NODE."EM_WASTE_ID",NODE."PCB_LOAD_TYPE_CODE",NODE."PCB_ARTICLE_CONT_ID",NODE."PCB_REMOVAL_DATE",NODE."PCB_WEIGHT",NODE."PCB_WASTE_TYPE",NODE."PCB_BULK_IDENTITY",NODE."LOAD_TYPE_DESC"
+from NODE_RCRA_EM_WASTE_PCB NODE
+         join ETL_EM_WASTE_VW ETL on ETL.EM_WASTE_ID = NODE.EM_WASTE_ID
+/
+
+create synonym NODE_RCRA_CA_STATUTORY_CITAT for NODE_FLOW_RCRA.RCRA_CA_STATUTORY_CITATION
+/
+
+create view ETL_CA_STATUTORY_CITATION_VW as
+(
+SELECT WH.CA_STATUTORY_CITATION_ID WH_CA_STATUTORY_CITATION_ID,
+       ETL.WH_CA_AUTHORITY_ID,
+       ETL.CA_SUBM_ID,
+       NODE."CA_STATUTORY_CITATION_ID",
+       NODE."CA_AUTHORITY_ID",
+       NODE."TRANS_CODE",
+       NODE."STATUTORY_CITTION_DTA_OWNR_CDE",
+       NODE."STATUTORY_CITATION_IDEN"
+FROM NODE_RCRA_CA_STATUTORY_CITAT NODE
+         INNER JOIN ETL_CA_AUTHORITY_VW ETL ON ETL.CA_AUTHORITY_ID = NODE.CA_AUTHORITY_ID
+         LEFT OUTER JOIN RCRA_CA_STATUTORY_CITATION WH ON WH.CA_AUTHORITY_ID = ETL.WH_CA_AUTHORITY_ID
+    AND WH.STATUTORY_CITTION_DTA_OWNR_CDE =
+        NODE.STATUTORY_CITTION_DTA_OWNR_CDE
+    AND WH.STATUTORY_CITATION_IDEN = NODE.STATUTORY_CITATION_IDEN
+    )
+/
+
+create synonym NODE_RCRA_FA_COST_EST_REL_MECH for NODE_FLOW_RCRA.RCRA_FA_COST_EST_REL_MECHANISM
+/
+
+create view ETL_FA_COST_EST_REL_MECH_VW as
+(
+SELECT WH.FA_COST_EST_REL_MECHANISM_ID WH_FA_COST_EST_REL_MECH_ID,
+       ETL.WH_FA_COST_EST_ID,
+       ETL.FA_SUBM_ID,
+       NODE."FA_COST_EST_REL_MECHANISM_ID",
+       NODE."FA_COST_EST_ID",
+       NODE."TRANS_CODE",
+       NODE."ACT_LOC_CODE",
+       NODE."MECHANISM_AGN_CODE",
+       NODE."MECHANISM_SEQ_NUM",
+       NODE."MECHANISM_DETAIL_SEQ_NUM"
+FROM NODE_RCRA_FA_COST_EST_REL_MECH NODE
+         INNER JOIN ETL_FA_COST_EST_VW ETL ON ETL.FA_COST_EST_ID = NODE.FA_COST_EST_ID
+         LEFT OUTER JOIN RCRA_FA_COST_EST_REL_MECHANISM WH ON WH.FA_COST_EST_ID = ETL.WH_FA_COST_EST_ID
+    AND WH.MECHANISM_SEQ_NUM = NODE.MECHANISM_SEQ_NUM
+    AND WH.MECHANISM_DETAIL_SEQ_NUM = NODE.MECHANISM_DETAIL_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_HD_SEC_MATERIAL_ACT for NODE_FLOW_RCRA.RCRA_HD_SEC_MATERIAL_ACTIVITY
+/
+
+create view ETL_HD_SEC_MAT_ACT_VW as
+(
+SELECT WH.HD_SEC_MATERIAL_ACTIVITY_ID WH_HD_SEC_MATERIAL_ACTIVITY_ID,
+       ETL.WH_HD_HANDLER_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_SEC_MATERIAL_ACTIVITY_ID",
+       NODE."HD_HANDLER_ID",
+       NODE."TRANS_CODE",
+       NODE."HSM_SEQ_NUM",
+       NODE."FAC_CODE_OWNER_NAME",
+       NODE."FAC_TYPE_CODE",
+       NODE."ESTIMATED_SHORT_TONS_QNTY",
+       NODE."ACTL_SHORT_TONS_QNTY",
+       NODE."LAND_BASED_UNIT_IND",
+       NODE."LAND_BASED_UNIT_IND_TEXT"
+FROM NODE_RCRA_HD_SEC_MATERIAL_ACT NODE
+         INNER JOIN ETL_HD_HANDLER_ID_VW ETL ON ETL.HD_HANDLER_ID = NODE.HD_HANDLER_ID
+         LEFT OUTER JOIN RCRA_HD_SEC_MATERIAL_ACTIVITY WH ON WH.HD_HANDLER_ID = ETL.WH_HD_HANDLER_ID
+    AND WH.HSM_SEQ_NUM = NODE.HSM_SEQ_NUM
+    )
+/
+
+create view ETL_HD_SEC_WASTE_CD_VW as
+(
+SELECT WH.HD_SEC_WASTE_CODE_ID WH_HD_SEC_WASTE_CODE_ID,
+       ETL.WH_HD_SEC_MATERIAL_ACTIVITY_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_SEC_WASTE_CODE_ID",
+       NODE."HD_SEC_MATERIAL_ACTIVITY_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."WASTE_CODE_OWNER",
+       NODE."WASTE_CODE_TYPE"
+FROM NODE_RCRA_HD_SEC_WASTE_CODE NODE
+         INNER JOIN ETL_HD_SEC_MAT_ACT_VW ETL ON ETL.HD_SEC_MATERIAL_ACTIVITY_ID = NODE.HD_SEC_MATERIAL_ACTIVITY_ID
+         LEFT OUTER JOIN RCRA_HD_SEC_WASTE_CODE WH
+                         ON WH.HD_SEC_MATERIAL_ACTIVITY_ID = ETL.WH_HD_SEC_MATERIAL_ACTIVITY_ID
+                             AND WH.WASTE_CODE_OWNER = NODE.WASTE_CODE_OWNER
+                             AND WH.WASTE_CODE_TYPE = NODE.WASTE_CODE_TYPE
+    )
+/
+
+create synonym NODE_RCRA_HD_EPISODIC_WASTE_CD for NODE_FLOW_RCRA.RCRA_HD_EPISODIC_WASTE_CODE
+/
+
+create view ETL_HD_EPISODIC_WASTE_CODE as
+(
+SELECT WH.HD_EPISODIC_WASTE_CODE_ID WH_HD_EPISODIC_WASTE_CODE_ID,
+       ETL.WH_HD_EPISODIC_WASTE_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_EPISODIC_WASTE_CODE_ID",
+       NODE."HD_EPISODIC_WASTE_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."WASTE_CODE_OWNER",
+       NODE."WASTE_CODE",
+       NODE."WASTE_CODE_TEXT"
+FROM NODE_RCRA_HD_EPISODIC_WASTE_CD NODE
+         INNER JOIN ETL_HD_EPISODIC_WASTE ETL ON ETL.HD_EPISODIC_WASTE_ID = NODE.HD_EPISODIC_WASTE_ID
+         LEFT OUTER JOIN RCRA_HD_EPISODIC_WASTE_CODE WH ON WH.HD_EPISODIC_WASTE_ID = ETL.WH_HD_EPISODIC_WASTE_ID
+    AND WH.WASTE_CODE_OWNER = NODE.WASTE_CODE_OWNER
+    AND WH.WASTE_CODE = NODE.WASTE_CODE
+    )
+/
+
+create view NODE_TABLE_COUNTS as
+SELECT 'RCRA_CA_AREA' table_name,
+       count(*)       cnt
+FROM NODE_RCRA_CA_AREA
+UNION ALL
+SELECT 'RCRA_CA_AREA_REL_EVENT' table_name,
+       count(*)                 cnt
+FROM NODE_RCRA_CA_AREA_REL_EVENT
+UNION ALL
+SELECT 'RCRA_CA_AUTH_REL_EVENT' table_name,
+       count(*)                 cnt
+FROM NODE_RCRA_CA_AUTH_REL_EVENT
+UNION ALL
+SELECT 'RCRA_CA_AUTHORITY' table_name,
+       count(*)            cnt
+FROM NODE_RCRA_CA_AUTHORITY
+UNION ALL
+SELECT 'RCRA_CA_EVENT' table_name,
+       count(*)        cnt
+FROM NODE_RCRA_CA_EVENT
+UNION ALL
+SELECT 'RCRA_CA_EVENT_COMMITMENT' table_name,
+       count(*)                   cnt
+FROM NODE_RCRA_CA_EVENT_COMMITMENT
+UNION ALL
+SELECT 'RCRA_CA_FAC_SUBM' table_name,
+       count(*)           cnt
+FROM NODE_RCRA_CA_FAC_SUBM
+UNION ALL
+SELECT 'RCRA_CA_REL_PERMIT_UNIT' table_name,
+       count(*)                  cnt
+FROM NODE_RCRA_CA_REL_PERMIT_UNIT
+UNION ALL
+SELECT 'RCRA_CA_STATUTORY_CITATION' table_name,
+       count(*)                     cnt
+FROM NODE_RCRA_CA_STATUTORY_CITAT
+UNION ALL
+SELECT 'RCRA_CA_SUBM' table_name,
+       count(*)       cnt
+FROM NODE_RCRA_CA_SUBM
+UNION ALL
+SELECT 'RCRA_CME_CITATION' table_name,
+       count(*)            cnt
+FROM NODE_RCRA_CME_CITATION
+UNION ALL
+SELECT 'RCRA_CME_CSNY_DATE' table_name,
+       count(*)             cnt
+FROM NODE_RCRA_CME_CSNY_DATE
+UNION ALL
+SELECT 'RCRA_CME_ENFRC_ACT' table_name,
+       count(*)             cnt
+FROM NODE_RCRA_CME_ENFRC_ACT
+UNION ALL
+SELECT 'RCRA_CME_EVAL' table_name,
+       count(*)        cnt
+FROM NODE_RCRA_CME_EVAL
+UNION ALL
+SELECT 'RCRA_CME_EVAL_COMMIT' table_name,
+       count(*)               cnt
+FROM NODE_RCRA_CME_EVAL_COMMIT
+UNION ALL
+SELECT 'RCRA_CME_EVAL_VIOL' table_name,
+       count(*)             cnt
+FROM NODE_RCRA_CME_EVAL_VIOL
+UNION ALL
+SELECT 'RCRA_CME_FAC_SUBM' table_name,
+       count(*)            cnt
+FROM NODE_RCRA_CME_FAC_SUBM
+UNION ALL
+SELECT 'RCRA_CME_MEDIA' table_name,
+       count(*)         cnt
+FROM NODE_RCRA_CME_MEDIA
+UNION ALL
+SELECT 'RCRA_CME_MILESTONE' table_name,
+       count(*)             cnt
+FROM NODE_RCRA_CME_MILESTONE
+UNION ALL
+SELECT 'RCRA_CME_PNLTY' table_name,
+       count(*)         cnt
+FROM NODE_RCRA_CME_PNLTY
+UNION ALL
+SELECT 'RCRA_CME_PYMT' table_name,
+       count(*)        cnt
+FROM NODE_RCRA_CME_PYMT
+UNION ALL
+SELECT 'RCRA_CME_RQST' table_name,
+       count(*)        cnt
+FROM NODE_RCRA_CME_RQST
+UNION ALL
+SELECT 'RCRA_CME_SUBM' table_name,
+       count(*)        cnt
+FROM NODE_RCRA_CME_SUBM
+UNION ALL
+SELECT 'RCRA_CME_SUPP_ENVR_PRJT' table_name,
+       count(*)                  cnt
+FROM NODE_RCRA_CME_SUPP_ENVR_PRJT
+UNION ALL
+SELECT 'RCRA_CME_VIOL' table_name,
+       count(*)        cnt
+FROM NODE_RCRA_CME_VIOL
+UNION ALL
+SELECT 'RCRA_CME_VIOL_ENFRC' table_name,
+       count(*)              cnt
+FROM NODE_RCRA_CME_VIOL_ENFRC
+UNION ALL
+SELECT 'RCRA_FA_COST_EST' table_name,
+       count(*)           cnt
+FROM NODE_RCRA_FA_COST_EST
+UNION ALL
+SELECT 'RCRA_FA_COST_EST_REL_MECHANISM' table_name,
+       count(*)                         cnt
+FROM NODE_RCRA_FA_COST_EST_REL_MECH
+UNION ALL
+SELECT 'RCRA_FA_FAC_SUBM' table_name,
+       count(*)           cnt
+FROM NODE_RCRA_FA_FAC_SUBM
+UNION ALL
+SELECT 'RCRA_FA_MECHANISM' table_name,
+       count(*)            cnt
+FROM NODE_RCRA_FA_MECHANISM
+UNION ALL
+SELECT 'RCRA_FA_MECHANISM_DETAIL' table_name,
+       count(*)                   cnt
+FROM NODE_RCRA_FA_MECHANISM_DETAIL
+UNION ALL
+SELECT 'RCRA_FA_SUBM' table_name,
+       count(*)       cnt
+FROM NODE_RCRA_FA_SUBM
+UNION ALL
+SELECT 'RCRA_GIS_FAC_SUBM' table_name,
+       count(*)            cnt
+FROM NODE_RCRA_GIS_FAC_SUBM
+UNION ALL
+SELECT 'RCRA_GIS_GEO_INFORMATION' table_name,
+       count(*)                   cnt
+FROM NODE_RCRA_GIS_GEO_INFORMATION
+UNION ALL
+SELECT 'RCRA_GIS_SUBM' table_name,
+       count(*)        cnt
+FROM NODE_RCRA_GIS_SUBM
+UNION ALL
+SELECT 'RCRA_HD_CERTIFICATION' table_name,
+       count(*)                cnt
+FROM NODE_RCRA_HD_CERTIFICATION
+UNION ALL
+SELECT 'RCRA_HD_ENV_PERMIT' table_name,
+       count(*)             cnt
+FROM NODE_RCRA_HD_ENV_PERMIT
+UNION ALL
+SELECT 'RCRA_HD_EPISODIC_EVENT' table_name,
+       count(*)                 cnt
+FROM NODE_RCRA_HD_EPISODIC_EVENT
+UNION ALL
+SELECT 'RCRA_HD_EPISODIC_WASTE' table_name,
+       count(*)                 cnt
+FROM NODE_RCRA_HD_EPISODIC_WASTE
+UNION ALL
+SELECT 'RCRA_HD_EPISODIC_WASTE_CODE' table_name,
+       count(*)                      cnt
+FROM NODE_RCRA_HD_EPISODIC_WASTE_CD
+UNION ALL
+SELECT 'RCRA_HD_HANDLER' table_name,
+       count(*)          cnt
+FROM NODE_RCRA_HD_HANDLER
+UNION ALL
+SELECT 'RCRA_HD_HBASIC' table_name,
+       count(*)         cnt
+FROM NODE_RCRA_HD_HBASIC
+UNION ALL
+SELECT 'RCRA_HD_LQG_CLOSURE' table_name,
+       count(*)              cnt
+FROM NODE_RCRA_HD_LQG_CLOSURE
+UNION ALL
+SELECT 'RCRA_HD_LQG_CONSOLIDATION' table_name,
+       count(*)                    cnt
+FROM NODE_RCRA_HD_LQG_CONSOLIDATION
+UNION ALL
+SELECT 'RCRA_HD_NAICS' table_name,
+       count(*)        cnt
+FROM NODE_RCRA_HD_NAICS
+UNION ALL
+SELECT 'RCRA_HD_OTHER_ID' table_name,
+       count(*)           cnt
+FROM NODE_RCRA_HD_OTHER_ID
+UNION ALL
+SELECT 'RCRA_HD_OWNEROP' table_name,
+       count(*)          cnt
+FROM NODE_RCRA_HD_OWNEROP
+UNION ALL
+SELECT 'RCRA_HD_SEC_MATERIAL_ACTIVITY' table_name,
+       count(*)                        cnt
+FROM NODE_RCRA_HD_SEC_MATERIAL_ACT
+UNION ALL
+SELECT 'RCRA_HD_SEC_WASTE_CODE' table_name,
+       count(*)                 cnt
+FROM NODE_RCRA_HD_SEC_WASTE_CODE
+UNION ALL
+SELECT 'RCRA_HD_STATE_ACTIVITY' table_name,
+       count(*)                 cnt
+FROM NODE_RCRA_HD_STATE_ACTIVITY
+UNION ALL
+SELECT 'RCRA_HD_SUBM' table_name,
+       count(*)       cnt
+FROM NODE_RCRA_HD_SUBM
+UNION ALL
+SELECT 'RCRA_HD_UNIVERSAL_WASTE' table_name,
+       count(*)                  cnt
+FROM NODE_RCRA_HD_UNIVERSAL_WASTE
+UNION ALL
+SELECT 'RCRA_HD_WASTE_CODE' table_name,
+       count(*)             cnt
+FROM NODE_RCRA_HD_WASTE_CODE
+UNION ALL
+SELECT 'RCRA_PRM_EVENT' table_name,
+       count(*)         cnt
+FROM NODE_RCRA_PRM_EVENT
+UNION ALL
+SELECT 'RCRA_PRM_EVENT_COMMITMENT' table_name,
+       count(*)                    cnt
+FROM NODE_RCRA_PRM_EVENT_COMMITMENT
+UNION ALL
+SELECT 'RCRA_PRM_FAC_SUBM' table_name,
+       count(*)            cnt
+FROM NODE_RCRA_PRM_FAC_SUBM
+UNION ALL
+SELECT 'RCRA_PRM_RELATED_EVENT' table_name,
+       count(*)                 cnt
+FROM NODE_RCRA_PRM_RELATED_EVENT
+UNION ALL
+SELECT 'RCRA_PRM_SERIES' table_name,
+       count(*)          cnt
+FROM NODE_RCRA_PRM_SERIES
+UNION ALL
+SELECT 'RCRA_PRM_SUBM' table_name,
+       count(*)        cnt
+FROM NODE_RCRA_PRM_SUBM
+UNION ALL
+SELECT 'RCRA_PRM_UNIT' table_name,
+       count(*)        cnt
+FROM NODE_RCRA_PRM_UNIT
+UNION ALL
+SELECT 'RCRA_PRM_UNIT_DETAIL' table_name,
+       count(*)               cnt
+FROM NODE_RCRA_PRM_UNIT_DETAIL
+UNION ALL
+SELECT 'RCRA_PRM_WASTE_CODE' table_name,
+       count(*)              cnt
+FROM NODE_RCRA_PRM_WASTE_CODE
+UNION ALL
+SELECT 'RCRA_RU_REPORT_UNIV' table_name,
+       count(*)              cnt
+FROM NODE_RCRA_RU_REPORT_UNIV
+UNION ALL
+SELECT 'RCRA_RU_REPORT_UNIV_SUBM' table_name,
+       count(*)                   cnt
+FROM NODE_RCRA_RU_REPORT_UNIV_SUBM
+UNION ALL
+SELECT 'RCRA_RU_SUBM' table_name,
+       count(*)       cnt
+FROM NODE_RCRA_RU_SUBM
+UNION ALL
+SELECT 'RCRA_EM_EMANIFEST' table_name,
+       count(*)            cnt
+FROM NODE_RCRA_EM_EMANIFEST
+UNION ALL
+SELECT 'RCRA_EM_EMANIFEST_COMMENT' table_name,
+       count(*)                    cnt
+FROM NODE_RCRA_EM_EMANIFEST_COMMENT
+UNION ALL
+SELECT 'RCRA_EM_HANDLER' table_name,
+       count(*)          cnt
+FROM NODE_RCRA_EM_HANDLER
+UNION ALL
+SELECT 'RCRA_EM_SUBM' table_name,
+       count(*)       cnt
+FROM NODE_RCRA_EM_SUBM
+UNION ALL
+SELECT 'RCRA_EM_TR_NUM_ORIG' table_name,
+       count(*)              cnt
+FROM NODE_RCRA_EM_TR_NUM_ORIG
+UNION ALL
+SELECT 'RCRA_EM_TR_NUM_REJ' table_name,
+       count(*)             cnt
+FROM NODE_RCRA_EM_TR_NUM_REJ
+UNION ALL
+SELECT 'RCRA_EM_TR_NUM_RES_NEW' table_name,
+       count(*)                 cnt
+FROM NODE_RCRA_EM_TR_NUM_RES_NEW
+UNION ALL
+SELECT 'RCRA_EM_TR_NUM_WASTE' table_name,
+       count(*)               cnt
+FROM NODE_RCRA_EM_TR_NUM_WASTE
+UNION ALL
+SELECT 'RCRA_EM_WASTE' table_name,
+       count(*)        cnt
+FROM NODE_RCRA_EM_WASTE
+UNION ALL
+SELECT 'RCRA_EM_WASTE_CD_FED' table_name,
+       count(*)               cnt
+FROM NODE_RCRA_EM_WASTE_CD_FED
+UNION ALL
+SELECT 'RCRA_EM_WASTE_CD_GEN' table_name,
+       count(*)               cnt
+FROM NODE_RCRA_EM_WASTE_CD_GEN
+UNION ALL
+SELECT 'RCRA_EM_WASTE_CD_TRANS' table_name,
+       count(*)                 cnt
+FROM NODE_RCRA_EM_WASTE_CD_TRANS
+UNION ALL
+SELECT 'RCRA_EM_WASTE_CD_TSDF' table_name,
+       count(*)                cnt
+FROM NODE_RCRA_EM_WASTE_CD_TSDF
+UNION ALL
+SELECT 'RCRA_EM_WASTE_COMMENT' table_name,
+       count(*)                cnt
+FROM NODE_RCRA_EM_WASTE_COMMENT
+UNION ALL
+SELECT 'RCRA_EM_WASTE_PCB' table_name,
+       count(*)            cnt
+FROM NODE_RCRA_EM_WASTE_PCB
+UNION ALL
+SELECT 'RCRA_SUBMISSIONHISTORY' table_name,
+       count(*)                 cnt
+FROM NODE_RCRA_SUBMISSIONHISTORY
+/
+
+create synonym NODE_RCRA_HANDLER for NODE_FLOW_RCRA.RCRA_HANDLER
+/
+
+create synonym NODE_RCRA_LOCADDRESS for NODE_FLOW_RCRA.RCRA_LOCADDRESS
+/
+
+create synonym NODE_RCRA_MAILINGADDRESS for NODE_FLOW_RCRA.RCRA_MAILINGADDRESS
+/
+
+create synonym NODE_RCRA_CONTACTADDRESS for NODE_FLOW_RCRA.RCRA_CONTACTADDRESS
+/
+
+create synonym NODE_RCRA_CONTACT for NODE_FLOW_RCRA.RCRA_CONTACT
+/
+
+create synonym NODE_RCRA_FACSUB for NODE_FLOW_RCRA.RCRA_FACSUB
+/
+
+create synonym NODE_RCRA_USEDOIL for NODE_FLOW_RCRA.RCRA_USEDOIL
+/
+
+create synonym NODE_RCRA_LABHZRDWASTE for NODE_FLOW_RCRA.RCRA_LABHZRDWASTE
+/
+
+create synonym NODE_RCRA_SITEWASTEACT for NODE_FLOW_RCRA.RCRA_SITEWASTEACT
+/
+
+create synonym NODE_RCRA_HZRDSECONDARYMTRL for NODE_FLOW_RCRA.RCRA_HZRDSECONDARYMTRL
+/
+
+create synonym NODE_RCRA_NAICS for NODE_FLOW_RCRA.RCRA_NAICS
+/
+
+create synonym NODE_RCRA_CERT for NODE_FLOW_RCRA.RCRA_CERT
+/
+
+create synonym NODE_RCRA_ENVPERMIT for NODE_FLOW_RCRA.RCRA_ENVPERMIT
+/
+
+create synonym NODE_RCRA_HANDLERWASTECODE for NODE_FLOW_RCRA.RCRA_HANDLERWASTECODE
+/
+
+create synonym NODE_RCRA_UNVWASTEACT for NODE_FLOW_RCRA.RCRA_UNVWASTEACT
+/
+
+create synonym NODE_RCRA_STATEACT for NODE_FLOW_RCRA.RCRA_STATEACT
+/
+
+create synonym NODE_RCRA_FACOWNROPER for NODE_FLOW_RCRA.RCRA_FACOWNROPER
+/
+
+create synonym NODE_RCRA_HZRDSECONDARYMTRLACT for NODE_FLOW_RCRA.RCRA_HZRDSECONDARYMTRLACT
+/
+
+create synonym NODE_RCRA_OTHERID for NODE_FLOW_RCRA.RCRA_OTHERID
+/
+
+create synonym NODE_RCRA_WASTEGENRTR for NODE_FLOW_RCRA.RCRA_WASTEGENRTR
+/
+
+create synonym NODE_RCRA_PERMITFACSUB for NODE_FLOW_RCRA.RCRA_PERMITFACSUB
+/
+
+create synonym NODE_RCRA_PERMITSERIES for NODE_FLOW_RCRA.RCRA_PERMITSERIES
+/
+
+create synonym NODE_RCRA_PERMITUNIT for NODE_FLOW_RCRA.RCRA_PERMITUNIT
+/
+
+create synonym NODE_RCRA_PERMITUNITDETAIL for NODE_FLOW_RCRA.RCRA_PERMITUNITDETAIL
+/
+
+create synonym NODE_RCRA_PERMITEVENT for NODE_FLOW_RCRA.RCRA_PERMITEVENT
+/
+
+create synonym NODE_RCRA_EVENTCOMMIT for NODE_FLOW_RCRA.RCRA_EVENTCOMMIT
+/
+
+create synonym NODE_RCRA_PERMITRELEVENT for NODE_FLOW_RCRA.RCRA_PERMITRELEVENT
+/
+
+create synonym NODE_RCRA_FINASSURFACSUB for NODE_FLOW_RCRA.RCRA_FINASSURFACSUB
+/
+
+create synonym NODE_RCRA_MECH for NODE_FLOW_RCRA.RCRA_MECH
+/
+
+create synonym NODE_RCRA_MECHDETAIL for NODE_FLOW_RCRA.RCRA_MECHDETAIL
+/
+
+create synonym NODE_RCRA_COSTEST for NODE_FLOW_RCRA.RCRA_COSTEST
+/
+
+create synonym NODE_RCRA_COSTESTRELMECH for NODE_FLOW_RCRA.RCRA_COSTESTRELMECH
+/
+
+create synonym NODE_RCRA_CORRACTFACSUB for NODE_FLOW_RCRA.RCRA_CORRACTFACSUB
+/
+
+create synonym NODE_RCRA_CORRACTEVENT for NODE_FLOW_RCRA.RCRA_CORRACTEVENT
+/
+
+create synonym NODE_RCRA_CORRACTAREA for NODE_FLOW_RCRA.RCRA_CORRACTAREA
+/
+
+create synonym NODE_RCRA_CORRACTAUTH for NODE_FLOW_RCRA.RCRA_CORRACTAUTH
+/
+
+create synonym NODE_RCRA_CORRACTRELEVENT for NODE_FLOW_RCRA.RCRA_CORRACTRELEVENT
+/
+
+create synonym NODE_RCRA_CORRACTSTATCITN for NODE_FLOW_RCRA.RCRA_CORRACTSTATCITN
+/
+
+create synonym NODE_RCRA_CORRACTRELPERMITUNIT for NODE_FLOW_RCRA.RCRA_CORRACTRELPERMITUNIT
+/
+
+create synonym NODE_RCRA_CMEFACSUB for NODE_FLOW_RCRA.RCRA_CMEFACSUB
+/
+
+create synonym NODE_RCRA_VIO for NODE_FLOW_RCRA.RCRA_VIO
+/
+
+create synonym NODE_RCRA_EVAL for NODE_FLOW_RCRA.RCRA_EVAL
+/
+
+create synonym NODE_RCRA_ENFRCACT for NODE_FLOW_RCRA.RCRA_ENFRCACT
+/
+
+create synonym NODE_RCRA_EVALCOMMIT for NODE_FLOW_RCRA.RCRA_EVALCOMMIT
+/
+
+create synonym NODE_RCRA_EVALVIO for NODE_FLOW_RCRA.RCRA_EVALVIO
+/
+
+create synonym NODE_RCRA_CITN for NODE_FLOW_RCRA.RCRA_CITN
+/
+
+create synonym NODE_RCRA_CSNYDATE for NODE_FLOW_RCRA.RCRA_CSNYDATE
+/
+
+create synonym NODE_RCRA_MEDIA for NODE_FLOW_RCRA.RCRA_MEDIA
+/
+
+create synonym NODE_RCRA_MLSTN for NODE_FLOW_RCRA.RCRA_MLSTN
+/
+
+create synonym NODE_RCRA_REQUEST for NODE_FLOW_RCRA.RCRA_REQUEST
+/
+
+create synonym NODE_RCRA_SUPPENVPROJ for NODE_FLOW_RCRA.RCRA_SUPPENVPROJ
+/
+
+create synonym NODE_RCRA_VIOENFRC for NODE_FLOW_RCRA.RCRA_VIOENFRC
+/
+
+create synonym NODE_RCRA_PENALTY for NODE_FLOW_RCRA.RCRA_PENALTY
+/
+
+create synonym NODE_RCRA_PAYMNT for NODE_FLOW_RCRA.RCRA_PAYMNT
+/
+
+create synonym NODE_RCRA_GISFACSUB for NODE_FLOW_RCRA.RCRA_GISFACSUB
+/
+
+create synonym NODE_RCRA_GEOGINF for NODE_FLOW_RCRA.RCRA_GEOGINF
+/
+
+create synonym NODE_RCRA_GEOGMETA for NODE_FLOW_RCRA.RCRA_GEOGMETA
+/
+
+create synonym NODE_RCRA_WHERETYPE for NODE_FLOW_RCRA.RCRA_WHERETYPE
+/
+
+create synonym NODE_RCRA_AREAACREAGE for NODE_FLOW_RCRA.RCRA_AREAACREAGE
+/
+
+create synonym NODE_RCRA_REPORTUNIV for NODE_FLOW_RCRA.RCRA_REPORTUNIV
+/
+
+create synonym NODE_RCRA_HANDLERLQGCLOSURE for NODE_FLOW_RCRA.RCRA_HANDLERLQGCLOSURE
+/
+
+create synonym NODE_RCRA_HANDLERLQGCONSOLID for NODE_FLOW_RCRA.RCRA_HANDLERLQGCONSOLIDATION
+/
+
+create synonym NODE_RCRA_EPISODICWASTE for NODE_FLOW_RCRA.RCRA_EPISODICWASTE
+/
+
+create synonym NODE_RCRA_HANDLEREPISODICEVENT for NODE_FLOW_RCRA.RCRA_HANDLEREPISODICEVENT
+/
+
+create synonym NODE_RCRA_PRM_MOD_EVENT for NODE_FLOW_RCRA.RCRA_PRM_MOD_EVENT
+/
+
+create view ETL_PRM_MOD_EVENT_VW as
+(
+SELECT WH.PRM_MOD_EVENT_ID WH_PRM_MOD_EVENT_ID,
+       ETL.WH_PRM_EVENT_ID,
+       ETL.PRM_SUBM_ID,
+       NODE."PRM_MOD_EVENT_ID",
+       NODE."PRM_EVENT_ID",
+       NODE."TRANS_CODE",
+       NODE."MOD_HANDLER_ID",
+       NODE."MOD_ACT_LOC_CODE",
+       NODE."MOD_SERIES_SEQ_NUM",
+       NODE."MOD_EVENT_SEQ_NUM",
+       NODE."MOD_EVENT_AGN_CODE",
+       NODE."MOD_EVENT_DATA_OWNER_CODE",
+       NODE."MOD_EVENT_CODE"
+FROM NODE_RCRA_PRM_MOD_EVENT NODE
+         INNER JOIN ETL_PRM_EVENT_VW ETL ON ETL.PRM_EVENT_ID = NODE.PRM_EVENT_ID
+         LEFT OUTER JOIN RCRA_PRM_MOD_EVENT WH ON WH.PRM_EVENT_ID = ETL.WH_PRM_EVENT_ID
+    AND WH.MOD_EVENT_SEQ_NUM = NODE.MOD_EVENT_SEQ_NUM
+    )
+/
+
+create synonym NODE_RCRA_CME_SUBM_DEL for NODE_FLOW_RCRA.RCRA_CME_SUBM_DEL
+/
+
+create synonym NODE_RCRA_CME_FAC_SUBM_DEL for NODE_FLOW_RCRA.RCRA_CME_FAC_SUBM_DEL
+/
+
+create view ETL_CME_FAC_SUBM_DEL_VW as
+(
+SELECT WH.CME_FAC_SUBM_ID WH_CME_FAC_SUBM_ID,
+       NODE."CME_FAC_SUBM_DEL_ID",
+       NODE."CME_SUBM_DEL_ID",
+       NODE."EPA_HDLR_ID"
+FROM NODE_RCRA_CME_FAC_SUBM_DEL NODE
+         LEFT OUTER JOIN RCRA_CME_FAC_SUBM WH ON WH.EPA_HDLR_ID = NODE.EPA_HDLR_ID
+    )
+/
+
+create synonym NODE_RCRA_CME_ENFRC_ACT_DEL for NODE_FLOW_RCRA.RCRA_CME_ENFRC_ACT_DEL
+/
+
+create view ETL_CME_ENFRC_ACT_DEL_VW as
+(
+SELECT WH.CME_ENFRC_ACT_ID WH_CME_ENFR_ACT_ID,
+       ETL.WH_CME_FAC_SUBM_ID,
+       ETL.CME_SUBM_DEL_ID,
+       NODE."CME_ENFRC_ACT_DEL_ID",
+       NODE."CME_FAC_SUBM_DEL_ID",
+       NODE."ENFRC_AGN_LOC_NAME",
+       NODE."ENFRC_ACT_IDEN",
+       NODE."ENFRC_ACT_DATE",
+       NODE."ENFRC_AGN_NAME",
+       NODE."NOTES"
+FROM NODE_RCRA_CME_ENFRC_ACT_DEL NODE
+         INNER JOIN ETL_CME_FAC_SUBM_DEL_VW ETL ON ETL.CME_FAC_SUBM_DEL_ID = NODE.CME_FAC_SUBM_DEL_ID
+         LEFT OUTER JOIN RCRA_CME_ENFRC_ACT WH ON WH.CME_FAC_SUBM_ID = ETL.WH_CME_FAC_SUBM_ID
+    AND WH.ENFRC_ACT_IDEN = NODE.ENFRC_ACT_IDEN
+    AND WH.ENFRC_ACT_DATE = NODE.ENFRC_ACT_DATE
+    AND WH.ENFRC_AGN_NAME = NODE.ENFRC_AGN_NAME
+    )
+/
+
+create synonym NODE_RCRA_CME_EVAL_DEL for NODE_FLOW_RCRA.RCRA_CME_EVAL_DEL
+/
+
+create view ETL_CME_EVAL_DEL_VW as
+(
+SELECT WH.CME_EVAL_ID WH_CME_EVAL_ID,
+       ETL.WH_CME_FAC_SUBM_ID,
+       ETL.CME_SUBM_DEL_ID,
+       NODE."CME_EVAL_DEL_ID",
+       NODE."CME_FAC_SUBM_DEL_ID",
+       NODE."EVAL_ACT_LOC",
+       NODE."EVAL_IDEN",
+       NODE."EVAL_START_DATE",
+       NODE."EVAL_RESP_AGN",
+       NODE."NOTES"
+FROM NODE_RCRA_CME_EVAL_DEL NODE
+         JOIN ETL_CME_FAC_SUBM_DEL_VW ETL ON ETL.CME_FAC_SUBM_DEL_ID = NODE.CME_FAC_SUBM_DEL_ID
+         LEFT OUTER JOIN RCRA_CME_EVAL WH ON WH.CME_FAC_SUBM_ID = ETL.WH_CME_FAC_SUBM_ID
+    AND WH.EVAL_ACT_LOC = NODE.EVAL_ACT_LOC
+    AND WH.EVAL_IDEN = NODE.EVAL_IDEN
+    AND WH.EVAL_RESP_AGN = NODE.EVAL_RESP_AGN
+    AND WH.EVAL_START_DATE = NODE.EVAL_START_DATE
+    )
+/
+
+create synonym NODE_RCRA_CME_VIOL_DEL for NODE_FLOW_RCRA.RCRA_CME_VIOL_DEL
+/
+
+create view ETL_CME_VIOL_DEL_VW as
+(
+SELECT WH.CME_VIOL_ID WH_CME_VIOL_ID,
+       ETL.WH_CME_FAC_SUBM_ID,
+       ETL.CME_SUBM_DEL_ID,
+       NODE."CME_VIOL_DEL_ID",
+       NODE."CME_FAC_SUBM_DEL_ID",
+       NODE."VIOL_ACT_LOC",
+       NODE."VIOL_SEQ_NUM",
+       NODE."AGN_WHICH_DTRM_VIOL",
+       NODE."NOTES"
+FROM NODE_RCRA_CME_VIOL_DEL NODE
+         JOIN ETL_CME_FAC_SUBM_DEL_VW ETL ON ETL.CME_FAC_SUBM_DEL_ID = NODE.CME_FAC_SUBM_DEL_ID
+         LEFT OUTER JOIN RCRA_CME_VIOL WH ON WH.CME_FAC_SUBM_ID = ETL.WH_CME_FAC_SUBM_ID
+    AND WH.VIOL_SEQ_NUM = NODE.VIOL_SEQ_NUM
+    AND WH.VIOL_ACT_LOC = NODE.VIOL_ACT_LOC
+    AND WH.AGN_WHICH_DTRM_VIOL = NODE.AGN_WHICH_DTRM_VIOL
+    )
+/
+
+create synonym NODE_RCRA_HD_EPISODIC_PRJT for NODE_FLOW_RCRA.RCRA_HD_EPISODIC_PRJT
+/
+
+create view ETL_HD_EPISODIC_PRJT as
+(
+SELECT WH.HD_EPISODIC_PRJT_ID WH_HD_EPISODIC_PRJT_ID,
+       ETL.WH_HD_EPISODIC_EVENT_ID,
+       ETL.HD_SUBM_ID,
+       NODE."HD_EPISODIC_PRJT_ID",
+       NODE."HD_EPISODIC_EVENT_ID",
+       NODE."TRANSACTION_CODE",
+       NODE."PRJT_CODE_OWNER",
+       NODE."PRJT_CODE",
+       NODE."OTHER_PRJT_DESC"
+FROM NODE_RCRA_HD_EPISODIC_PRJT NODE
+         INNER JOIN ETL_HD_EPISODIC_EVENT ETL ON ETL.HD_EPISODIC_EVENT_ID = NODE.HD_EPISODIC_EVENT_ID
+         LEFT OUTER JOIN RCRA_HD_EPISODIC_PRJT WH ON WH.HD_EPISODIC_EVENT_ID = ETL.WH_HD_EPISODIC_EVENT_ID
+    AND WH.PRJT_CODE_OWNER = NODE.PRJT_CODE_OWNER
+    AND WH.PRJT_CODE = NODE.PRJT_CODE
+    )
+/
+
+create synonym NODE_RCRA_EM_FED_WASTE_CODE for NODE_FLOW_RCRA.RCRA_EM_FED_WASTE_CODE_DESC
+/
+
+create view ETL_EM_FED_WASTE_CODE_DESC_VW as
+select ETL.WH_EM_WASTE_ID,
+       ETL.WH_EM_EMANIFEST_ID,
+       ETL.EM_SUBM_ID,
+       NODE."EM_FED_WASTE_CODE_DESC_ID",NODE."EM_WASTE_ID",NODE."FED_MANIFEST_WASTE_CODE",NODE."MANIFEST_WASTE_DESC",NODE."COI_IND"
+from NODE_RCRA_EM_FED_WASTE_CODE NODE
+         join ETL_EM_WASTE_VW ETL on ETL.EM_WASTE_ID = NODE.EM_WASTE_ID
+/
+
+create synonym NODE_RCRA_EM_STATE_WASTE_CODE for NODE_FLOW_RCRA.RCRA_EM_STATE_WASTE_CODE_DESC
+/
+
+create view ETL_EM_STATE_WASTE_CODE_VW as
+select ETL.WH_EM_WASTE_ID,
+       ETL.WH_EM_EMANIFEST_ID,
+       ETL.EM_SUBM_ID,
+       NODE."EM_STATE_WASTE_CODE_DESC_ID",NODE."EM_WASTE_ID",NODE."STA_MANIFEST_WASTE_CODE",NODE."MANIFEST_WASTE_DESC"
+from NODE_RCRA_EM_STATE_WASTE_CODE NODE
+         join ETL_EM_WASTE_VW ETL on ETL.EM_WASTE_ID = NODE.EM_WASTE_ID
+/
+
+create synonym NODE_RCRA_EM_TRANSPORTER for NODE_FLOW_RCRA.RCRA_EM_TRANSPORTER
+/
+
+create view ETL_EM_TRANSPORTER_VW as
+select ETL.WH_EM_EMANIFEST_ID,
+       ETL.EM_SUBM_ID,
+       NODE."EM_TRANSPORTER_ID",NODE."EM_EMANIFEST_ID",NODE."TRANSPORTER_ID",NODE."TRANSPORTER_NAME",NODE."TRANSPORTER_PRINTED_NAME",NODE."TRANSPORTER_SIGNATURE_DATE",NODE."TRANSPORTER_ESIG_FIRST_NAME",NODE."TRANSPORTER_ESIG_LAST_NAME",NODE."TRANS_ESIG_SIGNATURE_DATE",NODE."TRANSPORTER_LINE_NUM",NODE."TRANSPORTER_REGISTERED"
+from NODE_RCRA_EM_TRANSPORTER NODE
+         join ETL_EM_EMANIFEST_VW ETL on ETL.EM_EMANIFEST_ID = NODE.EM_EMANIFEST_ID
+/
+
+create PACKAGE BODY RCRAINFO_ETL AS
 
     -- EM
     PROCEDURE EM_LOG_HANDLER AS
@@ -6822,5 +12801,3 @@ CREATE OR REPLACE PACKAGE BODY RCRAINFO_ETL AS
 END RCRAINFO_ETL;
 /
 
-drop procedure handle_db_action
-/
