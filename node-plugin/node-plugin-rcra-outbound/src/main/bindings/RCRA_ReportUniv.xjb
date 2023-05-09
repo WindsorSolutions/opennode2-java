@@ -3,7 +3,7 @@
                xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
                xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
-               jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/11/RCRA_ReportUniv_v5.11.xsd"
+               jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/12/RCRA_ReportUniv_v5.12.xsd"
                xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc">
 
     <jaxb:bindings node="//xsd:complexType[@name='ReportUnivDataType']">
@@ -14,6 +14,12 @@
         <hj:generated-id name="Dbid">
             <orm:column name="RU_REPORT_UNIV_ID"/>
         </hj:generated-id>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="//xsd:element[@name='ReceiveDate']">
+        <hj:basic>
+            <orm:column name="RECEIVE_DATE" />
+        </hj:basic>
     </jaxb:bindings>
 
     <jaxb:bindings node="//xsd:element[@ref='RC:BOYEPAAddressedCode']">

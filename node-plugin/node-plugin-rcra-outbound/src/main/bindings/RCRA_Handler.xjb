@@ -3,7 +3,7 @@
                xmlns:hj="http://hyperjaxb3.jvnet.org/ejb/schemas/customizations"
                xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
                xmlns:inheritance="http://jaxb2-commons.dev.java.net/basic/inheritance"
-               jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/11/RCRA_Handler_v5.11.xsd">
+               jaxb:extensionBindingPrefixes="hj orm inheritance" schemaLocation="../xsd/5/12/RCRA_Handler_v5.12.xsd">
 
     <jaxb:bindings node="//xsd:complexType[@name='HandlerDataType']">
         <inheritance:extends>com.windsor.node.plugin.rcra.outbound.domain.AbstractHandler</inheritance:extends>
